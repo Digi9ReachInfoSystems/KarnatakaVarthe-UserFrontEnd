@@ -45,6 +45,8 @@ import MarchKarnatakIdpage from "./components-newdesigns/pages/marchofkarnatakvi
 import SignIn from "./components-newdesigns/auth/signin/Sign-In";
 import SignUp from "./components-newdesigns/auth/signup/SignUp-Page";
 import Error404 from "./components-newdesigns/layout/Error404/Error404";
+import MarchofKarnataka from "./components-newdesigns/pages/marchofkarnataka/Marchofkarnataka";
+import MarchofKarnatakaV1 from "./components-newdesigns/components/marchofkarnatakapage/MarchofKarnatakaV1";
 
 
 const App = () => {
@@ -103,7 +105,7 @@ const App = () => {
                   <Route path="/district" element={<DistrictNewspage />} />
                   <Route path="/specialnews" element={<SpecialNews />} />
                   <Route path="/news" element={<News />} />
-                  <Route path="/marchofkarnataka" element={<Marchofkarnataka />} />
+                  <Route path="/marchofkarnataka" element={<MarchofKarnatakaV1 />} />
                   <Route path="/newsdetails/:id" element={<NewsId />} />
                   <Route path="/magazinesvartha" element={<MagazinesVartha />} />
                   <Route path="/marchofkarnatakmagzine" element={<MarchofKarnatakMagzine />} />
@@ -111,6 +113,7 @@ const App = () => {
                   <Route path="/marchofkarnatakview/:id" element={<MarchKarnatakIdpage />} />
                 </Route>
                 <Route path="/login" element={<Login />} />
+                {/* <Route path="/marchofkarnatakaV1" element={<MarchofKarnatakaV1 />} /> */}
                 {/* <Route path="/otp" element={<Otp />} />
                 <Route path="/signup" element={<SignUppage />} /> */}
                 <Route path="/signin" element={<SignIn />} />
