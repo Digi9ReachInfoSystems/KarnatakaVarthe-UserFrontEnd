@@ -144,9 +144,35 @@ export const NewsList = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${theme.spacing(1.5)};
+   max-height: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  
+  /* Custom scrollbar styling */
+  scrollbar-width: thin;
+  scrollbar-color: ${theme.colors.gray[400]} ${theme.colors.gray[100]};
+  
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: ${theme.colors.gray[100]};
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: ${theme.colors.gray[400]};
+    border-radius: 3px;
+    
+    &:hover {
+      background: ${theme.colors.gray[500]};
+    }
+  }
 
   @media (min-width: ${theme.breakpoints.tablet}) {
     gap: ${theme.spacing(2)};
+    max-height: 400px;
   }
 `
 
