@@ -158,7 +158,7 @@ export const TabButton = styled.button`
 
 export const Layout = styled.div`
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 2fr 1fr;
   gap: ${theme.spacing(4)};
 
   @media (max-width: ${theme.breakpoints.mobile}) {
@@ -172,7 +172,7 @@ export const Layout = styled.div`
   }
 
   @media (min-width: 769px) and (max-width: ${theme.breakpoints.desktop}) {
-    grid-template-columns: 1fr;
+    grid-template-columns: 2fr 1fr;
     gap: ${theme.spacing(3.5)};
   }
 `
@@ -360,13 +360,40 @@ export const SideList = styled.ul`
   padding: 0;
   display: grid;
   gap: ${theme.spacing(2.5)};
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  
+  /* Custom scrollbar styling */
+  scrollbar-width: thin;
+  scrollbar-color: ${theme.colors.gray[400]} ${theme.colors.gray[100]};
+  
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: ${theme.colors.gray[100]};
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: ${theme.colors.gray[400]};
+    border-radius: 3px;
+    
+    &:hover {
+      background: ${theme.colors.gray[500]};
+    }
+  }
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     gap: ${theme.spacing(2)};
+    max-height: 400px;
   }
 
   @media (min-width: 481px) and (max-width: ${theme.breakpoints.tablet}) {
     gap: ${theme.spacing(2.25)};
+    max-height: 450px;
   }
 `
 
