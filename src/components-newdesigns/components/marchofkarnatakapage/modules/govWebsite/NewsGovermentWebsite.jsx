@@ -9,7 +9,7 @@ import {   SidebarCard,
     ItemLabel,
     SkeletonItem,
     SkeletonAvatar,
-    SkeletonLabel } from "./NewsGov.Styes"
+    SkeletonLabel } from "./NewsGov.Styes.js"
 import { LanguageContext } from "../../../../../context/LanguageContext.jsx"
 
 const defaultSites = [

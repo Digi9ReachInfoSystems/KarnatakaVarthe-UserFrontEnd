@@ -130,7 +130,7 @@ import React from 'react'
 import { Link } from "react-router-dom"
 import { useState, useEffect, useContext } from "react"
 import { LanguageContext } from "../../../../../context/LanguageContext.jsx"
-import { Section, HeaderRow, Title, SeeMore, ArrowIcon, PageLayout, FeaturedCard, FeaturedImage, Overlay, FeaturedContent, Badge, FeaturedTitle, FeaturedExcerpt, MetaBar, MetaBarSmall, MetaItem, MiddleCol, SmallCard, Thumb, SmallContent, SmallBadge, SmallTitle, SkeletonFeaturedCard, SkeletonFeaturedImage, SkeletonMetaBar, SkeletonText, SkeletonSmallCard, SkeletonThumb } from "./StateNews.styles"
+import { Section, HeaderRow, Title, SeeMore, ArrowIcon, PageLayout, FeaturedCard, FeaturedImage, Overlay, FeaturedContent, Badge, FeaturedTitle, FeaturedExcerpt, MetaBar, MetaBarSmall, MetaItem, MiddleCol, SmallCard, Thumb, SmallContent, SmallBadge, SmallTitle, SkeletonFeaturedCard, SkeletonFeaturedImage, SkeletonMetaBar, SkeletonText, SkeletonSmallCard, SkeletonThumb } from "./StateNews.Styles.js"
 import { getNews } from "../../../../../services/newsApi/NewsApi"
 import { CategoryApi } from "../../../../../services/categoryapi/CategoryApi"
 

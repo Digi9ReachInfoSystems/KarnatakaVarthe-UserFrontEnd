@@ -1,5 +1,5 @@
 
-import { FlexContainer, PageLayout } from './MarchOfkarnatakV1.styles'
+import { FlexContainer, PageLayout } from './MarchOfkarnatakV1.styles.js'
 import MarchOfKarnatakaHero from './modules/herosection/MarchOfKarnatakaHero'
 import StateNewsOfMarchOfKarnataka from './modules/stateNews/StateNews'
 import NewsGovermentWebsite from './modules/govWebsite/NewsGovermentWebsite'
