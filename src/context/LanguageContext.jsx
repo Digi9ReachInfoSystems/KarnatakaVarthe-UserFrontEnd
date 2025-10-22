@@ -19,6 +19,15 @@ export const LanguageProvider = ({ children }) => {
   const [languagePreferences, setLanguagePreferences] = useState(getStoredLanguagePreferences);
   const [currentMagazineType, setCurrentMagazineType] = useState(null);
 
+  // Set default preferences on page refresh
+  useEffect(() => {
+    setLanguagePreferences({
+      global: "Kannada",
+      magazine: "Kannada",      // Vartha Janapada
+      magazine2: "English"       // March of Karnataka
+    });
+  }, []);
+
   // Save to localStorage whenever preferences change
   useEffect(() => {
     localStorage.setItem("languagePreferences", JSON.stringify(languagePreferences));

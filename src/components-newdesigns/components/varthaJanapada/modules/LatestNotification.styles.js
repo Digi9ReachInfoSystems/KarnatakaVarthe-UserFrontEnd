@@ -51,23 +51,12 @@ export const NotificationList = styled.ol`
   flex-direction: column;
   gap: ${theme.spacing1(2)};
   background-color: ${theme.colors.white};
-  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   cursor: pointer;
-  animation: scrollUp 15s linear infinite;
 
   &:hover {
     background-color: ${theme.colors.gray[50] || '#f9fafb'};
-    animation-play-state: paused;
-  }
-
-  @keyframes scrollUp {
-    0% {
-      transform: translateY(0);
-    }
-    100% {
-      transform: translateY(-100%);
-    }
   }
 
   @media (max-width: ${theme.breakpoints.mobile}) {

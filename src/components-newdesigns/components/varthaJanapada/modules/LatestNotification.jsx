@@ -24,7 +24,6 @@ export default function LatestNotification({ notifications = [] }) {
   const [apiNotifications, setApiNotifications] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [currentIndex, setCurrentIndex] = useState(0)
   const [isHovered, setIsHovered] = useState(false)
   const scrollRef = useRef(null)
 
@@ -50,41 +49,29 @@ export default function LatestNotification({ notifications = [] }) {
   // Priority: props notifications > API notifications
   const notificationData = notifications.length > 0 ? notifications : apiNotifications
 
-  // Auto-scroll effect for more than 5 notifications
+  // Auto-scroll effect
   useEffect(() => {
-    if (notificationData.length > 5 && !loading && !error && !isHovered) {
-      const interval = setInterval(() => {
-        setCurrentIndex((prevIndex) => 
-          prevIndex >= notificationData.length - 1 ? 0 : prevIndex + 1
-        )
-      }, 3000) // Change notification every 3 seconds
+    if (notificationData.length > 0 && !loading && !error && scrollRef.current && !isHovered) {
+      const scrollContainer = scrollRef.current
+      const scrollHeight = scrollContainer.scrollHeight
+      const clientHeight = scrollContainer.clientHeight
+      
+      // Only auto-scroll if content is taller than container
+      if (scrollHeight > clientHeight) {
+        const interval = setInterval(() => {
+          if (scrollContainer.scrollTop >= scrollHeight - clientHeight - 10) {
+            // Near the bottom, scroll back to top
+            scrollContainer.scrollTop = 0
+          } else {
+            // Scroll down by 1 pixel for smooth scrolling
+            scrollContainer.scrollTop += 1
+          }
+        }, 30)
 
-      return () => clearInterval(interval)
+        return () => clearInterval(interval)
+      }
     }
   }, [notificationData.length, loading, error, isHovered])
-
-  // Get visible notifications for smooth vertical scrolling
-  const getVisibleNotifications = () => {
-    if (notificationData.length <= 5) {
-      return notificationData
-    }
-    
-    // For smooth vertical scrolling, show all notifications multiple times
-    const allVisible = []
-    
-    // Create 3 complete sets of all notifications for continuous scrolling
-    for (let set = 0; set < 3; set++) {
-      notificationData.forEach((notification, index) => {
-        allVisible.push({
-          ...notification,
-          displayIndex: index + 1 + (set * notificationData.length), // Continue numbering across sets
-          setIndex: set
-        })
-      })
-    }
-    
-    return allVisible
-  }
 
   // Helper function to get notification text and link
   const getNotificationContent = (notification, index) => {
@@ -129,13 +116,11 @@ export default function LatestNotification({ notifications = [] }) {
     </ShimmerContainer>
   )
 
-  const visibleNotifications = getVisibleNotifications()
-
   return (
     <NotificationPanel aria-labelledby="notifications-heading">
       <PanelHeader id="notifications-heading">Latest notifications</PanelHeader>
       <NotificationList 
-        aria-label="Notifications list" 
+        aria-label="Notifications list"
         ref={scrollRef}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -144,17 +129,15 @@ export default function LatestNotification({ notifications = [] }) {
           <ShimmerLoader />
         ) : error ? (
           <ErrorText>{error}</ErrorText>
-        ) : visibleNotifications.length > 0 ? (
-          visibleNotifications.map((notification, i) => {
+        ) : notificationData.length > 0 ? (
+          notificationData.map((notification, i) => {
             const { text, link } = getNotificationContent(notification, i)
-            const displayNumber = notification.displayIndex || (i + 1)
-            const keySuffix = notification.setIndex !== undefined ? `-set${notification.setIndex}` : ''
             return (
-              <ListItem key={`${i}${keySuffix}`}>
-                <ListIndex aria-hidden="true">{displayNumber}.</ListIndex>
+              <ListItem key={i}>
+                <ListIndex aria-hidden="true">{i + 1}.</ListIndex>
                 <ListBody>
                   {text}
-                  <ListLink as={Link} to={link} aria-label={`See more about notification ${displayNumber}`}>
+                  <ListLink as={Link} to={link} aria-label={`See more about notification ${i + 1}`}>
                     See more <span aria-hidden="true">→</span>
                   </ListLink>
                 </ListBody>
