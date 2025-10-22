@@ -80,8 +80,7 @@ export const ArrowControls = styled.div`
   gap: 8px;
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    bottom: 10px;
-    right: 10px;
+    display: none;
   }
 `
 
@@ -126,7 +125,7 @@ export const HeroBackground = styled.div`
   position: absolute;
   inset: 0;
   background-image: url(${props => props.src});
-  background-size: cover;
+  background-size: 100% 100%;
   background-position: center;
   filter: brightness(0.7);
 `
@@ -141,18 +140,22 @@ export const HeroContent = styled.div`
   position: relative;
   z-index: 1;
   display: flex;
-  flex-direction: column;
-  gap: ${theme.spacing1(3)};
-  padding: ${theme.spacing1(8)};
-  max-width: 780px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  border-radius: ${theme.borderRadius.medium} ${theme.borderRadius.medium} 0 0;
   position: absolute;
   bottom: 0;
   left: 0;
+  width: 100%;
+  padding: ${theme.spacing1(8)};
   padding-bottom: ${theme.spacing1(4)};
 
   @media (max-width: ${theme.breakpoints.desktop}) {
     padding: ${theme.spacing1(6)};
-    max-width: 90%;
+    width: 100%;
   }
 
   @media (max-width: ${theme.breakpoints.tablet}) {
@@ -162,7 +165,8 @@ export const HeroContent = styled.div`
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     padding: ${theme.spacing1(3)};
-    gap: ${theme.spacing1(1.5)};
+    width: 100%;
+    max-width: none;
   }
 `
 
