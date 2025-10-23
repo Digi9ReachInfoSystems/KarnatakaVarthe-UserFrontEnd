@@ -138,7 +138,7 @@ export const HeroOverlay = styled.div`
 `
 
 export const HeroContent = styled.div`
-  position: relative;
+ position: relative;
   z-index: 1;
   display: flex;
   flex-direction: row;
@@ -156,9 +156,7 @@ export const HeroContent = styled.div`
 
   @media (max-width: ${theme.breakpoints.desktop}) {
     padding: ${theme.spacing1(6)};
-    flex-direction: column;
-
-    max-width: 90%;
+    width: 100%;
   }
 
   @media (max-width: ${theme.breakpoints.tablet}) {
