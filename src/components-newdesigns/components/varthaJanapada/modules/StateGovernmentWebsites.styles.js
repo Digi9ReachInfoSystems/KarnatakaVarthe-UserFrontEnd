@@ -50,11 +50,13 @@ export const SidebarList = styled.ul`
     grid-template-columns: repeat(2, 1fr);
     gap: ${theme.spacing1(2)};
     padding: ${theme.spacing1(3)};
+    max-height: 400px;
   }
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     grid-template-columns: 1fr;
     padding: ${theme.spacing1(2)};
+    max-height: 300px;
   }
 `
 
