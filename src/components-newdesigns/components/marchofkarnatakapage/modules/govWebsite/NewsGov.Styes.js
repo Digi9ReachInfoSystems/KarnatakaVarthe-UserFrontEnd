@@ -41,6 +41,8 @@ export const SidebarList = styled.ul`
   padding: ${theme.spacing1(2)};
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  max-height: 600px;
   flex: 1;
 
   @media (max-width: ${theme.breakpoints.tablet}) {
@@ -48,11 +50,13 @@ export const SidebarList = styled.ul`
     grid-template-columns: repeat(2, 1fr);
     gap: ${theme.spacing1(2)};
     padding: ${theme.spacing1(3)};
+    max-height: 400px;
   }
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     grid-template-columns: 1fr;
     padding: ${theme.spacing1(2)};
+    max-height: 300px;
   }
 `
 

@@ -33,6 +33,7 @@ export default function LatestNotification({ notifications = [] }) {
         setLoading(true)
         setError(null)
         const response = await getLatestNotification()
+        console.log('Fetched notifications:', response)
         setApiNotifications(response.data || response || [])
       } catch (err) {
         console.error('Error fetching notifications:', err)
