@@ -21,8 +21,6 @@ import {
   PopularContent,
   PopularTitle,
   PopularDate,
-  SeeMoreWrap,
-  SeeMoreBtn,
   SkeletonFeaturedCard,
   SkeletonFeaturedImage,
   SkeletonFeaturedContent,
@@ -42,7 +40,6 @@ const NewsArticles = () => {
   const [rawData, setRawData] = useState([])
   const [latestNews, setLatestNews] = useState([])
   const { language } = useContext(LanguageContext)
-  const [visibleCount, setVisibleCount] = useState(4)
   const [popularNews, setPopularNews] = useState([])
   const navigate = useNavigate()
   // Parse date for datetime attribute
@@ -78,8 +75,10 @@ const NewsArticles = () => {
       const diffHrs = (now - new Date(item.date)) / (1000 * 60 * 60)
       return diffHrs >= 24 && diffHrs <= 72
     })
-    setNewsData(mappedData.slice(1))       // all except top one
+    setNewsData(mappedData.slice(1))    
+       // all except top one
   setLatestNews(mappedData.slice(0, 1))  
+
   setPopularNews(popular)
   }
  }, [rawData, language])
@@ -219,21 +218,8 @@ const NewsArticles = () => {
         {/* Latest News - Center Column */}
         <NewsColumn as="div" role="region" aria-labelledby="latest-news-heading">
           <ColumnHeader id="latest-news-heading" as="h3">LATEST NEWS</ColumnHeader>
-          <NewsList
-            role="feed"
-            aria-label="Latest news articles"
-            aria-busy="false"
-            style={{
-              display: 'flex',
-              
-              overflowX: newsData.length > 4 ? 'auto' : 'unset',
-              gap: '16px',
-              paddingBottom: newsData.length > 4 ? '8px' : '0',
-              scrollBehavior: 'smooth',
-              maxWidth: '100%'
-            }}
-          >
-            {newsData.slice(0, visibleCount).map((item, index) => (
+          <NewsList role="feed" aria-label="Latest news articles" aria-busy="false">
+            {newsData.map((item, index) => (
               <NewsItem
                 key={item.id}
                 as="article"
@@ -241,7 +227,7 @@ const NewsArticles = () => {
                 aria-labelledby={`latest-news-${index}`}
                 tabIndex="0"
                 onClick={() => navigate(`/newsdetails/${item.id}`)}
-                style={{ cursor: 'pointer', minWidth: '260px', flex: '0 0 auto' }}
+                style={{ cursor: 'pointer' }}
               >
                 <NewsItemContent>
                   <NewsDate as="time" dateTime={parseDateTimeAttr(item.date)}>
@@ -258,30 +244,13 @@ const NewsArticles = () => {
               </NewsItem>
             ))}
           </NewsList>
-          {newsData.length > 4 && (
-            <SeeMoreWrap style={{ marginTop: '8px', textAlign: 'center' }}>
-              <SeeMoreBtn
-                type="button"
-                onClick={() => {
-                  if (visibleCount >= newsData.length) {
-                    setVisibleCount(4)
-                  } else {
-                    setVisibleCount(prev => Math.min(prev + 3, newsData.length))
-                  }
-                }}
-                aria-label={visibleCount >= newsData.length ? "Show less latest news articles" : "Load more latest news articles"}
-              >
-                {visibleCount >= newsData.length ? "See Less" : "See More"}
-              </SeeMoreBtn>
-            </SeeMoreWrap>
-          )}
         </NewsColumn>
 
         {/* Popular News - Right Column */}
         <NewsColumn as="div" role="region" aria-labelledby="popular-news-heading">
           <ColumnHeader id="popular-news-heading" as="h3">POPULAR NEWS</ColumnHeader>
           <NewsList role="feed" aria-label="Popular news articles" aria-busy="false">
-            {popularNews.slice(0, visibleCount).map((item, index) => (
+            {popularNews.map((item, index) => (
               <PopularItem
                 key={item.id}
                 as="article"
@@ -316,23 +285,6 @@ const NewsArticles = () => {
                 </PopularContent>
               </PopularItem>
             ))}
-            {popularNews.length > 4 && (
-              <SeeMoreWrap>
-                <SeeMoreBtn
-                  type="button"
-                  onClick={() => {
-                    if (visibleCount >= popularNews.length) {
-                      setVisibleCount(4) // Reset to initial count
-                    } else {
-                      setVisibleCount(prev => prev + 3) // Load more
-                    }
-                  }}
-                  aria-label={visibleCount >= popularNews.length ? "Show less popular news articles" : "Load more popular news articles"}
-                >
-                  {visibleCount >= popularNews.length ? "See Less" : "See More"}
-                </SeeMoreBtn>
-              </SeeMoreWrap>
-            )}
           </NewsList>
         </NewsColumn>
       </GridLayout>

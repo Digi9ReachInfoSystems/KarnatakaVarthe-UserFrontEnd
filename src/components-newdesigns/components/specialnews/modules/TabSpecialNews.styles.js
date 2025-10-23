@@ -238,7 +238,7 @@ export const List = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${theme.spacing(3)};
-  max-height: 560px;
+  max-height: 400px;
   overflow: hidden;
   padding: ${theme.spacing(0.5)} ${theme.spacing(1.5)};
   text-align: left;
@@ -248,7 +248,7 @@ export const List = styled.div`
   }
 
   @media (max-width: ${theme.breakpoints.tablet}) {
-    max-height: 500px;
+    max-height: 400px;
     overflow-y: auto;
     padding: ${theme.spacing(1)} ${theme.spacing(1.5)};
     gap: ${theme.spacing(3)};
@@ -340,22 +340,49 @@ export const Divider = styled.hr`
 
 // Center feature
 export const FeatureCard = styled.article`
-  position: relative;
-  width: 100%;
-  height: 550px;
+  background: ${theme.colors.background};
+  border-radius: ${theme.borderRadius.medium};
   overflow: hidden;
-  background: ${theme.colors.gray[200]};
-  border-radius: ${theme.borderRadius.small};
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all ${theme.transitions.fast};
+  position: relative;
+  min-height: 220px;
+  max-height: 400px;
+  height: auto;
 
-  @media (max-width: ${theme.breakpoints.tablet}) {
-    height: 450px;
-    order: -1;
+  &:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
   }
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    height: 320px;
-    order: -1;
     border-radius: ${theme.borderRadius.small};
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    min-height: 180px;
+    max-height: 260px;
+    height: auto;
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+  }
+
+  @media (min-width: 481px) and (max-width: ${theme.breakpoints.tablet}) {
+    min-height: 200px;
+    max-height: 320px;
+    height: auto;
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.13);
+    }
+  }
+
+  @media (min-width: 769px) {
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
   }
 `
 
@@ -401,7 +428,7 @@ export const FeatureTitle = styled.h3`
   line-height: 1.25;
   margin-top: ${theme.spacing(1.25)};
   margin-bottom: 0;
-  color: ${theme.colors.white};
+  color: ${theme.colors.black};
   word-wrap: break-word;
   overflow-wrap: break-word;
 
@@ -535,7 +562,7 @@ export const FeatureMetaRow = styled.div`
 `
 
 export const FeatureAuthor = styled.span`
-  color: ${theme.colors.white};
+  color: ${theme.colors.black};
   font-size: ${theme.fontSizes.small};
   font-family: ${theme.fonts.body};
   font-weight: 500;
@@ -546,7 +573,7 @@ export const FeatureAuthor = styled.span`
 `
 
 export const FeatureDateText = styled.span`
-  color: ${theme.colors.white};
+  color: ${theme.colors.Gray600};
   font-size: ${theme.fontSizes.small};
   font-family: ${theme.fonts.body};
   opacity: 0.9;

@@ -144,9 +144,10 @@ export const NewsList = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${theme.spacing(1.5)};
-   max-height: 500px;
+  max-height: 1200px;
   overflow-y: auto;
-  overflow-x: hidden;
+  
+
   
   /* Custom scrollbar styling */
   scrollbar-width: thin;
@@ -172,7 +173,7 @@ export const NewsList = styled.div`
 
   @media (min-width: ${theme.breakpoints.tablet}) {
     gap: ${theme.spacing(2)};
-    max-height: 400px;
+    max-height: 800px;
   }
 `
 
