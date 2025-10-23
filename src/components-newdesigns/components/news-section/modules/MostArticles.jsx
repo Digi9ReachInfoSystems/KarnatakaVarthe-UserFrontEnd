@@ -90,8 +90,8 @@ export default function TabSection() {
   }
 
   // Get news to display
-  const bigCardNews = news.slice(0, 4) // First 4 as big cards (always shown)
-  const allSmallCardNews = news.slice(4) // All remaining news for sidebar
+  const bigCardNews = news.slice(0, 3) // First 3 as big cards (always shown)
+  const allSmallCardNews = news.slice(3) // All remaining news for sidebar
   const smallCardNews = visibleCount === 8 
     ? allSmallCardNews.slice(0, 4) // Show only first 4 initially
     : allSmallCardNews // Show all when expanded

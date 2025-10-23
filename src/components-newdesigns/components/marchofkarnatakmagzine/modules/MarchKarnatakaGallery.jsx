@@ -98,8 +98,7 @@ export default function MarchKarnatakaGallery() {
 const getMagazineByContent = async (content) => {
   try {
     const response = await getMagazineContext(content);
-    console.log('getMagazineContext response:', response);
-    return response || { results: [] };
+     return response || { results: [] };
   } catch (error) {
     console.error('Error fetching magazines:', error);
     return { results: [] }; // Return empty results on error
@@ -112,17 +111,14 @@ const performSearch = async (query) => {
     console.log('Starting search for query:', query);
     setLoading(true);
     const searchResults = await getMagazineByContent(query.trim());
-    console.log('Search results received:', searchResults);
-
+  
     if (searchResults && searchResults.results && searchResults.results.length > 0) {
-      console.log('Processing', searchResults.results.length, 'search results');
-
+  
       // Find the highest scoring result
       const topResult = searchResults.results.reduce((max, current) =>
         current.score > max.score ? current : max
       );
-      console.log('Top result:', topResult);
-
+ 
       // Transform API results to match magazine format
       const transformedResults = searchResults.results.map(result => ({
         _id: result.magazine_id, // Use magazine_id for navigation, not chunk id
@@ -137,14 +133,12 @@ const performSearch = async (query) => {
         content: result.content, // Include content for display
         // Add other necessary fields
       }));
-      console.log('Transformed results:', transformedResults);
-
+   
       // Deduplicate results based on magazine ID/title
       const deduplicatedResults = transformedResults.filter((result, index, self) =>
         index === self.findIndex(r => r._id === result._id || r.title === result.title)
       );
-      console.log('Deduplicated results:', deduplicatedResults);
-
+ 
       setMagazines(deduplicatedResults);
       setFilteredMagazines(deduplicatedResults);
       setSearchQuery(query); // Store the query for display
@@ -192,6 +186,7 @@ const performSearch = async (query) => {
     try {
       setLoading(true);
       const response = await MarchMagazines();
+      console.log('Fetched magazines:', response);
       
       if (response && response.data) {
         // Get all unique years from publishedYear and sort them to find the latest
