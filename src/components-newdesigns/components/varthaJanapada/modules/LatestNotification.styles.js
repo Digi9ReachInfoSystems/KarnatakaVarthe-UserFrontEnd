@@ -55,6 +55,13 @@ export const NotificationList = styled.ol`
   overflow-x: hidden;
   cursor: pointer;
 
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
+
   &:hover {
     background-color: ${theme.colors.gray[50] || '#f9fafb'};
   }

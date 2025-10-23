@@ -108,7 +108,7 @@ export default function NewsGovermentWebsite({ sites = [], loading = false }) {
         <SkeletonLoader />
       ) : (
         <SidebarList aria-label="Government websites list">
-          {displaySites.map((s, i) => (
+          {displaySites.slice(0, 6).map((s, i) => (
             <SidebarItem 
               key={i} 
               as="a"
