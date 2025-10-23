@@ -41,6 +41,8 @@ export const SidebarList = styled.ul`
   padding: ${theme.spacing1(2)};
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  max-height: 600px;
   flex: 1;
 
   @media (max-width: ${theme.breakpoints.tablet}) {
