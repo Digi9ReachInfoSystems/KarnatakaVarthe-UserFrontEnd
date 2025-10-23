@@ -1,6 +1,5 @@
 import styled, { keyframes } from 'styled-components';
-import theme from '../../../../../theme/Theme';
-
+import theme from '../../../theme/Theme';
 export const ArticlesSection = styled.section`
   background-color: ${theme.colors.background};
 `;
@@ -8,6 +7,9 @@ export const ArticlesSection = styled.section`
 export const Container = styled.div`
   max-width: 100%;
   margin: 0 auto;
+  padding: ${theme.spacing1(9)} ${theme.spacing1(15)};
+
+
 `;
 
 export const SectionHeader = styled.div`
@@ -55,17 +57,12 @@ export const Title = styled.h2`
 `;
 
 export const ArticlesGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  justify-content: space-between;
   gap: ${theme.spacing(1)};
 
   @media (min-width: ${theme.breakpoints.tablet}) {
     gap: ${theme.spacing(2)};
-  }
-
-  @media (min-width: ${theme.breakpoints.desktop}) {
-    grid-template-columns: 1fr 1fr;
-    gap: ${theme.spacing(1)};
   }
 `;
 
@@ -76,21 +73,16 @@ export const MainArticle = styled.article`
 `;
 
 export const SmallArticlesGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  justify-content: space-between;
   gap: ${theme.spacing(1)};
 
   @media (min-width: ${theme.breakpoints.mobile}) {
-    grid-template-columns: 1fr 1fr;
     gap: ${theme.spacing(1.5)};
   }
 
   @media (min-width: ${theme.breakpoints.tablet}) {
     gap: ${theme.spacing(2)};
-  }
-
-  @media (min-width: ${theme.breakpoints.desktop}) {
-    gap: ${theme.spacing(1)};
   }
 `;
 export const ViewMoreButton = styled.a`
@@ -338,17 +330,12 @@ export const ShimmerContainer = styled.div`
 `;
 
 export const ShimmerArticlesGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  justify-content: space-between;
   gap: ${theme.spacing(1)};
 
   @media (min-width: ${theme.breakpoints.tablet}) {
     gap: ${theme.spacing(2)};
-  }
-
-  @media (min-width: ${theme.breakpoints.desktop}) {
-    grid-template-columns: 1fr 1fr;
-    gap: ${theme.spacing(1)};
   }
 `;
 
@@ -385,21 +372,16 @@ export const ShimmerMainArticle = styled.div`
 `;
 
 export const ShimmerSmallArticlesGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  justify-content: space-between;
   gap: ${theme.spacing(1)};
 
   @media (min-width: ${theme.breakpoints.mobile}) {
-    grid-template-columns: 1fr 1fr;
     gap: ${theme.spacing(1.5)};
   }
 
   @media (min-width: ${theme.breakpoints.tablet}) {
     gap: ${theme.spacing(2)};
-  }
-
-  @media (min-width: ${theme.breakpoints.desktop}) {
-    gap: ${theme.spacing(1)};
   }
 `;
 
