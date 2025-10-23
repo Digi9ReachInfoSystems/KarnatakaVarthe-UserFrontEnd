@@ -13,7 +13,6 @@ import {
   ImageContainer,
   ArticleImage,
   PlayButton,
-  Badge,
   ArticleContent,
   ArticleTitle,
   ShimmerContainer,
@@ -21,6 +20,7 @@ import {
   ShimmerMainArticle,
   ShimmerSmallArticlesGrid,
   ShimmerSmallArticle,
+  ViewMoreButton,
 } from './LongVideos.styles';
 
 const LongVideos = () => {
@@ -30,28 +30,18 @@ const LongVideos = () => {
   const [playingVideo, setPlayingVideo] = useState(null);
   const { language } = useContext(LanguageContext);
 
-  // Helper function to extract category name based on language
-  const getCategoryName = (category) => {
-    if (!category) return 'VIDEO';
 
-    if (typeof category === "object" && category) {
-      if (language === "English") {
-        return category.name || category.title || 'VIDEO';
-      } else if (language === "Hindi") {
-        return category.hindi || category.name || category.title || 'VIDEO';
-      } else if (language === "Kannada") {
-        return category.kannada || category.name || category.title || 'VIDEO';
-      }
-    }
-
-    return 'VIDEO';
-  };
 
   // Header text translations
   const headerText = {
     English: "Latest Videos",
     Kannada: "ಲೆಟೆಸ್ಟ್ ವಿಡಿಯೋಸ್",
     Hindi: "लेटेस्ट वीडियोज़"
+  };
+  const buttonText = {
+    English: "Show More",
+    Kannada: "ಹೆಚ್ಚು ತೋರಿಸಿ",
+    Hindi: "और दिखाएँ"
   };
   
   useEffect(() => {
@@ -110,6 +100,7 @@ const LongVideos = () => {
         <Container>
           <SectionHeader>
             <Title>{headerText[language] || "Latest Videos"}</Title>
+            <ViewMoreButton href="/videos">{buttonText[language] || "Show More"}</ViewMoreButton>
           </SectionHeader>
           <div>
             {error ? 
@@ -171,7 +162,6 @@ const LongVideos = () => {
                     src={mainArticle.thumbnail || '/public/home/home.png'} 
                     alt={mainArticle[language.toLowerCase()]?.title || mainArticle.title} 
                   />
-                  <Badge>{getCategoryName(mainArticle.category)}</Badge>
                   <PlayButton 
                     onClick={() => handlePlayClick(mainArticle._id, mainArticle.video_url)} 
                     aria-label={`Play ${mainArticle[language.toLowerCase()]?.title || mainArticle.title}`} 
@@ -212,13 +202,15 @@ const LongVideos = () => {
                   )}
                 </ImageContainer>
                 <ArticleContent>
-                  <Badge>{getCategoryName(article.category)}</Badge>
                   <ArticleTitle>{article[language.toLowerCase()]?.title || article.title}</ArticleTitle>
                 </ArticleContent>
               </SmallArticle>
             ))}
           </SmallArticlesGrid>
         </ArticlesGrid>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+          <ViewMoreButton href="/videos">{buttonText[language] || "Show More"}</ViewMoreButton>
+        </div>
       </Container>
     </ArticlesSection>
   );

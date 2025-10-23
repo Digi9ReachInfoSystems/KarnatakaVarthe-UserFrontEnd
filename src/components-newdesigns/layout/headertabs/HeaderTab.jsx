@@ -84,6 +84,15 @@ const HeaderTab = () => {
         Hindi: "समाचार"
       }
     },
+    { 
+      name: "Videos", 
+      path: "/videos",
+      translations: {
+        English: "Videos",
+        Kannada: "ವೀಡಿಯೋಗಳು",
+        Hindi: "वीडियो"
+      }
+    }
   ];
 
   // Get translated name for nav item
