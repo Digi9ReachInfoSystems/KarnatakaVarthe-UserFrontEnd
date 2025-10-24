@@ -29,7 +29,7 @@ export const checkuserExists = async (phoneNumber) => {
 
 export const UserSignupWithPhoneApi = async (phoneData) => {
   try {
-    const response = await apiClient.post("/api/auth/signup-with-phone", phoneData);
+    const response = await apiClient.post("/api/auth/signup", phoneData);
     return response.data;
   } catch (err) {
     throw err;
