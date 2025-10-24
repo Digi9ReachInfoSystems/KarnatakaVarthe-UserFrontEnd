@@ -329,7 +329,7 @@ function StateNewsOfMarchOfKarnataka() {
                                 <FeaturedImage $src={featured.image}>
                                     <Overlay />
                                     <FeaturedContent>
-                                        <Badge>{featured.category}</Badge>
+                                        {/* <Badge>{featured.category}</Badge> */}
                                         <FeaturedTitle>{featured.title}</FeaturedTitle>
                                     </FeaturedContent>
                                 </FeaturedImage>
@@ -360,7 +360,7 @@ function StateNewsOfMarchOfKarnataka() {
                                     <SmallCard>
                                         <Thumb $src={item.image} role="img" aria-label={item.title} />
                                         <SmallContent>
-                                            <SmallBadge>{item.category}</SmallBadge>
+                                            {/* <SmallBadge>{item.category}</SmallBadge> */}
                                             <SmallTitle>{item.title}</SmallTitle>
                                         </SmallContent>
                                     </SmallCard>

@@ -194,22 +194,7 @@ fetchNews()
               />
             </ThumbWrap>
             <Content>
-              <BadgeRow>
-                <Badge aria-label={`Category: ${item.categoryName}`}>
-                  {/* simple red accent dot */}
-                  <span
-                    style={{
-                      width: 8,
-                      height: 8,
-                      borderRadius: "50%",
-                      background: "currentColor",
-                      display: "inline-block",
-                    }}
-                    aria-hidden="true"
-                  />
-                  {item.categoryName}
-                </Badge>
-              </BadgeRow>
+  
 
               <TitleLink 
                 id={`rec-title-${item.id}`}
@@ -252,21 +237,7 @@ fetchNews()
               />
             </ThumbWrap>
             <Content>
-              <BadgeRow>
-                <Badge aria-label={`Category: ${item.categoryName}`}>
-                  <span
-                    style={{
-                      width: 8,
-                      height: 8,
-                      borderRadius: "50%",
-                      background: "currentColor",
-                      display: "inline-block",
-                    }}
-                    aria-hidden="true"
-                  />
-                  {item.categoryName}
-                </Badge>
-              </BadgeRow>
+ 
 
               <TitleLink 
                 id={`read-title-${item.id}`}

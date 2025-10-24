@@ -128,7 +128,7 @@ export default function Banner() {
           <DateText as="time" dateTime={parseDateTimeAttr(item.date)}>
             {formatDate(item.date)}
           </DateText>
-          <div>{item.badge ? <Badge aria-label={`Story category: ${item.badge}`}>{item.badge}</Badge> : null}</div>
+          {/* <div>{item.badge ? <Badge aria-label={`Story category: ${item.badge}`}>{item.badge}</Badge> : null}</div> */}
           <Title id="banner-title" as="h3">{item.title.slice(0, 50)}...</Title>
         </Content>
         {/* Full-area link for accessibility */}
