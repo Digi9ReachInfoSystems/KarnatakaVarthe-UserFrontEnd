@@ -81,6 +81,7 @@ const setupRecaptcha = () => {
 
   return (
     <Container>
+      <div id="recaptcha-container"></div>
       <Card>
         <Header>
           <HeaderLeft>
