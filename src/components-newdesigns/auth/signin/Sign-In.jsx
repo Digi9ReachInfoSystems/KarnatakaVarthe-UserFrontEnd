@@ -1,10 +1,166 @@
+// import { useState } from "react";
+// import { Link } from "react-router-dom";
+// import { FaFacebook, FaApple } from "react-icons/fa";
+// import GoogleIcon from "../../../assets/Google.png";
+//   import { Spinner } from "./Sign-In.styles";
+
+
+// import {
+//   Container,
+//   Card,
+//   Header,
+//   HeaderLeft,
+//   HeaderRight,
+//   Subtitle,
+//   Title,
+//   NoAccountText,
+//   StyledLink,
+//   SocialButtonsContainer,
+//   SocialButton,
+//   IconButton,
+//   IconButtonsWrapper,
+//   Form,
+//   FormGroup,
+//   Label,
+//   Input,
+//     ForgotPasswordContainer,
+//   SubmitButton,
+// } from "./Sign-In.styles";
+// import { LoginPageApi } from "../../../services/auth/LoginApi";
+// import { useToast } from "../../../context/ToastContext";
+// import { useNavigate } from "react-router-dom";
+// import Cookies from "js-cookie";
+// import { Eye, EyeOff } from "lucide-react";
+
+// const SignIn = () => {
+//   const [formData, setFormData] = useState({
+//     email: "",
+//     password: "",
+//   });
+//   const [show, setShow] = useState(false);
+//   const { showSuccess, showError, showWarning } = useToast();
+//   const [loading , setLoading] = useState(false);
+//   const Navigate = useNavigate();
+
+//   const handleSubmit = async (e) => {
+//     setLoading(true);
+//     e.preventDefault();
+//     try {
+//       const payload = {
+//         email: formData.email.trim().toLowerCase(),
+//         password: formData.password,
+//       };
+
+//       const response = await LoginPageApi(payload);
+
+//       if (response?.success) {
+//         showSuccess("Login successful");
+//         Cookies.set("sessionToken", response.token, {
+//           expires: 7,
+//           secure: true,
+//         });
+//         Cookies.set("userId", response.userId, {
+//           expires: 7,
+//           secure: true,
+//         });
+
+//         Navigate("/");
+//       } else {
+//         showError("Login failed. Please try again.");
+//       }
+//     } catch (err) {
+//         console.log(err);
+//         const errorMessage =
+//         err?.response?.data?.message ||
+//         err?.response?.data?.error ||
+//         err?.message ||
+//         "Something went wrong. Please try again.";
+    
+//       showError(errorMessage);
+//       console.error("Login Error:", err);
+    
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return (
+//     <Container>
+//       <Card>
+//         <Header>
+//           <HeaderLeft>
+//             <Subtitle>
+//               Welcome to <span className="highlight">DIPR</span>
+//             </Subtitle>
+//             <Title>Sign in</Title>
+//           </HeaderLeft>
+//           <HeaderRight>
+//             <NoAccountText>No Account ?</NoAccountText>
+//             <StyledLink as={Link} to="/signup">
+//               Sign up
+//             </StyledLink>
+//           </HeaderRight>
+//         </Header>
+
+//         <SocialButtonsContainer>
+//           <SocialButton>
+//             <img src={GoogleIcon} alt="Google" className="icon" />
+//             Sign in with Google
+//           </SocialButton>
+//           <IconButtonsWrapper>
+//             <IconButton>
+//               <FaFacebook className="icon facebook" />
+//             </IconButton>
+//             <IconButton>
+//               <FaApple className="icon apple" />
+//             </IconButton>
+//           </IconButtonsWrapper>
+//         </SocialButtonsContainer>
+
+//         <Form onSubmit={handleSubmit}>
+//           <FormGroup>
+//             <Label>Enter your Phone Number</Label>
+//             <div style={{ display: "flex", alignItems: "center" }}>
+//               <span style={{ padding: "8px 12px", background: "#f3f3f3", border: "1px solid #ccc", borderRadius: "4px 0 0 4px", fontSize: "14px" }}>+91</span>
+//               <Input
+//                 type="tel"
+//                 placeholder="Phone number"
+//                 value={formData.phone || ""}
+//                 onChange={(e) => {
+//                   const val = e.target.value.replace(/[^0-9]/g, "").slice(0, 10);
+//                   setFormData({ ...formData, phone: val });
+//                 }}
+//                 maxLength={10}
+//                 style={{ borderRadius: "0 4px 4px 0", marginLeft: "-1px" }}
+//               />
+//             </div>
+//           </FormGroup>
+
+ 
+
+
+//           <SubmitButton type="submit" disabled={loading}>
+//           {loading ? (
+//     <>
+//       <Spinner />
+//       Signing in...
+//     </>
+//   ) : (
+//     "Sign in"
+//   )}
+// </SubmitButton>
+//         </Form>
+//       </Card>
+//     </Container>
+//   );
+// };
+
+// export default SignIn;
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaFacebook, FaApple } from "react-icons/fa";
 import GoogleIcon from "../../../assets/Google.png";
-  import { Spinner } from "./Sign-In.styles";
-
-
+import { Spinner } from "./Sign-In.styles";
 import {
   Container,
   Card,
@@ -23,62 +179,104 @@ import {
   FormGroup,
   Label,
   Input,
-    ForgotPasswordContainer,
   SubmitButton,
 } from "./Sign-In.styles";
-import { LoginPageApi } from "../../../services/auth/LoginApi";
 import { useToast } from "../../../context/ToastContext";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import { Eye, EyeOff } from "lucide-react";
+import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { auth } from "../../../config/firebaseConfig";
+import { checkuserExists } from "../../../services/auth/SignupApi";
+import { LoginUsingPhoneApi } from "../../../services/auth/SignupApi";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    phone: "",
   });
-  const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [otpStep, setOtpStep] = useState(false);
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [confirmationResult, setConfirmationResult] = useState(null);
   const { showSuccess, showError, showWarning } = useToast();
-  const [loading , setLoading] = useState(false);
-  const Navigate = useNavigate();
+  const navigate = useNavigate();
+
+  const setupRecaptcha = () => {
+    window.recaptchaVerifier = new RecaptchaVerifier(
+      auth,
+      "recaptcha-container",
+      {
+        size: "invisible",
+        callback: () => {},
+      }
+    );
+  };
 
   const handleSubmit = async (e) => {
-    setLoading(true);
     e.preventDefault();
+    setLoading(true);
     try {
-      const payload = {
-        email: formData.email.trim().toLowerCase(),
-        password: formData.password,
-      };
-
-      const response = await LoginPageApi(payload);
-
-      if (response?.success) {
-        showSuccess("Login successful");
-        Cookies.set("sessionToken", response.token, {
-          expires: 7,
-          secure: true,
-        });
-        Cookies.set("userId", response.userId, {
-          expires: 7,
-          secure: true,
-        });
-
-        Navigate("/");
+      if (!otpStep) {
+        if (!formData.phone || formData.phone.length !== 10) {
+          showWarning("Please enter a valid 10-digit phone number");
+          setLoading(false);
+          return;
+        }
+        const res = await checkuserExists( `+91${formData.phone}` );
+        console.log("User existence check:", res);
+        if (!res.success) {
+          showError("No user found with this phone number.");
+          setLoading(false);
+          return;
+        }
+        // Setup reCAPTCHA and get the verifier
+        setupRecaptcha();
+        const appVerifier = window.recaptchaVerifier;
+        const fullPhoneNumber = `+91${formData.phone}`;
+        const result = await signInWithPhoneNumber(
+          auth,
+          fullPhoneNumber,
+          appVerifier
+        );
+        setConfirmationResult(result);
+        setOtpStep(true);
+        showSuccess("OTP sent to your phone number.");
       } else {
-        showError("Login failed. Please try again.");
+        const code = otp.join("");
+        if (code.length === 6 && confirmationResult) {
+          const result = await confirmationResult.confirm(code);
+          const firebaseUID = result.user.uid;
+          showSuccess("OTP verified successfully!");
+          // Call login API with phone data
+   
+          try {
+            const loginRes = await LoginUsingPhoneApi(firebaseUID);
+            if (loginRes.success) {
+              showSuccess("Login successful!");
+              Cookies.set("accessToken", loginRes.accessToken, {
+                expires: 7,
+                secure: true,
+              });
+               Cookies.set("userId", loginRes.data._id, {
+          expires: 7,
+         secure: true,
+        });
+
+              navigate("/");
+            } else {
+              showError(loginRes.message || "Login failed.");
+            }
+          } catch (err) {
+            showError("Login API error.");
+          }
+        } else {
+          showError("Please enter a valid 6-digit OTP");
+        }
       }
     } catch (err) {
-        console.log(err);
-        const errorMessage =
-        err?.response?.data?.message ||
-        err?.response?.data?.error ||
-        err?.message ||
-        "Something went wrong. Please try again.";
-    
-      showError(errorMessage);
-      console.error("Login Error:", err);
-    
+      showError(err.message || "Error during login.");
+      if (window.recaptchaVerifier) {
+        window.recaptchaVerifier.clear();
+      }
     } finally {
       setLoading(false);
     }
@@ -86,6 +284,7 @@ const SignIn = () => {
 
   return (
     <Container>
+      <div id="recaptcha-container"></div>
       <Card>
         <Header>
           <HeaderLeft>
@@ -101,7 +300,6 @@ const SignIn = () => {
             </StyledLink>
           </HeaderRight>
         </Header>
-
         <SocialButtonsContainer>
           <SocialButton>
             <img src={GoogleIcon} alt="Google" className="icon" />
@@ -116,66 +314,80 @@ const SignIn = () => {
             </IconButton>
           </IconButtonsWrapper>
         </SocialButtonsContainer>
-
         <Form onSubmit={handleSubmit}>
-          <FormGroup>
-            <Label>Enter your username or email address</Label>
-            <Input
-              type="text"
-              placeholder="Username or email address"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-            />
-          </FormGroup>
-
-         <FormGroup>
-  <Label>Enter your Password</Label>
- <div style={{ position: 'relative' }}>
-    <Input
-      type={show ? "text" : "password"}
-      placeholder="Password"
-      value={formData.password}
-      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-      style={{ paddingRight: '40px' }} // Ensure there's space for the icon
-    />
-    <button
-      type="button"
-      onClick={() => setShow((s) => !s)}
-      aria-label={show ? "Hide password" : "Show password"}
-      style={{
-        position: "absolute",
-        right: "12px",
-        top: "50%",
-        transform: "translateY(-50%)",
-        background: "none",
-        border: "none",
-        cursor: "pointer",
-        padding: 0,
-      }}
-    >
-      {show ? <EyeOff size={18} /> : <Eye size={18} />}
-    </button>
-  </div>
-  {/* <ForgotPasswordContainer>
-    <StyledLink as={Link} to="/forgot-password">
-      Forgot Password
-    </StyledLink>
-  </ForgotPasswordContainer> */}
-</FormGroup>
-
-
+          {!otpStep ? (
+            <FormGroup>
+              <Label>Enter your Phone Number</Label>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <span style={{
+                  padding: "8px 12px",
+                  background: "#f3f3f3",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px 0 0 4px",
+                  fontSize: "14px"
+                }}>+91</span>
+                <Input
+                  type="tel"
+                  placeholder="Phone number"
+                  value={formData.phone || ""}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/[^0-9]/g, "").slice(0, 10);
+                    setFormData({ ...formData, phone: val });
+                  }}
+                  maxLength={10}
+                  style={{ borderRadius: "0 4px 4px 0", marginLeft: "-1px" }}
+                />
+              </div>
+            </FormGroup>
+          ) : (
+            <FormGroup>
+              <Label>Enter OTP</Label>
+              <div style={{ display: "flex", gap: "8px" }}>
+                {otp.map((digit, idx) => (
+                  <Input
+                    key={idx}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={1}
+                    value={digit}
+                    style={{
+                      width: "56px",
+                      height: "56px",
+                      fontSize: "16px",
+                      textAlign: "center",
+                      border: "1px solid #585757ff",
+                      borderRadius: "4px",
+                      background: "#fff",
+                      color: "#222",
+                    }}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/[^0-9]/g, "");
+                      const newOtp = [...otp];
+                      newOtp[idx] = val;
+                      setOtp(newOtp);
+                      // Focus next box if filled
+                      if (val && idx < 5) {
+                        const next = document.getElementById(`otp-box-${idx + 1}`);
+                        if (next) next.focus();
+                      }
+                    }}
+                    id={`otp-box-${idx}`}
+                  />
+                ))}
+              </div>
+            </FormGroup>
+          )}
           <SubmitButton type="submit" disabled={loading}>
-          {loading ? (
-    <>
-      <Spinner />
-      Signing in...
-    </>
-  ) : (
-    "Sign in"
-  )}
-</SubmitButton>
+            {loading ? (
+              <>
+                <Spinner /> {otpStep ? "Verifying OTP..." : "Sending OTP..."}
+              </>
+            ) : otpStep ? (
+              "Verify OTP"
+            ) : (
+              "Send OTP"
+            )}
+          </SubmitButton>
         </Form>
       </Card>
     </Container>

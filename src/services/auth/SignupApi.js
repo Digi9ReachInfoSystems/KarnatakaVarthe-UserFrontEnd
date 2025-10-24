@@ -18,9 +18,9 @@ export const SignupPageApi = async (userData) => {
   }
 };
 
-export const checkuserExists = async (phoneNumber) => {
+export const checkuserExists = async (phone_Number) => {
   try {
-    const response = await apiClient.post("/api/auth/checkuser-exists", { phoneNumber });
+    const response = await apiClient.post("/api/auth/checkuser-exists", { phone_Number });
     return response.data;
   } catch (err) {
     throw err;
@@ -30,6 +30,14 @@ export const checkuserExists = async (phoneNumber) => {
 export const UserSignupWithPhoneApi = async (phoneData) => {
   try {
     const response = await apiClient.post("/api/auth/signup", phoneData);
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+};
+export const LoginUsingPhoneApi = async (firebaseUid) => {
+  try {
+    const response = await apiClient.get(`/api/auth/getuserbyfirebaseuid/${firebaseUid}`);
     return response.data;
   } catch (err) {
     throw err;
