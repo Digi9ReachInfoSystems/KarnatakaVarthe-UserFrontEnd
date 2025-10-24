@@ -261,7 +261,7 @@ export default function MagzineIdview() {
 
       <HeaderSection>
         <h1 style={{ margin: 0, fontSize: '20px', fontWeight: 600, color: '#000', fontFamily: theme.fonts.body }}>
-          {getLocalizedMagazineData(magazine, 'title')}
+          {/* {getLocalizedMagazineData(magazine, 'title')} */}
         </h1>
         <MainDownloadButton onClick={handleDownload} aria-label={`${t.download} ${getLocalizedMagazineData(magazine, 'title')}`}>
           <MdOutlineFileDownload size={18} aria-hidden="true" />
