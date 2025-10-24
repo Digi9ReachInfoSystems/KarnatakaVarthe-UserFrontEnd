@@ -197,7 +197,7 @@ export default function FeaturedNewsSection() {
 
         <MainContent as="article" role="article" aria-labelledby="featured-main-title">
           <MetaRow>
-            <Tag aria-label={`Category: ${featured.category}`}>{featured.category}</Tag>
+            {/* <Tag aria-label={`Category: ${featured.category}`}>{featured.category}</Tag> */}
             <DateText as="time" dateTime={parseDateTimeAttr(featured.date)}>{featured.date}</DateText>
           </MetaRow>
 
@@ -235,7 +235,7 @@ export default function FeaturedNewsSection() {
               </div>
               <div>
                 <MetaRow>
-                  <Tag aria-label={`Category: ${item.category}`}>{item.category}</Tag>
+                  {/* <Tag aria-label={`Category: ${item.category}`}>{item.category}</Tag> */}
                   <DateText as="time" dateTime={parseDateTimeAttr(item.date)}>{item.date}</DateText>
                 </MetaRow>
                 <h5 id={`featured-side-title-${idx}`}>{item.title}</h5>

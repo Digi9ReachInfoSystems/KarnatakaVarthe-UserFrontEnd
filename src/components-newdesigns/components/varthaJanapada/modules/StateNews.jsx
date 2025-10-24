@@ -235,7 +235,7 @@ export default function StateNews({ onSeeMore }) {
                 <FeaturedImage $src={featured.image}>
                   <Overlay />
                   <FeaturedContent>
-                    <Badge>{featured.category}</Badge>
+                    {/* <Badge>{featured.category}</Badge> */}
                     <FeaturedTitle>{featured.title}</FeaturedTitle>
                   </FeaturedContent>
                 </FeaturedImage>
@@ -267,7 +267,7 @@ export default function StateNews({ onSeeMore }) {
                   <SmallCard>
                     <Thumb $src={item.image} role="img" aria-label={item.title} />
                     <SmallContent>
-                      <SmallBadge>{item.category}</SmallBadge>
+                      {/* <SmallBadge>{item.category}</SmallBadge> */}
                       <SmallTitle>{item.title}</SmallTitle>
                     </SmallContent>
                   </SmallCard>

@@ -167,7 +167,7 @@ export default function FeaturedNewsSection() {
         </LeftImageWrap>
         <MainContent onClick={() => navigate(`/newsdetails/${featuredNews._id}`)} style={{ cursor: 'pointer' }}>
           <MetaRow>
-            <Tag aria-label={`Category: ${featuredNews.category}`}>{featuredNews.category}</Tag>
+            {/* <Tag aria-label={`Category: ${featuredNews.category}`}>{featuredNews.category}</Tag> */}
             <DateText dateTime="2025-03-20">{featuredNews.date}</DateText>
           </MetaRow>
           <h2>{featuredNews.title.slice(0, 50) + "..."}</h2>
@@ -181,7 +181,7 @@ export default function FeaturedNewsSection() {
               </div>
               <div>
                 <MetaRow>
-                  <Tag aria-label={`Category: ${item.category}`}>{item.category}</Tag>
+                  {/* <Tag aria-label={`Category: ${item.category}`}>{item.category}</Tag> */}
                   <DateText dateTime="2025-03-20">{item.date}</DateText>
                 </MetaRow>
                 <h3>{item.title.slice(0, 50) + "..."}</h3>

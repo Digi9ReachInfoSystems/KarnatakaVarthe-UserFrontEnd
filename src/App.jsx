@@ -50,6 +50,7 @@ import MarchofKarnatakaV1 from "./components-newdesigns/components/marchofkarnat
 import Videos from "./components-newdesigns/components/videos/Videos";
 import ShortsVideo from "./components-newdesigns/components/varthaJanapada/modules/shortvideos/ShortVideosSection";
 import ShortsVIdeo from "./components-newdesigns/components/Shorts/ShortsVIdeo";
+import SavedListItems from "./components-newdesigns/components/SavedItems/SavedListItems";
 
 
 const App = () => {
@@ -115,6 +116,7 @@ const App = () => {
                   <Route path="/magazinesview/:id" element={<MagzineIdpage />} />
                   <Route path="/marchofkarnatakview/:id" element={<MarchKarnatakIdpage />} />
                   <Route path="/videos" element={<Videos />} />
+                  <Route path = '/SavedItems' element = {<SavedListItems />} />
                   <Route path="/shorts" element={<ShortsVIdeo />} />
                 </Route>
                 <Route path="/login" element={<Login />} />

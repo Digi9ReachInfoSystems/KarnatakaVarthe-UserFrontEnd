@@ -315,11 +315,11 @@ const MainContent = () => {
   return (
     <MainContentContainer as="article" role="article" aria-labelledby="article-title">
       {/* Location and Date Tags */}
-      {news.category && (
+      {/* {news.category && (
         <LocationTag as="div" aria-label="Article category">
           {news.category}
         </LocationTag>
-      )}
+      )} */}
       <DateTag as="time" dateTime={news.date}>{news.date}</DateTag>
       
       {/* Main Article Title */}

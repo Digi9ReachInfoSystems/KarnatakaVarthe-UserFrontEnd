@@ -358,7 +358,7 @@ export default function LatestNews() {
                 style={{ cursor: 'pointer' }}
               >
                 <MetaRow>
-                  <Badge aria-label={`Category: ${n.category}`}>{n.category}</Badge>
+                  {/* <Badge aria-label={`Category: ${n.category}`}>{n.category}</Badge> */}
                   <DateText as="time" dateTime={formatDate(n.date)}>{formatDate(n.date)}</DateText>
                 </MetaRow>
                 <Headline id={`latest-news-${idx}`} as="h4">{n.title}</Headline>
@@ -395,7 +395,7 @@ export default function LatestNews() {
             <FeatureOverlay aria-hidden="true" />
             <FeatureContent>
               <MetaRow>
-                <Badge aria-label="Category: {centerNews.category}">{centerNews.category}</Badge>
+                {/* <Badge aria-label="Category: {centerNews.category}">{centerNews.category}</Badge> */}
                 <DateText as="time" dateTime={formatDate(centerNews.date)}>{formatDate(centerNews.date)}</DateText>
               </MetaRow>
               <FeatureTitle id="featured-health-title" as="h4">
@@ -422,7 +422,7 @@ export default function LatestNews() {
                 style={{ cursor: 'pointer' }}
               >
                 <MetaRow>
-                  <Badge aria-label={`Category: ${n.category}`}>{n.category}</Badge>
+                  {/* <Badge aria-label={`Category: ${n.category}`}>{n.category}</Badge> */}
                   <DateText as="time" dateTime={formatDate(n.date)}>{formatDate(n.date)}</DateText>
                 </MetaRow>
                 <Headline id={`popular-news-${idx}`} as="h4">{n.title}</Headline>
