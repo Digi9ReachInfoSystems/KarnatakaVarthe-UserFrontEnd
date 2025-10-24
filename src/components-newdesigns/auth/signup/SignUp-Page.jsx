@@ -18,7 +18,7 @@ import {
   Spinner,
 } from "./SignUp-Page.styles";
 import { useToast } from "../../../context/ToastContext";
-import { checkuserExists } from "../../../services/auth/SignupApi";
+import { checkuserExists, UserSignupWithPhoneApi } from "../../../services/auth/SignupApi";
 import { RecaptchaVerifier } from "firebase/auth";
 import { auth } from "../../../config/firebaseConfig";
 import { useNavigate } from "react-router-dom";
@@ -36,6 +36,7 @@ const SignUp = () => {
   const [loading, setLoading] = useState(false);
   const [otpStep, setOtpStep] = useState(false);
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [confirmationResult, setConfirmationResult] = useState(null);
 const setupRecaptcha = () => {
   if (!window.recaptchaVerifier) {
     window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
@@ -54,20 +55,53 @@ const setupRecaptcha = () => {
           setLoading(false);
           return;
         }
-        setupRecaptcha();
         const res = await checkuserExists({ phone: `+91${formData.phone}` });
         if (res.exists) {
           showError("User with this phone number already exists.");
           setLoading(false);
           return;
         }
+        
+        // Setup reCAPTCHA and get the verifier
+        setupRecaptcha();
+        const appVerifier = window.recaptchaVerifier;
+        const fullPhoneNumber = `+91${formData.phone}`;
+
+       
+        const result = await signInWithPhoneNumber(auth, fullPhoneNumber, appVerifier);
+
+        // FIX: Save the confirmation result to state
+        setConfirmationResult(result);
         setOtpStep(true);
-      } else {
-        const isOtpValid = otp.every(digit => digit !== "");
-        if (isOtpValid) {
+        showSuccess("OTP sent to your phone number.");
+      }else {
+        const code = otp.join("");
+
+        if (code.length === 6 && confirmationResult) {
+          const result = await confirmationResult.confirm(code);
+          const firebaseUID = result.user.uid;
           showSuccess("OTP verified successfully!");
+          // Call signup API with phone data
+          const phoneData = {
+            firebaseUid: firebaseUID,
+            email: formData.email,
+            phone_Number: `+91${formData.phone}`,
+            displayName: formData.username,
+          };
+          try {
+            const signupRes = await UserSignupWithPhoneApi(phoneData);
+            if (signupRes.success) {
+              showSuccess("Signup completed successfully!");
+              // Optionally redirect or reset form
+              navigate("/signin");
+            } else {
+              showError(signupRes.message || "Signup failed.");
+            }
+          } catch (err) {
+            showError("Signup API error.");
+          }
         } else {
-          showError("Please enter a valid OTP");
+          showError("Please enter a valid 6-digit OTP");
         }
       }
     } catch (err) {
@@ -76,8 +110,7 @@ const setupRecaptcha = () => {
       setLoading(false);
     }
   };
-  {/* Recaptcha container for Firebase */}
-  <div id="recaptcha-container" style={{ display: 'none' }}></div>
+  
 
   return (
     <Container>
