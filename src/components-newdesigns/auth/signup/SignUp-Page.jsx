@@ -33,8 +33,8 @@ const SignUp = () => {
     email: "",
     displayName: "",
     password: "",
-    phone: "",
-    username: "",
+    phone: ""
+   
   });
   const [loading, setLoading] = useState(false);
   const [otpStep, setOtpStep] = useState(false);
@@ -61,8 +61,8 @@ const SignUp = () => {
           setLoading(false);
           return;
         }
-        const res = await checkuserExists({ phone: `+91${formData.phone}` });
-        if (res.exists) {
+        const res = await checkuserExists(`+91${formData.phone}`);
+        if (res.success) {
           showError("User with this phone number already exists.");
           setLoading(false);
           return;
@@ -95,7 +95,7 @@ const SignUp = () => {
             firebaseUid: firebaseUID,
             email: formData.email,
             phone_Number: `+91${formData.phone}`,
-            displayName: formData.username,
+            displayName: formData.displayName,
           };
           try {
             const signupRes = await UserSignupWithPhoneApi(phoneData);
@@ -148,9 +148,9 @@ const SignUp = () => {
             <Input
               type="text"
               placeholder="User name"
-              value={formData.username}
+              value={formData.displayName}
               onChange={(e) =>
-                setFormData({ ...formData, username: e.target.value })
+                setFormData({ ...formData, displayName: e.target.value })
               }
               disabled={otpStep}
             />
