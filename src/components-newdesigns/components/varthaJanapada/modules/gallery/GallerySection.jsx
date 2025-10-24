@@ -34,6 +34,11 @@ export default function GallerySection() {
     Kannada: "ಫೋಟೋ ಗ್ಯಾಲರಿ",
     Hindi: "फोटो गैलरी"
   }
+  const buttonText = {
+    English: "Show More ->",
+    Kannada: "ಹೆಚ್ಚು ತೋರಿಸಿ ->",
+    Hindi: "और दिखाएँ ->"
+  };
 
   // Fetch photos from API
   useEffect(() => {
@@ -184,7 +189,7 @@ export default function GallerySection() {
     return (
       <Section aria-label={headerText[language] || "Photo Gallery"}>
         <SectionHeader>
-          <SectionTitle>{headerText[language] || "Photo Gallery"}</SectionTitle>
+         
         </SectionHeader>
         <div style={{ textAlign: 'center', padding: '2rem', color: '#f44336' }}>
           {language === "English" ? error : 
@@ -201,6 +206,7 @@ export default function GallerySection() {
       <Section aria-label={headerText[language] || "Photo Gallery"}>
         <SectionHeader>
           <SectionTitle>{headerText[language] || "Photo Gallery"}</SectionTitle>
+          
         </SectionHeader>
         <div style={{ textAlign: 'center', padding: '2rem', color: '#666' }}>
           {language === "English" ? "No photos available" : 
@@ -231,6 +237,12 @@ export default function GallerySection() {
     <Section aria-label={headerText[language] || "Photo Gallery"}>
       <SectionHeader>
         <SectionTitle>{headerText[language] || "Photo Gallery"}</SectionTitle>
+         
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+              <a href="/" style={{ textDecoration: 'none', color: '#007BFF', fontWeight: 'bold' }}>
+                {buttonText[language] || "Show More"}
+              </a>
+            </div>
       </SectionHeader>
       <GalleryContainer role="region" aria-label="Gallery single row layout">
         {/* Left side images - dynamically change with carousel */}

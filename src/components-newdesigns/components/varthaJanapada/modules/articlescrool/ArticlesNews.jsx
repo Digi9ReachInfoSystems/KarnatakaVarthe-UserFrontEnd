@@ -36,9 +36,9 @@ export default function ArticlesNews() {
   
   // Header text translations
   const headerText = {
-    English: "Articles",
-    Kannada: "ಲೇಖನಗಳು",
-    Hindi: "लेख"
+    English: "District News",
+    Kannada: "ಜಿಲ್ಲಾ ಸುದ್ದಿ",
+    Hindi: "जिला समाचार"
   }
   
   // Get items per page based on screen size
@@ -141,6 +141,11 @@ export default function ArticlesNews() {
   const handleNext = () => {
     setCurrentIndex((prev) => Math.min(articles.length - itemsPerPage, prev + 1))
   }
+  const buttonText = {
+    English: "Show More ->",
+    Kannada: "ಹೆಚ್ಚು ತೋರಿಸಿ ->",
+    Hindi: "और दिखाएँ ->"
+  };
 
   const visibleArticles = articles.slice(currentIndex, currentIndex + itemsPerPage)
   const canGoPrevious = currentIndex > 0
@@ -167,6 +172,11 @@ export default function ArticlesNews() {
         {/* Section Header */}
         <SectionHeader>
           <Title id="articles-heading">{headerText[language] || "Articles"}</Title>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+                        <a href="/district" style={{ textDecoration: 'none', color: '#007BFF', fontWeight: 'bold' }}>
+                          {buttonText[language] || "Show More"}
+                        </a>
+                      </div>
         </SectionHeader>
 
         {/* Articles Carousel */}

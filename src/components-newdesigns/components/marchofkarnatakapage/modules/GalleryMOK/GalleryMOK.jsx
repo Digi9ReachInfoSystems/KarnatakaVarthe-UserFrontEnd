@@ -34,6 +34,11 @@ export default function GalleryMOK() {
     Kannada: "ಫೋಟೋ ಗ್ಯಾಲರಿ",
     Hindi: "फोटो गैलरी"
   }
+  const buttonText = {
+    English: "Show More ->",
+    Kannada: "ಹೆಚ್ಚು ತೋರಿಸಿ ->",
+    Hindi: "और दिखाएँ ->"
+  };
 
   // Fetch photos from API
   useEffect(() => {
@@ -231,6 +236,11 @@ export default function GalleryMOK() {
     <Section aria-label={headerText[language] || "Photo Gallery"}>
       <SectionHeader>
         <SectionTitle>{headerText[language] || "Photo Gallery"}</SectionTitle>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+              <a href="/gallery" style={{ textDecoration: 'none', color: '#007BFF', fontWeight: 'bold' }}>
+                {buttonText[language] || "Show More"}
+              </a>
+            </div>
       </SectionHeader>
       <GalleryContainer role="region" aria-label="Gallery single row layout">
         {/* Left side images - dynamically change with carousel */}
