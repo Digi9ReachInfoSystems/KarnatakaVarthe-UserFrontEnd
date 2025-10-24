@@ -47,7 +47,11 @@ const  ShortsCarouselsMOK = () => {
     Kannada: "ಶಾರ್ಟ್ಸ್",
     Hindi: "शॉर्ट्स"
   }
-
+  const buttonText = {
+    English: "Show More ->",
+    Kannada: "ಹೆಚ್ಚು  ತೋರಿಸಿ ->",
+    Hindi: "और दिखाएँ ->"
+  };
   // Function to limit title words (no limit for Kannada)
   const limitWords = (text, currentLanguage) => {
     if (!text) return ""
@@ -242,6 +246,11 @@ const  ShortsCarouselsMOK = () => {
     <CarouselContainer ref={containerRef} role="region" aria-labelledby="shorts-heading" tabIndex="0">
       <SectionHeader>
         <Title id="shorts-heading">{headerText[language] || "Shorts"}</Title>
+           <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+              <a href="/shorts" style={{ textDecoration: 'none', color: '#007BFF', fontWeight: 'bold' }}>
+                {buttonText[language] || "Show More"}
+              </a>
+            </div>
       </SectionHeader>
       <CarouselWrapper onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp} onTouchEnd={handleMouseUp}>
         {/* Navigation buttons */}
@@ -347,11 +356,7 @@ const  ShortsCarouselsMOK = () => {
               ))}
         </CarouselTrack>
       </CarouselWrapper>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
-              <a href="/shorts" style={{ textDecoration: 'none', color: '#007BFF', fontWeight: 'bold' }}>
-                {buttonText[language] || "Show More"}
-              </a>
-            </div>
+       
     </CarouselContainer>
   )
 }
