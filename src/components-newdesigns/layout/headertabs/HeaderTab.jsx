@@ -92,6 +92,15 @@ const HeaderTab = () => {
         Kannada: "ವೀಡಿಯೋಗಳು",
         Hindi: "वीडियो"
       }
+    },
+    { 
+      name: "Shorts",
+      path: "/shorts",
+      translations: {
+        English: "Shorts",
+        Kannada: "ಶಾರ್ಟ್ಸ್",
+        Hindi: "शॉर्ट्स"
+      }
     }
   ];
 

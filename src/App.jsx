@@ -48,6 +48,8 @@ import Error404 from "./components-newdesigns/layout/Error404/Error404";
 import MarchofKarnataka from "./components-newdesigns/pages/marchofkarnataka/Marchofkarnataka";
 import MarchofKarnatakaV1 from "./components-newdesigns/components/marchofkarnatakapage/MarchofKarnatakaV1";
 import Videos from "./components-newdesigns/components/videos/Videos";
+import ShortsVideo from "./components-newdesigns/components/varthaJanapada/modules/shortvideos/ShortVideosSection";
+import ShortsVIdeo from "./components-newdesigns/components/Shorts/ShortsVIdeo";
 
 
 const App = () => {
@@ -113,6 +115,7 @@ const App = () => {
                   <Route path="/magazinesview/:id" element={<MagzineIdpage />} />
                   <Route path="/marchofkarnatakview/:id" element={<MarchKarnatakIdpage />} />
                   <Route path="/videos" element={<Videos />} />
+                  <Route path="/shorts" element={<ShortsVIdeo />} />
                 </Route>
                 <Route path="/login" element={<Login />} />
                 {/* <Route path="/marchofkarnatakaV1" element={<MarchofKarnatakaV1 />} /> */}

@@ -208,9 +208,11 @@ const LongVideos = () => {
             ))}
           </SmallArticlesGrid>
         </ArticlesGrid>
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
-          <ViewMoreButton href="/videos">{buttonText[language] || "Show More"}</ViewMoreButton>
-        </div>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+              <a href="/videos" style={{ textDecoration: 'none', color: '#007BFF', fontWeight: 'bold' }}>
+                {buttonText[language] || "Show More"}
+              </a>
+            </div>
       </Container>
     </ArticlesSection>
   );

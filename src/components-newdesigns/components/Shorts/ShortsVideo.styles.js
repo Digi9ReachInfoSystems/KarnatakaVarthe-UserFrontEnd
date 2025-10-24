@@ -1,6 +1,5 @@
 import styled, { keyframes } from 'styled-components';
-import theme from '../../../../../theme/Theme';
-
+import theme from '../../../theme/Theme';
 export const ArticlesSection = styled.section`
   background-color: ${theme.colors.background};
 `;
@@ -8,6 +7,9 @@ export const ArticlesSection = styled.section`
 export const Container = styled.div`
   max-width: 100%;
   margin: 0 auto;
+  padding: ${theme.spacing1(9)} ${theme.spacing1(15)};
+
+
 `;
 
 export const SectionHeader = styled.div`
@@ -55,17 +57,12 @@ export const Title = styled.h2`
 `;
 
 export const ArticlesGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  justify-content: space-between;
   gap: ${theme.spacing(1)};
 
   @media (min-width: ${theme.breakpoints.tablet}) {
     gap: ${theme.spacing(2)};
-  }
-
-  @media (min-width: ${theme.breakpoints.desktop}) {
-    grid-template-columns: 1fr 1fr;
-    gap: ${theme.spacing(1)};
   }
 `;
 
@@ -76,21 +73,16 @@ export const MainArticle = styled.article`
 `;
 
 export const SmallArticlesGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  justify-content: space-between;
   gap: ${theme.spacing(1)};
 
   @media (min-width: ${theme.breakpoints.mobile}) {
-    grid-template-columns: 1fr 1fr;
     gap: ${theme.spacing(1.5)};
   }
 
   @media (min-width: ${theme.breakpoints.tablet}) {
     gap: ${theme.spacing(2)};
-  }
-
-  @media (min-width: ${theme.breakpoints.desktop}) {
-    gap: ${theme.spacing(1)};
   }
 `;
 export const ViewMoreButton = styled.a`
@@ -124,18 +116,30 @@ export const SmallArticle = styled.article`
   overflow: hidden;
   cursor: pointer;
   transition: all ${theme.transitions.fast};
-  padding: ${theme.spacing(0.5)};
+  padding: ${theme.spacing(1)};
+  border-radius: 12px;
+  background: ${theme.colors.background};
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 220px;
+  max-width: 1fr;
+  flex: 1 1 0;
 
   @media (min-width: ${theme.breakpoints.mobile}) {
-    padding: ${theme.spacing(0.75)};
+    padding: ${theme.spacing(1)};
+    min-width: 220px;
   }
 
   @media (min-width: ${theme.breakpoints.tablet}) {
-    padding: ${theme.spacing(1)};
+    padding: ${theme.spacing(1.25)};
+    min-width: 240px;
   }
 
   @media (min-width: ${theme.breakpoints.desktop}) {
-    padding: ${theme.spacing(0.5)};
+    padding: ${theme.spacing(1.5)};
+    min-width: 260px;
   }
 `;
 
@@ -333,22 +337,15 @@ const shimmer = keyframes`
   }
 `;
 
-export const ShimmerContainer = styled.div`
-  width: 100%;
-`;
+
 
 export const ShimmerArticlesGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  justify-content: space-between;
   gap: ${theme.spacing(1)};
 
   @media (min-width: ${theme.breakpoints.tablet}) {
     gap: ${theme.spacing(2)};
-  }
-
-  @media (min-width: ${theme.breakpoints.desktop}) {
-    grid-template-columns: 1fr 1fr;
-    gap: ${theme.spacing(1)};
   }
 `;
 
@@ -385,21 +382,16 @@ export const ShimmerMainArticle = styled.div`
 `;
 
 export const ShimmerSmallArticlesGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  justify-content: space-between;
   gap: ${theme.spacing(1)};
 
   @media (min-width: ${theme.breakpoints.mobile}) {
-    grid-template-columns: 1fr 1fr;
     gap: ${theme.spacing(1.5)};
   }
 
   @media (min-width: ${theme.breakpoints.tablet}) {
     gap: ${theme.spacing(2)};
-  }
-
-  @media (min-width: ${theme.breakpoints.desktop}) {
-    gap: ${theme.spacing(1)};
   }
 `;
 
@@ -434,3 +426,154 @@ export const ShimmerSmallArticle = styled.div`
     height: 180px;
   }
 `;
+export const VideoContainer = styled.div`
+  width: 100%;
+  padding: ${theme.spacing1(9)} ${theme.spacing1(15)};
+  box-sizing: border-box;
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    padding: ${theme.spacing1(6)} ${theme.spacing1(8)};
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    padding: ${theme.spacing1(4)} ${theme.spacing1(4)};
+  }
+`;
+
+export const VideoGridCard = styled.div`
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0.75rem;
+  }
+`;
+
+export const VideoCard = styled.div`
+  position: relative;
+  aspect-ratio: 9 / 16;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: translateY(-2px);
+  }
+`;
+
+export const VideoThumbnail = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+`;
+
+export const PlayIcon = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 64px;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+  &::after {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 20px solid ${theme.colors.primary};
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    margin-left: 4px;
+  }
+
+  ${VideoCard}:hover & {
+    transform: translate(-50%, -50%) scale(1.15);
+    background: ${theme.colors.white};
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    width: 52px;
+    height: 52px;
+
+    &::after {
+      border-left: 18px solid ${theme.colors.primary};
+      border-top: 11px solid transparent;
+      border-bottom: 11px solid transparent;
+      margin-left: 3px;
+    }
+  }
+`;
+
+export const VideoTitle = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: ${theme.spacing(2.5)} ${theme.spacing(1.5)};
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  color: ${theme.colors.white};
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    font-size: 12px;
+    padding: ${theme.spacing(2)} ${theme.spacing(1)};
+  }
+`;
+
+
+const shimmerAnimation = keyframes`
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+`
+
+export const ShimmerContainer = styled.div`
+  width: 100%;
+`
+
+export const ShimmerThumbnail = styled.div`
+  width: 100%;
+  aspect-ratio: 9/16;
+  border-radius: 0;
+  background: linear-gradient(
+    to right,
+    #f0f0f0 8%,
+    #e0e0e0 18%,
+    #f0f0f0 33%
+  );
+  background-size: 800px 104px;
+  animation: ${shimmerAnimation} 1.5s infinite linear;
+  margin-bottom: ${theme.spacing(1)};
+`
