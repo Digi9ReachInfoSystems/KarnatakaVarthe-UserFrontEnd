@@ -22,6 +22,7 @@ import {
   ShimmerContainer,
   ShimmerThumbnail,
   ShimmerTitle,
+  ViewMoreButton,
 } from "./ShortVideosSection.styles"
 
 const  ShortsCarousel = () => {
@@ -97,6 +98,11 @@ const  ShortsCarousel = () => {
     }
     fetchVideos()
   }, [])
+    const buttonText = {
+    English: "Show More",
+    Kannada: "ಹೆಚ್ಚು ತೋರಿಸಿ",
+    Hindi: "और दिखाएँ"
+  };
 
   useEffect(() => {
     const updateVisibleVideos = () => {
@@ -347,6 +353,11 @@ const  ShortsCarousel = () => {
               ))}
         </CarouselTrack>
       </CarouselWrapper>
+    <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+              <a href="/shorts" style={{ textDecoration: 'none', color: '#007BFF', fontWeight: 'bold' }}>
+                {buttonText[language] || "Show More"}
+              </a>
+            </div>
     </CarouselContainer>
   )
 }

@@ -116,18 +116,30 @@ export const SmallArticle = styled.article`
   overflow: hidden;
   cursor: pointer;
   transition: all ${theme.transitions.fast};
-  padding: ${theme.spacing(0.5)};
+  padding: ${theme.spacing(1)};
+  border-radius: 12px;
+  background: ${theme.colors.background};
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 220px;
+  max-width: 1fr;
+  flex: 1 1 0;
 
   @media (min-width: ${theme.breakpoints.mobile}) {
-    padding: ${theme.spacing(0.75)};
+    padding: ${theme.spacing(1)};
+    min-width: 220px;
   }
 
   @media (min-width: ${theme.breakpoints.tablet}) {
-    padding: ${theme.spacing(1)};
+    padding: ${theme.spacing(1.25)};
+    min-width: 240px;
   }
 
   @media (min-width: ${theme.breakpoints.desktop}) {
-    padding: ${theme.spacing(0.5)};
+    padding: ${theme.spacing(1.5)};
+    min-width: 260px;
   }
 `;
 
@@ -376,6 +388,19 @@ export const ShimmerSmallArticlesGrid = styled.div`
   justify-content: space-between;
   gap: ${theme.spacing(1)};
 
+  @media (min-width: ${theme.breakpoints.mobile}) {
+    gap: ${theme.spacing(1.5)};
+  }
+
+  @media (min-width: ${theme.breakpoints.tablet}) {
+    gap: ${theme.spacing(2)};
+  }
+`;
+export const ShimmerThumbnail = styled.div`
+  display: flex;
+  gap: ${theme.spacing(1)};
+  width: 100%;
+  
   @media (min-width: ${theme.breakpoints.mobile}) {
     gap: ${theme.spacing(1.5)};
   }

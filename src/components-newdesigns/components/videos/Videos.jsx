@@ -22,6 +22,7 @@ import {
   ShimmerSmallArticlesGrid,
   ShimmerSmallArticle,
   ViewMoreButton,
+  ShimmerThumbnail,
 } from './Video.Styles';
 
 function Videos() {
@@ -142,7 +143,14 @@ function Videos() {
             </SectionHeader>
     
             <ArticlesGrid>
-    
+            {loading ? (
+              <ShimmerThumbnail>
+                <ShimmerSmallArticle />
+                <ShimmerSmallArticle />
+                <ShimmerSmallArticle />
+                <ShimmerSmallArticle />
+              </ShimmerThumbnail>
+            ) : (
               <SmallArticlesGrid>
                 {smallArticles.map((article) => (
                   <SmallArticle key={article._id}>
@@ -175,6 +183,7 @@ function Videos() {
                   </SmallArticle>
                 ))}
               </SmallArticlesGrid>
+            )}
             </ArticlesGrid>
         
           </Container>

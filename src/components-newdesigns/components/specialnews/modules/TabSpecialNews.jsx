@@ -208,10 +208,10 @@ export default function TabSpecialNews() {
                 <FeatureExcerpt style={{ fontSize: '13px', marginBottom: '6px', color: '#444' }}>
                   {item.excerpt}
                 </FeatureExcerpt>
-                <FeatureTagsRow>
+                {/* <FeatureTagsRow>
                   <FeatureBadge>{item.category}</FeatureBadge>
                   <FeatureBadge>{item.readTime}</FeatureBadge>
-                </FeatureTagsRow>
+                </FeatureTagsRow> */}
               </div>
             </FeatureCard>
           ))}

@@ -54,6 +54,11 @@ const LongVideoMOK = () => {
     Kannada: "ಲೆಟೆಸ್ಟ್ ವಿಡಿಯೋಸ್",
     Hindi: "लेटेस्ट वीडियोज़"
   };
+  const buttonText = {
+    English: "Show More",
+    Kannada: "ಹೆಚ್ಚು ತೋರಿಸಿ",
+    Hindi: "और दिखाएँ"
+  };
   
   useEffect(() => {
     const fetchVideos = async () => {
@@ -220,6 +225,11 @@ const LongVideoMOK = () => {
             ))}
           </SmallArticlesGrid>
         </ArticlesGrid>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+              <a href="/videos" style={{ textDecoration: 'none', color: '#007BFF', fontWeight: 'bold' }}>
+                {buttonText[language] || "Show More"}
+              </a>
+            </div>
       </Container>
     </ArticlesSection>
   );

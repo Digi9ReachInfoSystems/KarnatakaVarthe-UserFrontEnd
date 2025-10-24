@@ -282,79 +282,100 @@ export const VideoOverlay = styled.div`
     opacity: 1;
   }
 `
+export const ViewMoreButton = styled.a`
+  display: inline-block;
+  width: fit-content;
+  background: ${theme.colors.primary};
+  color: ${theme.colors.white};
+  border-radius:8px;
+  padding: ${theme.spacing1(3)} ${theme.spacing1(5)};
+  font-weight: 500;
+  font-size: 12px;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(${theme.colors.primaryRgb || '0,0,0'}, 0.2);
+  transition: ${theme.transitions.fast};
 
+  &:hover {
+    filter: brightness(0.95);
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${theme.colors.white};
+    outline-offset: 2px;
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    padding: ${theme.spacing1(2)} ${theme.spacing1(4)};
+    font-size: 11px;
+  }
+`
 export const PlayButton = styled.button`
-  position: relative;
-  background: ${theme.colors.primaryVideo};
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.95);
   border: none;
-  border-radius: 8px;
-  width: 70px;
-  height: 50px;
+  border-radius: 50%;
+  width: 64px;
+  height: 64px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
-  z-index: 10;
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  pointer-events: auto;
+  z-index: 5;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 
-  &::after {
+  &::before {
     content: '';
     width: 0;
     height: 0;
-    border-left: 20px solid ${theme.colors.white};
+    border-left: 20px solid ${theme.colors.primary};
     border-top: 12px solid transparent;
     border-bottom: 12px solid transparent;
     margin-left: 4px;
   }
 
-  &:focus-visible {
-    outline-color: ${theme.colors.primary || "#0070f3"};
-    transform: scale(1.1);
-  }
-  
   &:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 16px rgba(255, 0, 0, 0.4);
+    transform: translate(-50%, -50%) scale(1.15);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    background: ${theme.colors.white};
   }
-  
+
   &:active {
-    transform: scale(0.98);
+    transform: translate(-50%, -50%) scale(1.05);
   }
-  
+
+  &:focus-visible {
+    outline: 3px solid ${theme.colors.primary};
+    outline-offset: 3px;
+  }
+
   @media (max-width: ${theme.breakpoints.tablet}) {
-    width: 60px;
-    height: 42px;
-    border-radius: 7px;
-    
-    &::after {
-      border-left: 16px solid ${theme.colors.white};
+    width: 56px;
+    height: 56px;
+
+    &::before {
+      border-left: 18px solid ${theme.colors.primary};
+      border-top: 11px solid transparent;
+      border-bottom: 11px solid transparent;
+      margin-left: 3px;
+    }
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    width: 48px;
+    height: 48px;
+
+    &::before {
+      border-left: 16px solid ${theme.colors.primary};
       border-top: 10px solid transparent;
       border-bottom: 10px solid transparent;
       margin-left: 3px;
     }
   }
-  
-  @media (max-width: 640px) {
-    width: 50px;
-    height: 35px;
-    border-radius: 6px;
-    
-    &::after {
-      border-left: 14px solid ${theme.colors.white};
-      border-top: 8px solid transparent;
-      border-bottom: 8px solid transparent;
-      margin-left: 3px;
-    }
-  }
-`
+`;
 
 // Video Info Components
 export const VideoInfo = styled.div`
