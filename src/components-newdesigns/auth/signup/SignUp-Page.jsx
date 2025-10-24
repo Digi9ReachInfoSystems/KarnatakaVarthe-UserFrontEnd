@@ -16,70 +16,68 @@ import {
   Input,
   SubmitButton,
   Spinner,
-  } from "./SignUp-Page.styles";
+} from "./SignUp-Page.styles";
 import { useToast } from "../../../context/ToastContext";
-import { SignupPageApi } from "../../../services/auth/SignupApi";
+import { checkuserExists } from "../../../services/auth/SignupApi";
+import { RecaptchaVerifier } from "firebase/auth";
+import { auth } from "../../../config/firebaseConfig";
 import { useNavigate } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react";
 
-
-  const SignUp = () => {
+const SignUp = () => {
   const { showSuccess, showError, showWarning } = useToast();
-  const Navigate = useNavigate();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     displayName: "",
     password: "",
+    phone: "",
+    username: "",
   });
   const [loading, setLoading] = useState(false);
-  const [show, setShow] = useState(false);
-
+  const [otpStep, setOtpStep] = useState(false);
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+const setupRecaptcha = () => {
+  if (!window.recaptchaVerifier) {
+    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+      size: 'invisible',
+      callback: () => {},
+    });
+  }
+};
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const payload = {
-        displayName: formData.username.trim(),
-        email: formData.email.trim().toLowerCase(),
-        password: formData.password,
-      };
-      if (!payload.displayName || !payload.email || !payload.password) {
-        showWarning("All fields are required");
-        return;
-      }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
-        showWarning("Invalid email format");
-        return;
-      }
-      const res = await SignupPageApi(payload);
-
-      if (res.success) {
-        showSuccess(
-          "Signup successful. Please check your email for verification."
-        );
-        setFormData({ email: "", username: "", password: "" });
-        Navigate("/signin");
+      if (!otpStep) {
+        if (!formData.phone || formData.phone.length !== 10) {
+          showWarning("Please enter a valid 10-digit phone number");
+          setLoading(false);
+          return;
+        }
+        setupRecaptcha();
+        const res = await checkuserExists({ phone: `+91${formData.phone}` });
+        if (res.exists) {
+          showError("User with this phone number already exists.");
+          setLoading(false);
+          return;
+        }
+        setOtpStep(true);
       } else {
-        showError("Signup failed. Please try again.");
-        if(res.message){
-          showError(res.message);
+        const isOtpValid = otp.every(digit => digit !== "");
+        if (isOtpValid) {
+          showSuccess("OTP verified successfully!");
+        } else {
+          showError("Please enter a valid OTP");
         }
       }
     } catch (err) {
-      console.log(err);
-      const errorMessage =
-      err?.response?.data?.message ||
-      err?.response?.data?.error ||
-      err?.message ||
-      "Something went wrong. Please try again.";
-  
-    showError(errorMessage);
-    console.error("Signup Error:", err);
-   
+      showError("Error during signup.");
     } finally {
       setLoading(false);
     }
   };
+  {/* Recaptcha container for Firebase */}
+  <div id="recaptcha-container" style={{ display: 'none' }}></div>
 
   return (
     <Container>
@@ -92,13 +90,12 @@ import { Eye, EyeOff } from "lucide-react";
             <Title>Sign up</Title>
           </HeaderLeft>
           <HeaderRight>
-            <AccountText>Have an Account ?</AccountText>
+            <AccountText>Have an Account?</AccountText>
             <StyledLink as={Link} to="/signin">
               Sign in
             </StyledLink>
           </HeaderRight>
         </Header>
-
         <Form onSubmit={handleSubmit}>
           <FormGroup>
             <Label>User name</Label>
@@ -106,9 +103,8 @@ import { Eye, EyeOff } from "lucide-react";
               type="text"
               placeholder="User name"
               value={formData.username}
-              onChange={(e) =>
-                setFormData({ ...formData, username: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+              disabled={otpStep}
             />
           </FormGroup>
           <FormGroup>
@@ -117,53 +113,74 @@ import { Eye, EyeOff } from "lucide-react";
               type="email"
               placeholder="Enter your email address"
               value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              disabled={otpStep}
             />
           </FormGroup>
-
           <FormGroup>
-            <Label>Enter your Password</Label>
-            <div style={{ position: "relative" }}>
+            <Label>Phone Number</Label>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <span style={{ padding: "8px 12px", background: "#f3f3f3", border: "1px solid #ccc", borderRadius: "4px 0 0 4px", fontSize: "14px" }}>+91</span>
               <Input
-                type={show ? "text" : "password"}
-                placeholder="Password"
-                value={formData.password}
-                style={{ paddingRight: "40px" }}
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
-              />
-              <button
-                type="button"
-                onClick={() => setShow((s) => !s)}
-                aria-label={show ? "Hide password" : "Show password"}
-                style={{
-                  position: "absolute",
-                  right: "12px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  padding: 0,
+                type="tel"
+                placeholder="Phone number"
+                value={formData.phone}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/[^0-9]/g, "").slice(0, 10);
+                  setFormData({ ...formData, phone: val });
                 }}
-              >
-                {show ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
+                maxLength={10}
+                style={{ borderRadius: "0 4px 4px 0", marginLeft: "-1px" }}
+                disabled={otpStep}
+              />
             </div>
           </FormGroup>
-
+          {otpStep && (
+            <FormGroup>
+              <Label>Enter OTP</Label>
+              <div style={{ display: "flex", gap: "8px" }}>
+                {otp.map((digit, idx) => (
+                  <Input
+                    key={idx}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={1}
+                    value={digit}
+                    style={{
+                      width: "56px",
+                      height: "56px",
+                      fontSize: "16px",
+                      textAlign: "center",
+                      border: "1px solid #585757ff",
+                      borderRadius: "4px",
+                      background: "#fff",
+                      color: "#222",
+                      
+                    }}
+                    onChange={e => {
+                      const val = e.target.value.replace(/[^0-9]/g, "");
+                      const newOtp = [...otp];
+                      newOtp[idx] = val;
+                      setOtp(newOtp);
+                      // Focus next box if filled
+                      if (val && idx < 5) {
+                        const next = document.getElementById(`otp-box-${idx+1}`);
+                        if (next) next.focus();
+                      }
+                    }}
+                    id={`otp-box-${idx}`}
+                  />
+                ))}
+              </div>
+            </FormGroup>
+          )}
           <SubmitButton type="submit" disabled={loading}>
-  {loading ? (
-    <>
-      <Spinner /> Signing up...
-    </>
-  ) : (
-    "Sign up"
-  )}
-</SubmitButton>
+            {loading ? (
+              <>
+                <Spinner /> {otpStep ? "Verifying OTP..." : "Sending OTP..."}
+              </>
+            ) : otpStep ? "Verify OTP" : "Send OTP"}
+          </SubmitButton>
         </Form>
       </Card>
     </Container>

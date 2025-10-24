@@ -17,3 +17,21 @@ export const SignupPageApi = async (userData) => {
     throw err;
   }
 };
+
+export const checkuserExists = async (phoneNumber) => {
+  try {
+    const response = await apiClient.post("/api/auth/checkuser-exists", { phoneNumber });
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const UserSignupWithPhoneApi = async (phoneData) => {
+  try {
+    const response = await apiClient.post("/api/auth/signup-with-phone", phoneData);
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+};
