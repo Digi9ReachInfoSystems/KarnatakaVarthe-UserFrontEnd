@@ -61,7 +61,7 @@ const SignUp = () => {
           setLoading(false);
           return;
         }
-        const res = await checkuserExists(`+91${formData.phone}`);
+        const res = await checkuserExists({ phone_Number: `+91${formData.phone}` });
         if (res.success) {
           showError("User with this phone number already exists.");
           setLoading(false);

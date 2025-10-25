@@ -18,9 +18,10 @@ export const SignupPageApi = async (userData) => {
   }
 };
 
-export const checkuserExists = async (phone_Number) => {
+export const checkuserExists = async (data) => {
   try {
-    const response = await apiClient.post("/api/auth/checkuser-exists", { phone_Number });
+    // data should be an object with either { phone_Number: "..." } or { email: "..." }
+    const response = await apiClient.post("/api/auth/checkuser-exists", data);
     return response.data;
   } catch (err) {
     throw err;
