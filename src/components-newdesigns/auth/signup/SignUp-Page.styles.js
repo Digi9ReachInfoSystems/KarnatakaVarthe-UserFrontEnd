@@ -187,6 +187,131 @@ export const GridContainer = styled.div`
   }
 `;
 
+export const SocialButtonsContainer = styled.div`
+  display: flex;
+  gap: ${theme.spacing(2)};
+  margin-bottom: ${theme.spacing(4)};
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    gap: ${theme.spacing(1.5)};
+    margin-bottom: ${theme.spacing(3)};
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    flex-direction: column;
+    gap: ${theme.spacing(1.5)};
+    width: 100%;
+  }
+`;
+
+export const IconButtonsWrapper = styled.div`
+  display: flex;
+  gap: ${theme.spacing(2)};
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    gap: ${theme.spacing(1.5)};
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    width: 100%;
+    gap: ${theme.spacing(1.5)};
+  }
+`;
+
+export const SocialButton = styled.button`
+  flex: 1;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background-color: #E9F1FF;
+  color: #4285F4;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-family: ${theme.fonts.body};
+  cursor: pointer;
+  transition: ${theme.transitions.fast};
+
+  &:hover {
+    background-color: #D3E3FD;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    font-size: 13px;
+    gap: 10px;
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    width: 100%;
+    height: 56px;
+    font-size: 15px;
+    
+    .icon {
+      width: 24px;
+      height: 24px;
+    }
+  }
+`;
+
+export const IconButton = styled.button`
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${theme.colors.gray[100]};
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: ${theme.transitions.fast};
+
+  &:hover {
+    background-color: ${theme.colors.gray[200]};
+  }
+
+  .icon {
+    width: 22px;
+    height: 22px;
+
+    &.facebook {
+      color: #1877f2;
+    }
+
+    &.apple {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    width: 44px;
+    height: 44px;
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    flex: 1;
+    height: 56px;
+    border-radius: 12px;
+
+    .icon {
+      width: 22px;
+      height: 22px;
+    }
+  }
+`;
+
 export const SubmitButton = styled.button`
   width: 100%;
   height: 56px;

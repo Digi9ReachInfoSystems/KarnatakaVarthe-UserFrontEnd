@@ -131,6 +131,7 @@ const SignIn = () => {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
       const res = await checkuserExists({ email: user.email });
+      console.log("User existence check:", res);
       if(!res.success){
         const phonedata = {
           firebaseUid: user.uid,
@@ -138,8 +139,10 @@ const SignIn = () => {
           displayName: user.displayName,
         };
         await UserSignupWithPhoneApi(phonedata)
+        console.log("User signed up successfully:", phonedata);
       }
      const loginRes = await LoginUsingPhoneApi(user.uid);
+     console.log("Login response:", loginRes);
       if(loginRes.success){
         showSuccess("Login successful!");
         Cookies.set("accessToken", loginRes.accessToken, {
