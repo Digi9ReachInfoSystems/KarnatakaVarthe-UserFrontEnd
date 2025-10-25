@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { FaFacebook, FaApple } from "react-icons/fa";
+import GoogleIcon from "../../../assets/Google.png";
 import {
   Container,
   Card,
@@ -10,6 +12,10 @@ import {
   Title,
   AccountText,
   StyledLink,
+  SocialButtonsContainer,
+  SocialButton,
+  IconButton,
+  IconButtonsWrapper,
   Form,
   FormGroup,
   Label,
@@ -21,10 +27,12 @@ import { useToast } from "../../../context/ToastContext";
 import {
   checkuserExists,
   UserSignupWithPhoneApi,
+  LoginUsingPhoneApi,
 } from "../../../services/auth/SignupApi";
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { RecaptchaVerifier, signInWithPhoneNumber, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../../../config/firebaseConfig";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const SignUp = () => {
   const { showSuccess, showError, showWarning } = useToast();
@@ -40,6 +48,7 @@ const SignUp = () => {
   const [otpStep, setOtpStep] = useState(false);
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [confirmationResult, setConfirmationResult] = useState(null);
+  const googleProvider = new GoogleAuthProvider();
 
   const setupRecaptcha = () => {
     window.recaptchaVerifier = new RecaptchaVerifier(
@@ -51,6 +60,61 @@ const SignUp = () => {
       }
     );
   };
+
+  const handleGoogleSignUp = async () => {
+    setLoading(true);
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+
+      // Check if user already exists
+      const res = await checkuserExists({ email: user.email });
+      
+      if (res.success) {
+        showWarning("User with this email already exists. Please sign in.");
+        setLoading(false);
+        navigate("/signin");
+        return;
+      }
+
+      // Create new user account
+      const userData = {
+        firebaseUid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+      };
+
+      const signupRes = await UserSignupWithPhoneApi(userData);
+      
+      if (signupRes.success) {
+        showSuccess("Signup completed successfully!");
+        
+        // Automatically log in the user
+        const loginRes = await LoginUsingPhoneApi(user.uid);
+        
+        if (loginRes.success) {
+          Cookies.set("accessToken", loginRes.accessToken, {
+            expires: 7,
+            secure: true,
+          });
+          Cookies.set("userId", loginRes.data._id, {
+            expires: 7,
+            secure: true,
+          });
+          navigate("/");
+        } else {
+          navigate("/signin");
+        }
+      } else {
+        showError(signupRes.message || "Signup failed.");
+      }
+    } catch (err) {
+      showError(err.message || "Error during Google sign-up.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -142,6 +206,20 @@ const SignUp = () => {
             </StyledLink>
           </HeaderRight>
         </Header>
+        <SocialButtonsContainer>
+          <SocialButton onClick={handleGoogleSignUp} disabled={loading}>
+            <img src={GoogleIcon} alt="Google" className="icon" />
+            Sign up with Google
+          </SocialButton>
+          <IconButtonsWrapper>
+            <IconButton>
+              <FaFacebook className="icon facebook" />
+            </IconButton>
+            <IconButton>
+              <FaApple className="icon apple" />
+            </IconButton>
+          </IconButtonsWrapper>
+        </SocialButtonsContainer>
         <Form onSubmit={handleSubmit}>
           <FormGroup>
             <Label>User name</Label>
