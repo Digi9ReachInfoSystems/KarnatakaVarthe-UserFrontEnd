@@ -298,7 +298,7 @@ export default function GallerySection() {
           </MainCard>
           
           {/* Caption OUTSIDE the card */}
-          <Caption>{active.title}</Caption>
+          {/* <Caption>{active.title}</Caption> */}
         </CentralCarousel>
 
         {/* Right side images - dynamically change with carousel */}
