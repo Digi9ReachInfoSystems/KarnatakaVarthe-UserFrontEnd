@@ -95,23 +95,21 @@ const SignIn = () => {
           try {
             const loginRes = await LoginUsingPhoneApi(firebaseUID);
             if (loginRes.success) {
+       
               showSuccess("Login successful!");
               Cookies.set("accessToken", loginRes.accessToken, {
                 expires: 7,
-                secure: true,
               });
-               Cookies.set("userId", loginRes.data._id, {
-          expires: 7,
-         secure: true,
-        });
-        Cookies.set("Phone", loginRes.data.phone || "", {
-          expires: 7,
-          secure: true,
-        });
-        Cookies.set("UserName", loginRes.data.displayName || "", {
-          expires: 7,
-          secure: true,
-        });
+              Cookies.set("userId", loginRes.data._id, {
+                expires: 7,
+              });
+              const cleanPhone = loginRes.data.phone_Number.startsWith('+91') ? loginRes.data.phone_Number.slice(3) : loginRes.data.phone_Number;
+              Cookies.set("Phone", cleanPhone, {
+                expires: 7,
+              });
+              Cookies.set("UserName", loginRes.data.displayName || "", {
+                expires: 7,
+              });
 
               navigate("/");
             } else {
@@ -155,19 +153,15 @@ const SignIn = () => {
         showSuccess("Login successful!");
         Cookies.set("accessToken", loginRes.accessToken, {
           expires: 7,
-          secure: true,
         });
         Cookies.set("userId", loginRes.data._id, {
           expires: 7,
-          secure: true,
         });
         Cookies.set("Email", loginRes.data.email || "", {
           expires: 7,
-          secure: true, 
         });
         Cookies.set("UserName", loginRes.data.displayName || "", {
           expires: 7,
-          secure: true,
         });
 
       }
