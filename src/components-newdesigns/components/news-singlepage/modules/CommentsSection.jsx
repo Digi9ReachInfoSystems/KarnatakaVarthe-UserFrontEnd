@@ -34,10 +34,12 @@ const CommentsSectionComponent = () => {
 
     
     if (userEmail) {
-      console.log("User email found:", userEmail);
+     
       setEmailOrPhone(userEmail);
       setIsEmailDisabled(true);
     } else if (userPhone) {
+      // Remove +91 prefix if it exists and show only 10 digits
+     
       setEmailOrPhone(userPhone);
       setIsEmailDisabled(true);
     }
@@ -127,17 +129,35 @@ const CommentsSectionComponent = () => {
             />
             
             <label htmlFor="comment-email" style={{ position: 'absolute', left: '-9999px' }}>Your email address (required)</label>
-            <CommentInput 
-              id="comment-email"
-              type="email" 
-              name="email"
-              placeholder="Your email address"
-              aria-required="true"
-              aria-describedby="email-hint"
-              value={emailOrPhone}
-              onChange={(e) => !isEmailDisabled && setEmailOrPhone(e.target.value)}
-              disabled={isEmailDisabled}
-            />
+            {Cookies.get("Phone") && !Cookies.get("Email") ? (
+              <div style={{ display: "flex", alignItems: "center" }}>
+    
+                <CommentInput 
+                  id="comment-email"
+                  type="text" 
+                  name="email"
+                  placeholder="Your Contact Details"
+                  aria-required="true"
+                  aria-describedby="email-hint"
+                  value={emailOrPhone}
+                  onChange={(e) => !isEmailDisabled && setEmailOrPhone(e.target.value)}
+                  disabled={isEmailDisabled}
+                  style={{ borderRadius: "0 4px 4px 0", marginLeft: "-1px" }}
+                />
+              </div>
+            ) : (
+              <CommentInput 
+                id="comment-email"
+                type="text" 
+                name="email"
+                placeholder="Your Contact Details"
+                aria-required="true"
+                aria-describedby="email-hint"
+                value={emailOrPhone}
+                onChange={(e) => !isEmailDisabled && setEmailOrPhone(e.target.value)}
+                disabled={isEmailDisabled}
+              />
+            )}
             <span id="email-hint" style={{ position: 'absolute', left: '-9999px' }}>
               Your email will not be published
             </span>
