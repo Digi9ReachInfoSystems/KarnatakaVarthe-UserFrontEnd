@@ -112,7 +112,18 @@ const MainContent = () => {
       return;
     }
   
-    const langKey = language === "English" ? "English" : language === "Hindi" ? "hindi" : "kannada";
+    const getLangKey = (lang) => {
+      switch (lang) {
+        case "English":
+          return "English";
+        case "Hindi":
+          return "hindi";
+        case "Kannada":
+        default:
+          return "kannada";
+      }
+    };
+    const langKey = getLangKey(language);
   
     try {
       // Extract audio URL based on language

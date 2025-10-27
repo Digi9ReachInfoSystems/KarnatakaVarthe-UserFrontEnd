@@ -238,11 +238,11 @@ export default function GallerySection() {
       <SectionHeader>
         <SectionTitle>{headerText[language] || "Photo Gallery"}</SectionTitle>
          
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+          {/* <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
               <a href="/" style={{ textDecoration: 'none', color: '#007BFF', fontWeight: 'bold' }}>
                 {buttonText[language] || "Show More"}
               </a>
-            </div>
+            </div> */}
       </SectionHeader>
       <GalleryContainer role="region" aria-label="Gallery single row layout">
         {/* Left side images - dynamically change with carousel */}
