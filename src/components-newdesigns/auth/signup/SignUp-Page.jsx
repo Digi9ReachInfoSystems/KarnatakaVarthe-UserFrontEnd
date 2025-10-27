@@ -211,14 +211,14 @@ const SignUp = () => {
             <img src={GoogleIcon} alt="Google" className="icon" />
             Sign up with Google
           </SocialButton>
-          <IconButtonsWrapper>
+          {/* <IconButtonsWrapper>
             <IconButton>
               <FaFacebook className="icon facebook" />
             </IconButton>
             <IconButton>
               <FaApple className="icon apple" />
             </IconButton>
-          </IconButtonsWrapper>
+          </IconButtonsWrapper> */}
         </SocialButtonsContainer>
         <Form onSubmit={handleSubmit}>
           <FormGroup>
