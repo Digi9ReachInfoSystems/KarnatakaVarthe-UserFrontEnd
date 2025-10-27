@@ -72,8 +72,8 @@ const NewsArticles = () => {
     }))
     const now = new Date()
     const popular = mappedData.filter(item => {
-      const diffHrs = (now - new Date(item.date)) / (1000 * 60 * 60)
-      return diffHrs >= 24 && diffHrs <= 72
+      const diffHrs = (now - new Date(item.date)) / (1000 * 60 * 60 * 24)
+      return diffHrs >= 0 && diffHrs <= 45
     })
     setNewsData(mappedData.slice(1))    
        // all except top one

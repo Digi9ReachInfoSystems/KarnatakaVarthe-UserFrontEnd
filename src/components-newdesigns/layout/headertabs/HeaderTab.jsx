@@ -101,6 +101,15 @@ const HeaderTab = () => {
         Kannada: "ಶಾರ್ಟ್ಸ್",
         Hindi: "शॉर्ट्स"
       }
+    },
+    { 
+      name: "Photos",
+      path: "/photos",
+      translations: {
+        English: "Photos",
+        Kannada: "ಫೋಟೋಗಳು",
+        Hindi: "फोटो"
+      }
     }
   ];
 

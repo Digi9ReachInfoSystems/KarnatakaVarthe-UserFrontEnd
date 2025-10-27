@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import React from 'react'
 import Cookies from "js-cookie";
 import {
@@ -23,11 +23,26 @@ import { useParams } from 'react-router-dom';
 
 const CommentsSectionComponent = () => {
   const { showSuccess, showError, showWarning } = useToast();
-   const newsId = useParams().id
+  const newsId = useParams().id
+  const [emailOrPhone, setEmailOrPhone] = useState('');
+  const [isEmailDisabled, setIsEmailDisabled] = useState(false);
+  const username = Cookies.get("UserName");
 
+  useEffect(() => {
+    const userEmail = Cookies.get("Email");
+    const userPhone = Cookies.get("Phone");
 
-  
- 
+    
+    if (userEmail) {
+      console.log("User email found:", userEmail);
+      setEmailOrPhone(userEmail);
+      setIsEmailDisabled(true);
+    } else if (userPhone) {
+      setEmailOrPhone(userPhone);
+      setIsEmailDisabled(true);
+    }
+  }, []);
+
   const handleSubmit = async(e) => {
     e.preventDefault()
     
@@ -105,7 +120,9 @@ const CommentsSectionComponent = () => {
               name="name"
               placeholder="Your name"
               aria-required="true"
-             
+              value={username || ''}
+            
+              disabled={username}
 
             />
             
@@ -117,7 +134,9 @@ const CommentsSectionComponent = () => {
               placeholder="Your email address"
               aria-required="true"
               aria-describedby="email-hint"
-             
+              value={emailOrPhone}
+              onChange={(e) => !isEmailDisabled && setEmailOrPhone(e.target.value)}
+              disabled={isEmailDisabled}
             />
             <span id="email-hint" style={{ position: 'absolute', left: '-9999px' }}>
               Your email will not be published
@@ -127,13 +146,13 @@ const CommentsSectionComponent = () => {
             <CommentTextarea 
               id="comment-text"
               name="comment"
-              placeholder="Write your review"
+              placeholder="Write your comment here..."
               aria-required="true"
               required
             />
             
             <SubmitButton type="submit">
-              SUBMIT
+              Submit Comment
             </SubmitButton>
           </CommentForm>
         </FormSection>

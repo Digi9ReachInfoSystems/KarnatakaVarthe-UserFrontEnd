@@ -104,6 +104,14 @@ const SignIn = () => {
           expires: 7,
          secure: true,
         });
+        Cookies.set("Phone", loginRes.data.phone || "", {
+          expires: 7,
+          secure: true,
+        });
+        Cookies.set("UserName", loginRes.data.displayName || "", {
+          expires: 7,
+          secure: true,
+        });
 
               navigate("/");
             } else {
@@ -153,6 +161,15 @@ const SignIn = () => {
           expires: 7,
           secure: true,
         });
+        Cookies.set("Email", loginRes.data.email || "", {
+          expires: 7,
+          secure: true, 
+        });
+        Cookies.set("UserName", loginRes.data.displayName || "", {
+          expires: 7,
+          secure: true,
+        });
+
       }
       
       navigate("/");

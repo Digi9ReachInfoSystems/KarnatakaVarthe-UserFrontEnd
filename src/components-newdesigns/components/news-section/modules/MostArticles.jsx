@@ -219,28 +219,7 @@ export default function TabSection() {
               ))}
             </SideList>
 
-            {hasMore && (
-              <SeeMoreWrap>
-                <SeeMoreBtn
-                  type="button"
-                  onClick={handleShowMore}
-                  aria-label="Load more Karnataka news articles"
-                >
-                  Show More
-                </SeeMoreBtn>
-              </SeeMoreWrap>
-            )}
-            {showingAll && (
-              <SeeMoreWrap>
-                <SeeMoreBtn
-                  type="button"
-                  onClick={handleShowLess}
-                  aria-label="Show less Karnataka news articles"
-                >
-                  Show Less
-                </SeeMoreBtn>
-              </SeeMoreWrap>
-            )}
+     
           </Sidebar>
         </Layout>
       </Container>
