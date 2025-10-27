@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { useEffect } from "react";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_Firebase_API_KEY,

@@ -237,7 +237,7 @@ export default function GalleryMOK() {
       <SectionHeader>
         <SectionTitle>{headerText[language] || "Photo Gallery"}</SectionTitle>
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
-              <a href="/gallery" style={{ textDecoration: 'none', color: '#007BFF', fontWeight: 'bold' }}>
+              <a href="/photos" style={{ textDecoration: 'none', color: '#007BFF', fontWeight: 'bold' }}>
                 {buttonText[language] || "Show More"}
               </a>
             </div>

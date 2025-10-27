@@ -202,7 +202,7 @@ import { useNavigate } from "react-router-dom"
               More District News
             </h3>
             <SideList role="list">
-              {smallCardNews.map((item) => (
+              {allSmallCardNews.map((item) => (
                 <SideItem 
                   key={item.id} 
                   role="listitem"
@@ -218,29 +218,7 @@ import { useNavigate } from "react-router-dom"
               ))}
             </SideList>
             
-            {hasMore && (
-              <SeeMoreWrap>
-                <SeeMoreBtn 
-                  type="button" 
-                  onClick={handleShowMore}
-                  aria-label="Load more district news articles"
-                >
-                  Show More
-                </SeeMoreBtn>
-              </SeeMoreWrap>
-            )}
-
-            {showingAll && (
-              <SeeMoreWrap>
-                <SeeMoreBtn 
-                  type="button" 
-                  onClick={handleShowLess}
-                  aria-label="Show less district news articles"
-                >
-                  Show Less
-                </SeeMoreBtn>
-              </SeeMoreWrap>
-            )}
+  
           </Sidebar>
         </Layout>
       </Container>

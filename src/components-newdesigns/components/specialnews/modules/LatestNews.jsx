@@ -236,8 +236,8 @@ export default function LatestNews() {
       })
       const now = new Date()
       const popular = mappedData.filter(item => {
-        const diffHrs = (now - new Date(item.date)) / (1000 * 60 * 60)
-        return diffHrs >= 24 && diffHrs <= 72
+        const diffDays = (now - new Date(item.date)) / (1000 * 60 * 60 * 24)
+        return diffDays >= 0 && diffDays <= 45
       })
       setNewsData(mappedData)       // all except top one
     setLatestNews(mappedData.slice(0, 1))  
@@ -430,11 +430,6 @@ export default function LatestNews() {
                 <Divider aria-hidden="true" />
               </Item>
             ))}
-            {popularNews.length > 4 && (
-              <SeeMoreBtn type="button" aria-label="Load more popular news articles">
-                See More
-              </SeeMoreBtn>
-            )}
           </List>
         </Column>
       </Grid>

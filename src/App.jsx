@@ -51,6 +51,7 @@ import Videos from "./components-newdesigns/components/videos/Videos";
 import ShortsVideo from "./components-newdesigns/components/varthaJanapada/modules/shortvideos/ShortVideosSection";
 import ShortsVIdeo from "./components-newdesigns/components/Shorts/ShortsVIdeo";
 import SavedListItems from "./components-newdesigns/components/SavedItems/SavedListItems";
+import ShowPhotos from "./components-newdesigns/components/photos/ShowPhotos";
 
 
 const App = () => {
@@ -118,6 +119,7 @@ const App = () => {
                   <Route path="/videos" element={<Videos />} />
                   <Route path = '/SavedItems' element = {<SavedListItems />} />
                   <Route path="/shorts" element={<ShortsVIdeo />} />
+                  <Route path="/photos" element={<ShowPhotos />} />
                 </Route>
                 <Route path="/login" element={<Login />} />
                 {/* <Route path="/marchofkarnatakaV1" element={<MarchofKarnatakaV1 />} /> */}

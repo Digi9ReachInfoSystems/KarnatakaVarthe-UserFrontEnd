@@ -32,214 +32,49 @@ export const Container = styled.div`
   }
 `
 
-export const Tabs = styled.nav`
-  display: flex;
-  flex-wrap: wrap;
-  gap: ${theme.spacing(4)};
-  align-items: center;
-  border-bottom: 1px solid ${theme.colors.gray[200]};
-  padding-bottom: ${theme.spacing(1.5)};
-  margin-bottom: ${theme.spacing(4)};
-
-  @media (max-width: ${theme.breakpoints.mobile}) {
-    flex-wrap: nowrap;
-    gap: ${theme.spacing(1.5)};
-    padding-bottom: ${theme.spacing(1)};
-    margin-bottom: ${theme.spacing(2.5)};
-    overflow-x: auto;
-    overflow-y: hidden;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    -webkit-overflow-scrolling: touch;
-    padding-left: ${theme.spacing(1)};
-    padding-right: ${theme.spacing(1)};
-    
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  }
-
-  @media (min-width: 481px) and (max-width: ${theme.breakpoints.tablet}) {
-    flex-wrap: nowrap;
-    gap: ${theme.spacing(2)};
-    padding-bottom: ${theme.spacing(1.25)};
-    margin-bottom: ${theme.spacing(3)};
-    overflow-x: auto;
-    overflow-y: hidden;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    -webkit-overflow-scrolling: touch;
-    padding-left: ${theme.spacing(1.5)};
-    padding-right: ${theme.spacing(1.5)};
-    
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  }
-
-  @media (min-width: 769px) and (max-width: ${theme.breakpoints.desktop}) {
-    flex-wrap: nowrap;
-    gap: ${theme.spacing(3)};
-    overflow-x: auto;
-    overflow-y: hidden;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    -webkit-overflow-scrolling: touch;
-    
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  }
-`
-
-export const TabButton = styled.button`
-  background: transparent;
-  border: 0;
-  padding: ${theme.spacing(1.5)} ${theme.spacing(2)};
-  font-size: ${theme.fontSizes.large};
-  cursor: pointer;
-  position: relative;
-  color: ${(p) => (p.$active ? theme.colors.black : theme.colors.gray[600])};
-  outline: none;
-  font-weight: 500;
-  white-space: nowrap;
-  flex-shrink: 0;
-  min-width: fit-content;
-
-  @media (max-width: ${theme.breakpoints.mobile}) {
-    padding: ${theme.spacing(0.75)} ${theme.spacing(1.25)};
-    font-size: 14px;
-    font-weight: 600;
-    border-radius: 6px;
-    transition: all 0.2s ease;
-    
-    &:hover {
-      background: ${theme.colors.gray[50]};
-    }
-  }
-
-  @media (min-width: 481px) and (max-width: ${theme.breakpoints.tablet}) {
-    padding: ${theme.spacing(1)} ${theme.spacing(1.5)};
-    font-size: 15px;
-    font-weight: 600;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-    
-    &:hover {
-      background: ${theme.colors.gray[50]};
-    }
-  }
-
-  &:after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -13px;
-    height: 3px;
-    width: ${(p) => (p.$active ? "100%" : "0")};
-    background: ${theme.colors.black};
-    transition: width ${theme.transitions.fast};
-
-    @media (max-width: ${theme.breakpoints.mobile}) {
-      bottom: -9px;
-      height: 2px;
-    }
-    
-    @media (min-width: 481px) and (max-width: ${theme.breakpoints.tablet}) {
-      bottom: -11px;
-      height: 2.5px;
-    }
-  }
-
-  &:hover {
-    color: ${theme.colors.primary};
-  }
-`
 
 export const Layout = styled.div`
-  display: grid;
-  grid-template-columns: 2fr 1fr;
+  display: flex;
   gap: ${theme.spacing(4)};
 
-  @media (max-width: ${theme.breakpoints.mobile}) {
-    grid-template-columns: 1fr;
-    gap: ${theme.spacing(2.5)};
-  }
-
-  @media (min-width: 481px) and (max-width: ${theme.breakpoints.tablet}) {
-    grid-template-columns: 1fr;
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    flex-direction: column;
     gap: ${theme.spacing(3)};
-  }
-
-  @media (min-width: 769px) and (max-width: ${theme.breakpoints.desktop}) {
-    grid-template-columns: 2fr 1fr;
-    gap: ${theme.spacing(3.5)};
   }
 `
 
 export const Grid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: ${theme.spacing(8)};
+  display: flex;
+
+  flex-direction: row;
+  gap: ${theme.spacing(3)};
+  flex: 2;
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    grid-template-columns: 1fr;
     gap: ${theme.spacing(2.5)};
-    padding: 0 ${theme.spacing(0.5)};
-  }
-
-  @media (min-width: 481px) and (max-width: ${theme.breakpoints.tablet}) {
-    grid-template-columns: 1fr 1fr;
-    gap: ${theme.spacing(3)};
-    padding: 0 ${theme.spacing(1)};
-  }
-
-  @media (min-width: 769px) and (max-width: ${theme.breakpoints.desktop}) {
-    grid-template-columns: 1fr 1fr;
-    gap: ${theme.spacing(3)};
   }
 `
 
 export const Card = styled.article`
-  background: ${theme.colors.background};
+  background: ${theme.colors.white};
+  border-radius: ${theme.borderRadius.medium};
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 
-  @media (max-width: ${theme.breakpoints.mobile}) {
-    &:hover {
-      transform: translateY(-2px);
-    }
-  }
-
-  @media (min-width: 481px) and (max-width: ${theme.breakpoints.tablet}) {
-    &:hover {
-      transform: translateY(-3px);
-    }
-  }
-
-  @media (min-width: 769px) {
-    &:hover {
-      transform: translateY(-4px);
-    }
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px rgba(0,0,0,0.08);
   }
 `
 
 export const ImageWrap = styled.div`
   width: 100%;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 16 / 10;
   background: ${theme.colors.gray[100]};
   overflow: hidden;
-
-
-  @media (max-width: ${theme.breakpoints.mobile}) {
-    aspect-ratio: 16 / 10;
-  }
-
-  @media (min-width: 481px) and (max-width: ${theme.breakpoints.tablet}) {
-    aspect-ratio: 16 / 9;
-  }
 
   img {
     width: 100%;
@@ -247,10 +82,10 @@ export const ImageWrap = styled.div`
     object-fit: cover;
     display: block;
     transition: transform 0.3s ease;
+  }
 
-    &:hover {
-      transform: scale(1.05);
-    }
+  ${Card}:hover & img {
+    transform: scale(1.05);
   }
 `
 
@@ -340,10 +175,12 @@ export const Excerpt = styled.p`
 `
 
 export const Sidebar = styled.aside`
-  border: none;
+  flex: 1;
+  background: ${theme.colors.gray[50]};
+  border-radius: ${theme.borderRadius.medium};
+  border: 1px solid ${theme.colors.gray[100]};
   padding: ${theme.spacing(2.5)};
   height: fit-content;
-  border-radius: 0;
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     padding: ${theme.spacing(2)};
