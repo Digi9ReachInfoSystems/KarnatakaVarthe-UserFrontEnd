@@ -180,14 +180,29 @@ export default function LatestNotification({ notifications = [] }) {
         ) : notificationData.length > 0 ? (
           notificationData.map((notification, i) => {
             const { text, link } = getNotificationContent(notification, i)
+            // Check if link is external (starts with http:// or https://)
+            const isExternalLink = link && (link.startsWith('http://') || link.startsWith('https://'))
+            
             return (
               <ListItem key={i}>
                 <ListIndex aria-hidden="true">{i + 1}.</ListIndex>
                 <ListBody>
                   {text}
-                  <ListLink as={Link} to={link} aria-label={`${t.ariaLabel} ${i + 1}`}>
-                    {t.seeMore} <span aria-hidden="true">→</span>
-                  </ListLink>
+                  {isExternalLink ? (
+                    <ListLink 
+                      as="a" 
+                      href={link} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      aria-label={`${t.ariaLabel} ${i + 1}`}
+                    >
+                      {t.seeMore} <span aria-hidden="true">→</span>
+                    </ListLink>
+                  ) : (
+                    <ListLink as={Link} to={link} aria-label={`${t.ariaLabel} ${i + 1}`}>
+                      {t.seeMore} <span aria-hidden="true">→</span>
+                    </ListLink>
+                  )}
                 </ListBody>
               </ListItem>
             )
