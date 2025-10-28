@@ -1,9 +1,9 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaFacebook, FaApple } from "react-icons/fa";
 import GoogleIcon from "../../../assets/Google.png";
 import { Spinner } from "./Sign-In.styles";
+
 import {
   Container,
   Card,
@@ -27,10 +27,19 @@ import {
 import { useToast } from "../../../context/ToastContext";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import { RecaptchaVerifier, signInWithPhoneNumber,GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 import { auth } from "../../../config/firebaseConfig";
-import { checkuserExists, UserSignupWithPhoneApi } from "../../../services/auth/SignupApi";
+import {
+  checkuserExists,
+  UserSignupWithPhoneApi,
+} from "../../../services/auth/SignupApi";
 import { LoginUsingPhoneApi } from "../../../services/auth/SignupApi";
+import { Cookie } from "lucide-react";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
@@ -65,7 +74,9 @@ const SignIn = () => {
           setLoading(false);
           return;
         }
-        const res = await checkuserExists({ phone_Number: `+91${formData.phone}` });
+        const res = await checkuserExists({
+          phone_Number: `+91${formData.phone}`,
+        });
         console.log("User existence check:", res);
         if (!res.success) {
           showError("No user found with this phone number.");
@@ -91,26 +102,39 @@ const SignIn = () => {
           const firebaseUID = result.user.uid;
           showSuccess("OTP verified successfully!");
           // Call login API with phone data
-   
+
           try {
             const loginRes = await LoginUsingPhoneApi(firebaseUID);
+            console.log("Login response:", loginRes);
             if (loginRes.success) {
-       
               showSuccess("Login successful!");
-              Cookies.set("accessToken", loginRes.accessToken, {
+              Cookies.set("token", loginRes.accessToken, {
                 expires: 7,
+
+                secure: true,
+              });
+              Cookies.set("firebaseUID", firebaseUID, {
+                expires: 7,
+                secure: true,
               });
               Cookies.set("userId", loginRes.data._id, {
                 expires: 7,
-              });
-              const cleanPhone = loginRes.data.phone_Number.startsWith('+91') ? loginRes.data.phone_Number.slice(3) : loginRes.data.phone_Number;
-              Cookies.set("Phone", cleanPhone, {
-                expires: 7,
-              });
-              Cookies.set("UserName", loginRes.data.displayName || "", {
-                expires: 7,
+
+                secure: true,
               });
 
+              Cookies.set("Phone", loginRes.data.phone_Number, {
+                expires: 7,
+                secure: true,
+              
+              });
+
+              Cookies.set("UserName", loginRes.data.displayName || "", {
+                expires: 7,
+
+                secure: true,
+              });
+              
               navigate("/");
             } else {
               showError(loginRes.message || "Login failed.");
@@ -138,20 +162,24 @@ const SignIn = () => {
       const user = result.user;
       const res = await checkuserExists({ email: user.email });
       console.log("User existence check:", res);
-      if(!res.success){
+      if (!res.success) {
         const phonedata = {
           firebaseUid: user.uid,
           email: user.email,
           displayName: user.displayName,
         };
-        await UserSignupWithPhoneApi(phonedata)
+        await UserSignupWithPhoneApi(phonedata);
         console.log("User signed up successfully:", phonedata);
       }
-     const loginRes = await LoginUsingPhoneApi(user.uid);
-     console.log("Login response:", loginRes);
-      if(loginRes.success){
+      const loginRes = await LoginUsingPhoneApi(user.uid);
+      console.log("Login response:", loginRes);
+      if (loginRes.success) {
         showSuccess("Login successful!");
-        Cookies.set("accessToken", loginRes.accessToken, {
+        Cookies.set("firebaseUID", loginRes.data.firebaseUid, {
+                expires: 7,
+                secure: true,
+              });
+        Cookies.set("token", loginRes.accessToken, {
           expires: 7,
         });
         Cookies.set("userId", loginRes.data._id, {
@@ -163,9 +191,8 @@ const SignIn = () => {
         Cookies.set("UserName", loginRes.data.displayName || "", {
           expires: 7,
         });
-
       }
-      
+
       navigate("/");
     } catch (err) {
       showError(err.message || "Error during Google sign-in.");
@@ -211,19 +238,25 @@ const SignIn = () => {
             <FormGroup>
               <Label>Enter your Phone Number</Label>
               <div style={{ display: "flex", alignItems: "center" }}>
-                <span style={{
-                  padding: "8px 12px",
-                  background: "#f3f3f3",
-                  border: "1px solid #ccc",
-                  borderRadius: "4px 0 0 4px",
-                  fontSize: "14px"
-                }}>+91</span>
+                <span
+                  style={{
+                    padding: "8px 12px",
+                    background: "#f3f3f3",
+                    border: "1px solid #ccc",
+                    borderRadius: "4px 0 0 4px",
+                    fontSize: "14px",
+                  }}
+                >
+                  +91
+                </span>
                 <Input
                   type="tel"
                   placeholder="Phone number"
                   value={formData.phone || ""}
                   onChange={(e) => {
-                    const val = e.target.value.replace(/[^0-9]/g, "").slice(0, 10);
+                    const val = e.target.value
+                      .replace(/[^0-9]/g, "")
+                      .slice(0, 10);
                     setFormData({ ...formData, phone: val });
                   }}
                   maxLength={10}
@@ -259,7 +292,9 @@ const SignIn = () => {
                       setOtp(newOtp);
                       // Focus next box if filled
                       if (val && idx < 5) {
-                        const next = document.getElementById(`otp-box-${idx + 1}`);
+                        const next = document.getElementById(
+                          `otp-box-${idx + 1}`
+                        );
                         if (next) next.focus();
                       }
                     }}

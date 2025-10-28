@@ -31,6 +31,15 @@ export const ContentWrapper = styled.div`
 
 export const CommentsSection = styled.div`
   margin-bottom: ${theme.spacing(4)};
+  max-height: ${theme.spacing(60)};
+  overflow-y: auto;
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    max-height: 300px;
+  }
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    max-height: 200px;
+  }
 `
 
 export const FormSection = styled.div`
@@ -60,6 +69,7 @@ export const CommentsTitle = styled.h3`
 
 export const CommentItem = styled.div`
   margin-bottom: ${theme.spacing(3.75)};
+ 
   
   @media (max-width: ${theme.breakpoints.tablet}) {
     margin-bottom: ${theme.spacing(3)};

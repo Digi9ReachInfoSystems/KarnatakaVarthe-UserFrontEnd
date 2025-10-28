@@ -75,16 +75,16 @@ export const LogoLink = styled(Link)`
   text-decoration: none;
   border-radius: ${theme.borderRadius.small};
   outline-offset: 2px;
-  
+
   &:focus {
     outline: 3px solid ${theme.colors.primary};
     outline-offset: 4px;
   }
-  
+
   &:focus:not(:focus-visible) {
     outline: none;
   }
-  
+
   &:focus-visible {
     outline: 3px solid ${theme.colors.primary};
     outline-offset: 4px;
@@ -137,18 +137,28 @@ export const SiteTitle = styled.h2`
   overflow-wrap: break-word;
 
   @media (max-width: ${theme.breakpoints.tablet}) {
-    font-size: 0.9rem;
-    line-height: 1.4;
+    font-size: 0.75rem;
+    line-height: 1.3;
+  }
+
+  @media (max-width: 1150px) {
+    font-size: 1rem;
+    line-height: 1.3;
+  }
+
+  @media (max-width: 600px) {
+    font-size: 0.7rem;
+    line-height: 1.3;
   }
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     text-align: center;
-    line-height: 1.4;
+    line-height: 1.3;
   }
 
-  @media (max-width: 480px) {
-    font-size: 0.8rem;
+  @media (max-width: 400px) {
+    font-size: 0.7rem;
   }
 `;
 
@@ -164,18 +174,28 @@ export const MainTitle = styled.h2`
   overflow-wrap: break-word;
 
   @media (max-width: ${theme.breakpoints.tablet}) {
-    font-size: 1.1rem;
-    line-height: 1.4;
+    font-size: 0.9rem;
+    line-height: 1.3;
+  }
+
+  @media (max-width: 1150px) {
+    font-size: 1rem;
+    line-height: 1.3;
+  }
+
+  @media (max-width: 600px) {
+    font-size: 0.8rem;
+    line-height: 1.3;
   }
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     text-align: center;
-    line-height: 1.4;
+    line-height: 1.3;
   }
 
-  @media (max-width: 480px) {
-    font-size: 0.85rem;
+  @media (max-width: 400px) {
+    font-size: 0.75rem;
   }
 `;
 
@@ -191,18 +211,23 @@ export const Subtitle = styled.h3`
   overflow-wrap: break-word;
 
   @media (max-width: ${theme.breakpoints.tablet}) {
-    font-size: 0.9rem;
-    line-height: 1.4;
+    font-size: 0.75rem;
+    line-height: 1.3;
+  }
+
+  @media (max-width: 600px) {
+    font-size: 0.7rem;
+    line-height: 1.3;
   }
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     text-align: center;
-    line-height: 1.4;
+    line-height: 1.3;
   }
 
-  @media (max-width: 480px) {
-    font-size: 0.8rem;
+  @media (max-width: 400px) {
+    font-size: 0.7rem;
   }
 `;
 
@@ -214,6 +239,18 @@ export const CMSection = styled.div`
   flex: 1;
   min-width: 300px;
   gap: ${theme.spacing(1)};
+
+  // For tablets (including iPads in portrait mode)
+  @media (max-width: 866px) {
+    min-width: 200px;
+    gap: ${theme.spacing(3)};
+  }
+
+  // For iPads in landscape mode and other mini tablets
+  @media (max-width: 1150px) {
+    min-width: 150px;
+    gap: ${theme.spacing(0.2)};
+  }
 
   @media (max-width: ${theme.breakpoints.tablet}) {
     min-width: auto;
@@ -243,21 +280,33 @@ export const CMImage = styled.img`
   flex-shrink: 0;
   display: block;
 
+  @media (max-width: 1150px) {
+    max-width: ${theme.spacing(25)};
+    height: 75px;
+    padding: ${theme.spacing(1)};
+  }
+
   @media (max-width: ${theme.breakpoints.tablet}) {
+    max-width: ${theme.spacing(16)};
+    height: 50px;
+    padding: ${theme.spacing(0.3)};
+  }
+
+  @media (max-width: 600px) {
+    max-width: ${theme.spacing(18)};
+    height: 55px;
+    padding: ${theme.spacing(0.4)};
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
     max-width: ${theme.spacing(20)};
     height: 60px;
     padding: ${theme.spacing(0.5)};
   }
 
-  @media (max-width: ${theme.breakpoints.mobile}) {
-    max-width: ${theme.spacing(25)};
-    height: 70px;
-    padding: ${theme.spacing(0.5)};
-  }
-
-  @media (max-width: 480px) {
-    max-width: ${theme.spacing(22)};
-    height: 65px;
-    padding: ${theme.spacing(0.5)};
+  @media (max-width: 400px) {
+    max-width: ${theme.spacing(18)};
+    height: 55px;
+    padding: ${theme.spacing(0.4)};
   }
 `;

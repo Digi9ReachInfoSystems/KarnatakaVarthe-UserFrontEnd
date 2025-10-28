@@ -36,3 +36,12 @@ export const LoginPageApi = async (userData) => {
     throw err;
   }
 };
+
+export const  UpdateUserDetailsApi = async (firebaseId, data) => {
+  try {
+    const response = await apiClient.put(`/api/users/update-profile/${firebaseId}`, data);
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+};
