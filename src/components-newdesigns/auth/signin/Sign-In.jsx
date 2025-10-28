@@ -126,7 +126,6 @@ const SignIn = () => {
               Cookies.set("Phone", loginRes.data.phone_Number, {
                 expires: 7,
                 secure: true,
-              
               });
 
               Cookies.set("UserName", loginRes.data.displayName || "", {
@@ -134,7 +133,7 @@ const SignIn = () => {
 
                 secure: true,
               });
-              
+
               navigate("/");
             } else {
               showError(loginRes.message || "Login failed.");
@@ -176,9 +175,9 @@ const SignIn = () => {
       if (loginRes.success) {
         showSuccess("Login successful!");
         Cookies.set("firebaseUID", loginRes.data.firebaseUid, {
-                expires: 7,
-                secure: true,
-              });
+          expires: 7,
+          secure: true,
+        });
         Cookies.set("token", loginRes.accessToken, {
           expires: 7,
         });
@@ -296,6 +295,20 @@ const SignIn = () => {
                           `otp-box-${idx + 1}`
                         );
                         if (next) next.focus();
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Backspace") {
+                        e.preventDefault();
+                        const newOtp = [...otp];
+                        newOtp[idx] = "";
+                        setOtp(newOtp);
+                        if (!digit && idx > 0) {
+                          const prev = document.getElementById(
+                            `otp-box-${idx - 1}`
+                          );
+                          if (prev) prev.focus();
+                        }
                       }
                     }}
                     id={`otp-box-${idx}`}

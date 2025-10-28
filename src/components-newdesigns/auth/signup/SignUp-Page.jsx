@@ -29,7 +29,12 @@ import {
   UserSignupWithPhoneApi,
   LoginUsingPhoneApi,
 } from "../../../services/auth/SignupApi";
-import { RecaptchaVerifier, signInWithPhoneNumber, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 import { auth } from "../../../config/firebaseConfig";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
@@ -41,8 +46,7 @@ const SignUp = () => {
     email: "",
     displayName: "",
     password: "",
-    phone: ""
-   
+    phone: "",
   });
   const [loading, setLoading] = useState(false);
   const [otpStep, setOtpStep] = useState(false);
@@ -69,7 +73,7 @@ const SignUp = () => {
 
       // Check if user already exists
       const res = await checkuserExists({ email: user.email });
-      
+
       if (res.success) {
         showWarning("User with this email already exists. Please sign in.");
         setLoading(false);
@@ -85,13 +89,13 @@ const SignUp = () => {
       };
 
       const signupRes = await UserSignupWithPhoneApi(userData);
-      
+
       if (signupRes.success) {
         showSuccess("Signup completed successfully!");
-        
+
         // Automatically log in the user
         const loginRes = await LoginUsingPhoneApi(user.uid);
-        
+
         if (loginRes.success) {
           Cookies.set("accessToken", loginRes.accessToken, {
             expires: 7,
@@ -125,7 +129,9 @@ const SignUp = () => {
           setLoading(false);
           return;
         }
-        const res = await checkuserExists({ phone_Number: `+91${formData.phone}` });
+        const res = await checkuserExists({
+          phone_Number: `+91${formData.phone}`,
+        });
         if (res.success) {
           showError("User with this phone number already exists.");
           setLoading(false);
@@ -307,6 +313,20 @@ const SignUp = () => {
                           `otp-box-${idx + 1}`
                         );
                         if (next) next.focus();
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Backspace") {
+                        e.preventDefault();
+                        const newOtp = [...otp];
+                        newOtp[idx] = "";
+                        setOtp(newOtp);
+                        if (!digit && idx > 0) {
+                          const prev = document.getElementById(
+                            `otp-box-${idx - 1}`
+                          );
+                          if (prev) prev.focus();
+                        }
                       }
                     }}
                     id={`otp-box-${idx}`}
