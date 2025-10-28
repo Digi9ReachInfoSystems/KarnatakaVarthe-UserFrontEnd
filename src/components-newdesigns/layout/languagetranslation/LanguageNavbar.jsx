@@ -103,7 +103,7 @@ const LanguageNavbar = () => {
         <SocialIcon href="https://www.facebook.com/KarnatakaVarthe.Official/" aria-label="Follow us on Facebook" target="_blank" rel="noopener noreferrer">
           <Facebook size={22} aria-hidden="true" />
         </SocialIcon>
-        <SocialIcon href="https://x.com/DIPR Karnataka" aria-label="Follow us on X (Twitter)" target="_blank" rel="noopener noreferrer">
+        <SocialIcon href="https://x.com/KarnatakaVarthe" aria-label="Follow us on X (Twitter)" target="_blank" rel="noopener noreferrer">
           <FaXTwitter size={22} aria-hidden="true" />
         </SocialIcon>
       </SocialIcons>
