@@ -311,6 +311,23 @@ const SignIn = () => {
                         }
                       }
                     }}
+                    onPaste={(e) => {
+                      e.preventDefault();
+                      const pasteData = e.clipboardData
+                        .getData("text/plain")
+                        .trim();
+                      if (pasteData.length === 6 && /^\d+$/.test(pasteData)) {
+                        const newOtp = pasteData.split("").slice(0, 6);
+                        setOtp(newOtp);
+                        // Focus the last box if all digits are filled
+                        if (newOtp.every((d) => d)) {
+                          const lastBox = document.getElementById(
+                            `otp-box-${5}`
+                          );
+                          if (lastBox) lastBox.focus();
+                        }
+                      }
+                    }}
                     id={`otp-box-${idx}`}
                   />
                 ))}
