@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useContext } from 'react'
 import { getLatestNotification } from '../../../../services/latestnotification/LatestNotification.js'
+import { LanguageContext } from '../../../../context/LanguageContext'
 import {
   NotificationPanel,
   PanelHeader,
@@ -20,12 +21,44 @@ import {
   ShimmerAnimation
 } from "./LatestNotification.styles.js"
 
+// Translations for UI text
+const translations = {
+  English: {
+    header: "Latest notifications",
+    seeMore: "See more",
+    failedToLoad: "Failed to load notifications",
+    noNotifications: "No notifications available",
+    notification: "Notification",
+    ariaLabel: "See more about notification"
+  },
+  Kannada: {
+    header: "ಇತ್ತೀಚಿನ ಅಧಿಸೂಚನೆಗಳು",
+    seeMore: "ಹೆಚ್ಚು ನೋಡಿ",
+    failedToLoad: "ಅಧಿಸೂಚನೆಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ವಿಫಲವಾಗಿದೆ",
+    noNotifications: "ಯಾವುದೇ ಅಧಿಸೂಚನೆಗಳು ಲಭ್ಯವಿಲ್ಲ",
+    notification: "ಅಧಿಸೂಚನೆ",
+    ariaLabel: "ಅಧಿಸೂಚನೆಯ ಬಗ್ಗೆ ಹೆಚ್ಚು ನೋಡಿ"
+  },
+  Hindi: {
+    header: "नवीनतम सूचनाएं",
+    seeMore: "और देखें",
+    failedToLoad: "सूचनाएं लोड करने में विफल",
+    noNotifications: "कोई सूचनाएं उपलब्ध नहीं",
+    notification: "सूचना",
+    ariaLabel: "सूचना के बारे में और देखें"
+  }
+}
+
 export default function LatestNotification({ notifications = [] }) {
+  const { language } = useContext(LanguageContext)
   const [apiNotifications, setApiNotifications] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [isHovered, setIsHovered] = useState(false)
   const scrollRef = useRef(null)
+  
+  // Get translations for current language
+  const t = translations[language] || translations.English
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -37,7 +70,7 @@ export default function LatestNotification({ notifications = [] }) {
         setApiNotifications(response.data || response || [])
       } catch (err) {
         console.error('Error fetching notifications:', err)
-        setError('Failed to load notifications')
+        setError('failedToLoad')
         setApiNotifications([])
       } finally {
         setLoading(false)
@@ -74,7 +107,7 @@ export default function LatestNotification({ notifications = [] }) {
     }
   }, [notificationData.length, loading, error, isHovered])
 
-  // Helper function to get notification text and link
+  // Helper function to get notification text and link based on current language
   const getNotificationContent = (notification, index) => {
     const maxLength = 100; // Character limit for notification text
     
@@ -88,8 +121,22 @@ export default function LatestNotification({ notifications = [] }) {
       }
     }
     
-    // If notification is an object with properties
-    const fullText = notification.title || notification.message || notification.text || notification.content || `Notification ${index + 1}`;
+    // Get the appropriate language field from notification
+    // Map language from context to API field names (case-sensitive)
+    let fullText = null;
+    if (language === 'Kannada' && notification.kannada) {
+      fullText = notification.kannada;
+    } else if (language === 'Hindi' && notification.hindi) {
+      fullText = notification.hindi;
+    } else if (language === 'English' && notification.English) {
+      fullText = notification.English;
+    } else {
+      // Fallback: try all language fields or use title/message/text/content
+      fullText = notification.kannada || notification.hindi || notification.English || 
+                 notification.title || notification.message || notification.text || 
+                 notification.content || `${t.notification} ${index + 1}`;
+    }
+    
     const truncatedText = fullText.length > maxLength 
       ? fullText.substring(0, maxLength) + '...'
       : fullText;
@@ -119,7 +166,7 @@ export default function LatestNotification({ notifications = [] }) {
 
   return (
     <NotificationPanel aria-labelledby="notifications-heading">
-      <PanelHeader id="notifications-heading">Latest notifications</PanelHeader>
+      <PanelHeader id="notifications-heading">{t.header}</PanelHeader>
       <NotificationList 
         aria-label="Notifications list"
         ref={scrollRef}
@@ -129,7 +176,7 @@ export default function LatestNotification({ notifications = [] }) {
         {loading ? (
           <ShimmerLoader />
         ) : error ? (
-          <ErrorText>{error}</ErrorText>
+          <ErrorText>{t.failedToLoad}</ErrorText>
         ) : notificationData.length > 0 ? (
           notificationData.map((notification, i) => {
             const { text, link } = getNotificationContent(notification, i)
@@ -138,15 +185,15 @@ export default function LatestNotification({ notifications = [] }) {
                 <ListIndex aria-hidden="true">{i + 1}.</ListIndex>
                 <ListBody>
                   {text}
-                  <ListLink as={Link} to={link} aria-label={`See more about notification ${i + 1}`}>
-                    See more <span aria-hidden="true">→</span>
+                  <ListLink as={Link} to={link} aria-label={`${t.ariaLabel} ${i + 1}`}>
+                    {t.seeMore} <span aria-hidden="true">→</span>
                   </ListLink>
                 </ListBody>
               </ListItem>
             )
           })
         ) : (
-          <LoadingText>No notifications available</LoadingText>
+          <LoadingText>{t.noNotifications}</LoadingText>
         )}
       </NotificationList>
     </NotificationPanel>
