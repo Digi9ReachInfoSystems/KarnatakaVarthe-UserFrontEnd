@@ -52,6 +52,7 @@ import ShortsVideo from "./components-newdesigns/components/varthaJanapada/modul
 import ShortsVIdeo from "./components-newdesigns/components/Shorts/ShortsVIdeo";
 import SavedListItems from "./components-newdesigns/components/SavedItems/SavedListItems";
 import ShowPhotos from "./components-newdesigns/components/photos/ShowPhotos";
+import Settings from "./components-newdesigns/components/settings/modules/Settings";
 
 
 const App = () => {
@@ -120,6 +121,7 @@ const App = () => {
                   <Route path = '/SavedItems' element = {<SavedListItems />} />
                   <Route path="/shorts" element={<ShortsVIdeo />} />
                   <Route path="/photos" element={<ShowPhotos />} />
+                  <Route path="/settings" element={<Settings />} />
                 </Route>
                 <Route path="/login" element={<Login />} />
                 {/* <Route path="/marchofkarnatakaV1" element={<MarchofKarnatakaV1 />} /> */}

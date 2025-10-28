@@ -44,3 +44,11 @@ export const LoginUsingPhoneApi = async (firebaseUid) => {
     throw err;
   }
 };
+export const getUserById = async (userId) => {
+  try {
+    const response = await apiClient.get(`/api/users/users/${userId}`);
+    return response.data;
+  } catch (err) {
+    throw err;
+  }
+};
