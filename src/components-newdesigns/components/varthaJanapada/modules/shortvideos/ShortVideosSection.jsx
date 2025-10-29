@@ -40,6 +40,7 @@ const  ShortsCarousel = () => {
   const [isDragging, setIsDragging] = useState(false)
   const [startX, setStartX] = useState(0)
   const [scrollLeft, setScrollLeft] = useState(0)
+  
   const { language } = useContext(LanguageContext)
   
   // Header text translations
@@ -226,7 +227,13 @@ const  ShortsCarousel = () => {
       setIsDragging(false)
     }
   }
-
+  const handleVideoClick = (videoId) => {
+    if (playingVideoId === videoId) {
+      setPlayingVideoId(null) 
+    } else {
+      setPlayingVideoId(videoId) 
+    }
+  }
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -300,7 +307,7 @@ const  ShortsCarousel = () => {
                   </VideoCard>
                 ))
             : videos.map((video, index) => (
-                <VideoCard key={video._id} role="listitem">
+                <VideoCard key={video._id}   onClick={() => handleVideoClick(video._id)}role="listitem">
                   {playingVideoId === video._id ? (
                     <VideoPlayer>
                       <video

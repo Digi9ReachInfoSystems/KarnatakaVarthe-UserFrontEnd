@@ -560,3 +560,12 @@ export const ProgressIndicator = styled.div`
   background-size: 200% 100%;
   animation: ${shimmer} 2s infinite linear;
 `
+export const VideoIframe = styled.iframe`
+  width: 100%;
+  height: 100%;
+  border: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+`

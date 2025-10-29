@@ -224,6 +224,14 @@ const  ShortsCarouselsMOK = () => {
       setIsDragging(false)
     }
   }
+   //handle videoCLick 
+   const handleVideoClick = (videoId) => {
+    if (playingVideoId === videoId) {
+      setPlayingVideoId(null) 
+    } else {
+      setPlayingVideoId(videoId) 
+    }
+  }
 
   // Keyboard navigation
   useEffect(() => {
@@ -298,7 +306,7 @@ const  ShortsCarouselsMOK = () => {
                   </VideoCard>
                 ))
             : videos.map((video, index) => (
-                <VideoCard key={video._id} role="listitem">
+                <VideoCard key={video._id} onClick={() => handleVideoClick(video._id)} role="listitem">
                   {playingVideoId === video._id ? (
                     <VideoPlayer>
                       <video
