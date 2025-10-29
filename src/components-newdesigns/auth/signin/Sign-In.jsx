@@ -63,6 +63,9 @@ const SignIn = () => {
       }
     );
   };
+  const homePage = () => {
+    navigate("/");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -206,7 +209,7 @@ const SignIn = () => {
       <Card>
         <Header>
           <HeaderLeft>
-            <Subtitle>
+            <Subtitle onClick={homePage} style={{ cursor: "pointer" }}>
               Welcome to <span className="highlight">DIPR</span>
             </Subtitle>
             <Title>Sign in</Title>
@@ -337,7 +340,12 @@ const SignIn = () => {
           <SubmitButton type="submit" disabled={loading}>
             {loading ? (
               <>
-                <Spinner /> {otpStep ? "Verifying OTP..." : "Sending OTP..."}
+                <Spinner />
+                {otpStep
+                  ? "Verifying OTP..."
+                  : handleGoogleSignIn
+                  ? "Signing in with Google..."
+                  : "Sending OTP..."}
               </>
             ) : otpStep ? (
               "Verify OTP"
