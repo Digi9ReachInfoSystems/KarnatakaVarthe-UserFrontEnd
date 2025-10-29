@@ -278,8 +278,7 @@ function Settings() {
                             value={formData.phone_Number}
                             maxLength={13}
                             onChange={handleChange}
-                            placeholder={language === 'English' ? '+91XXXXXXXXXX' :
-                                       language === 'Kannada' ? '+91XXXXXXXXXX' :
+                            placeholder={
                                        '+91XXXXXXXXXX'}
                             hasError={!!errors.phone_Number}
                             disabled={isPhoneDisabled}
