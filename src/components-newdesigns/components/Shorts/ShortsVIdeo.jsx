@@ -1,12 +1,12 @@
 import { useState, useEffect, useContext } from "react"
 import { getVideos } from "../../../services/videoApi/videoApi"
 import { LanguageContext } from "../../../context/LanguageContext"
-import { VideoContainer, VideoGridCard, VideoCard, VideoThumbnail, PlayIcon, VideoTitle, Title, SectionHeader, ShimmerThumbnail,ModalContent,ModalOverlay,CloseButton, ShimmerContainer, VideoIframe } from "./ShortsVideo.styles"
+import { VideoContainer, VideoGridCard, VideoCard, VideoThumbnail, PlayIcon, VideoTitle, Title, SectionHeader, ShimmerThumbnail, ShimmerContainer, VideoIframe } from "./ShortsVideo.styles"
 
 function ShortsVIdeo() {
   const [videos, setVideos] = useState([])
   const [loading, setLoading] = useState(true)
-  const [selectedVideo, setSelectedVideo] = useState(null)
+  const [playingVideoId, setPlayingVideoId] = useState(null)
   const { language } = useContext(LanguageContext)
         const headerText = {
     English: "Shorts",
@@ -51,24 +51,16 @@ function ShortsVIdeo() {
     fetchVideos()
   }, [])
 
-  const handleVideoClick = (video) => {
-    if (video.video_url) {
-      setSelectedVideo(video)
-    }
-  }
-
-  const closeModal = () => {
-    setSelectedVideo(null)
-  }
-
-  const handleOverlayClick = (e) => {
-    if (e.target === e.currentTarget) {
-      closeModal()
+  const handleVideoClick = (videoId) => {
+    if (playingVideoId === videoId) {
+      setPlayingVideoId(null) // Stop playing if clicked again
+    } else {
+      setPlayingVideoId(videoId) // Play the clicked video
     }
   }
 
   // Extract video ID from YouTube URL
-  const getYouTubeEmbedUrl = (url) => {
+  const getYouTubeEmbedUrl = (url, autoplay = false) => {
     if (!url) return null
     
     // Handle various YouTube URL formats
@@ -80,7 +72,7 @@ function ShortsVIdeo() {
     for (const pattern of patterns) {
       const match = url.match(pattern)
       if (match && match[1]) {
-        return `https://www.youtube.com/embed/${match[1]}?autoplay=1`
+        return `https://www.youtube.com/embed/${match[1]}${autoplay ? '?autoplay=1' : ''}`
       }
     }
     
@@ -105,35 +97,31 @@ function ShortsVIdeo() {
           videos.map((video) => (
             <VideoCard 
               key={video._id} 
-              onClick={() => handleVideoClick(video)}
+              onClick={() => handleVideoClick(video._id)}
             >
-              <VideoThumbnail 
-                src={video.thumbnail || '/api/placeholder/225/400'} 
-                alt={video.title || 'Short video'}
-              />
-              <PlayIcon />
-              {video.title && <VideoTitle>{video[language.toLowerCase()]?.title}</VideoTitle>}
+              {playingVideoId === video._id ? (
+                <VideoIframe
+                  src={getYouTubeEmbedUrl(video.video_url, true)}
+                  title={video.title || 'Video player'}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              ) : (
+                <>
+                  <VideoThumbnail 
+                    src={video.thumbnail || '/api/placeholder/225/400'} 
+                    alt={video.title || 'Short video'}
+                  />
+                  <PlayIcon />
+                  {video.title && <VideoTitle>{video[language.toLowerCase()]?.title}</VideoTitle>}
+                </>
+              )}
             </VideoCard>
           ))
         ) : (
           <p>No videos available</p>
         )}
       </VideoGridCard>
-
-      {/* Video Modal */}
-      {selectedVideo && (
-        <ModalOverlay onClick={handleOverlayClick}>
-          <ModalContent>
-            <CloseButton onClick={closeModal}>&times;</CloseButton>
-            <VideoIframe
-              src={getYouTubeEmbedUrl(selectedVideo.video_url)}
-              title={selectedVideo.title || 'Video player'}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </ModalContent>
-        </ModalOverlay>
-      )}
     </VideoContainer>
   )
 }

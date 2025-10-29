@@ -146,7 +146,15 @@ export const SectionHeader = styled.div`
     margin-bottom: ${theme.spacing1(1)};
   }
 `
-
+export const VideoIframe = styled.iframe`
+  width: 100%;
+  height: 100%;
+  border: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+`
 export const Title = styled.h2`
   font-family: ${theme.fonts.heading};
   font-size: clamp(20px, 2.5vw, 20px);
