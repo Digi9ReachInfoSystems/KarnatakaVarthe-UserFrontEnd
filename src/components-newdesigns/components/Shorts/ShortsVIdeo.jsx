@@ -1,11 +1,12 @@
 import { useState, useEffect, useContext } from "react"
 import { getVideos } from "../../../services/videoApi/videoApi"
 import { LanguageContext } from "../../../context/LanguageContext"
-import { VideoContainer, VideoGridCard, VideoCard, VideoThumbnail, PlayIcon, VideoTitle, Title, SectionHeader, ShimmerThumbnail, ShimmerContainer } from "./ShortsVideo.styles"
+import { VideoContainer, VideoGridCard, VideoCard, VideoThumbnail, PlayIcon, VideoTitle, Title, SectionHeader, ShimmerThumbnail,ModalContent,ModalOverlay,CloseButton, ShimmerContainer, VideoIframe } from "./ShortsVideo.styles"
 
 function ShortsVIdeo() {
   const [videos, setVideos] = useState([])
   const [loading, setLoading] = useState(true)
+  const [selectedVideo, setSelectedVideo] = useState(null)
   const { language } = useContext(LanguageContext)
         const headerText = {
     English: "Shorts",
@@ -50,10 +51,41 @@ function ShortsVIdeo() {
     fetchVideos()
   }, [])
 
-  const handleVideoClick = (videoUrl) => {
-    if (videoUrl) {
-      window.open(videoUrl, '_blank')
+  const handleVideoClick = (video) => {
+    if (video.video_url) {
+      setSelectedVideo(video)
     }
+  }
+
+  const closeModal = () => {
+    setSelectedVideo(null)
+  }
+
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      closeModal()
+    }
+  }
+
+  // Extract video ID from YouTube URL
+  const getYouTubeEmbedUrl = (url) => {
+    if (!url) return null
+    
+    // Handle various YouTube URL formats
+    const patterns = [
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
+      /youtube\.com\/shorts\/([^&\n?#]+)/
+    ]
+    
+    for (const pattern of patterns) {
+      const match = url.match(pattern)
+      if (match && match[1]) {
+        return `https://www.youtube.com/embed/${match[1]}?autoplay=1`
+      }
+    }
+    
+    // If it's already an embed URL or other video URL, return as is
+    return url
   }
 
   return (
@@ -73,7 +105,7 @@ function ShortsVIdeo() {
           videos.map((video) => (
             <VideoCard 
               key={video._id} 
-              onClick={() => handleVideoClick(video.video_url)}
+              onClick={() => handleVideoClick(video)}
             >
               <VideoThumbnail 
                 src={video.thumbnail || '/api/placeholder/225/400'} 
@@ -87,6 +119,21 @@ function ShortsVIdeo() {
           <p>No videos available</p>
         )}
       </VideoGridCard>
+
+      {/* Video Modal */}
+      {selectedVideo && (
+        <ModalOverlay onClick={handleOverlayClick}>
+          <ModalContent>
+            <CloseButton onClick={closeModal}>&times;</CloseButton>
+            <VideoIframe
+              src={getYouTubeEmbedUrl(selectedVideo.video_url)}
+              title={selectedVideo.title || 'Video player'}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </ModalContent>
+        </ModalOverlay>
+      )}
     </VideoContainer>
   )
 }
