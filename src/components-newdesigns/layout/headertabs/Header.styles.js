@@ -122,7 +122,14 @@ export const LoginButton = styled(NavLink)`
   font-family: ${theme.fonts.body};
   font-weight: 500;
   text-decoration: none;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  
+  @media (max-width: 940px) {
+    font-size: ${theme.fontSizes.xsmall};
+    padding: ${theme.spacing(0.5)} ${theme.spacing(1.5)};
+  }
 
   &:hover {
     background-color: ${theme.colors.primary};
@@ -349,3 +356,159 @@ export const mediaQueries = {
   desktop: `@media (min-width: ${theme.breakpoints.desktop})`,
   large: `@media (min-width: ${theme.breakpoints.large})`,
 };
+
+// Profile dropdown styles
+export const ProfileContainer = styled.div`
+  position: relative;
+  display: inline-block;
+`;
+
+export const ProfileButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: ${theme.colors.primary};
+  color: ${theme.colors.white};
+  border: none;
+  cursor: pointer;
+  transition: all ${theme.transitions.fast};
+  font-size: 18px;
+  
+  &:hover {
+    background-color: #1565C0;
+    transform: scale(1.05);
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${theme.colors.primary};
+    outline-offset: 2px;
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+`;
+
+export const DropdownMenu = styled.div`
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background-color: ${theme.colors.white};
+  border-radius: ${theme.borderRadius.medium};
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  min-width: 200px;
+  z-index: 1000;
+  opacity: ${props => props.isOpen ? 1 : 0};
+  visibility: ${props => props.isOpen ? 'visible' : 'hidden'};
+  transform: ${props => props.isOpen ? 'translateY(0)' : 'translateY(-10px)'};
+  transition: all 0.2s ease;
+  border: 1px solid ${theme.colors.gray[200]};
+`;
+
+export const DropdownItem = styled.button`
+  width: 100%;
+  padding: ${theme.spacing(1.5)} ${theme.spacing(2)};
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: ${theme.colors.text};
+  font-size: ${theme.fontSizes.medium};
+  transition: all ${theme.transitions.fast};
+  display: flex;
+  align-items: center;
+  gap: ${theme.spacing(1.5)};
+  font-family: ${theme.fonts.body};
+
+  &:first-child {
+    border-radius: ${theme.borderRadius.medium} ${theme.borderRadius.medium} 0 0;
+  }
+
+  &:last-child {
+    border-radius: 0 0 ${theme.borderRadius.medium} ${theme.borderRadius.medium};
+  }
+
+  &:hover {
+    background-color: ${theme.colors.gray[100]};
+    color: ${theme.colors.primary};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${theme.colors.primary};
+    outline-offset: -2px;
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  &.kannada-text {
+    font-weight: 600;
+  }
+`;
+
+export const DropdownLink = styled(NavLink)`
+  width: 100%;
+  padding: ${theme.spacing(1.5)} ${theme.spacing(2)};
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: ${theme.colors.text};
+  font-size: ${theme.fontSizes.medium};
+  transition: all ${theme.transitions.fast};
+  display: flex;
+  align-items: center;
+  gap: ${theme.spacing(1.5)};
+  text-decoration: none;
+  font-family: ${theme.fonts.body};
+
+  &:first-child {
+    border-radius: ${theme.borderRadius.medium} ${theme.borderRadius.medium} 0 0;
+  }
+
+  &:last-child {
+    border-radius: 0 0 ${theme.borderRadius.medium} ${theme.borderRadius.medium};
+  }
+
+  &:hover {
+    background-color: ${theme.colors.gray[100]};
+    color: ${theme.colors.primary};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${theme.colors.primary};
+    outline-offset: -2px;
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  &.kannada-text {
+    font-weight: 600;
+  }
+`;
+
+export const UserInfo = styled.div`
+  padding: ${theme.spacing(2)};
+  border-bottom: 1px solid ${theme.colors.gray[200]};
+`;
+
+export const UserName = styled.div`
+  font-weight: 600;
+  color: ${theme.colors.text};
+  font-size: ${theme.fontSizes.medium};
+  margin-bottom: ${theme.spacing(0.5)};
+`;
+
+export const UserEmail = styled.div`
+  font-size: ${theme.fontSizes.small};
+  color: ${theme.colors.gray[600]};
+`;
