@@ -276,6 +276,7 @@ function Settings() {
                             id="phone_Number"
                             name="phone_Number"
                             value={formData.phone_Number}
+                            maxLength={13}
                             onChange={handleChange}
                             placeholder={language === 'English' ? '+91XXXXXXXXXX' :
                                        language === 'Kannada' ? '+91XXXXXXXXXX' :
