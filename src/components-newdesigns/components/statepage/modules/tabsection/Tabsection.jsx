@@ -88,7 +88,7 @@ export default function TabSection() {
 
   // Get news to display
   const bigCardNews = news.slice(0, 4) // First 4 as big cards (always shown)
-  const allSmallCardNews = news.slice(4) // All remaining news for sidebar
+  const allSmallCardNews = news // All remaining news for sidebar
   const smallCardNews = allSmallCardNews.slice(0, visibleCount - 4) // Show limited small cards
   const hasMore = allSmallCardNews.length > (visibleCount - 4)
   const showingAll = allSmallCardNews.length > 4 && (visibleCount - 4) >= allSmallCardNews.length
@@ -192,7 +192,7 @@ export default function TabSection() {
               More State News
             </h3>
             <SideList role="list">
-              {smallCardNews.map((item) => (
+              {allSmallCardNews.map((item) => (
                 <SideItem
                   key={item.id}
                   role="listitem"
@@ -208,7 +208,7 @@ export default function TabSection() {
               ))}
             </SideList>
 
-            {hasMore && (
+            {/* {hasMore && (
               <SeeMoreWrap>
                 <SeeMoreBtn
                   type="button"
@@ -229,7 +229,7 @@ export default function TabSection() {
                   Show Less
                 </SeeMoreBtn>
               </SeeMoreWrap>
-            )}
+            )} */}
           </Sidebar>
         </Layout>
       </Container>

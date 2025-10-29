@@ -53,7 +53,9 @@ const SignUp = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [confirmationResult, setConfirmationResult] = useState(null);
   const googleProvider = new GoogleAuthProvider();
-
+  const homePage = () => {
+    navigate("/");
+  };
   const setupRecaptcha = () => {
     window.recaptchaVerifier = new RecaptchaVerifier(
       auth,
@@ -200,7 +202,7 @@ const SignUp = () => {
       <Card>
         <Header>
           <HeaderLeft>
-            <Subtitle>
+            <Subtitle onClick={homePage} style={{cursor:"pointer"}}>
               Welcome to <span className="highlight">DIPR</span>
             </Subtitle>
             <Title>Sign up</Title>
@@ -355,7 +357,7 @@ const SignUp = () => {
           <SubmitButton type="submit" disabled={loading}>
             {loading ? (
               <>
-                <Spinner /> {otpStep ? "Verifying OTP..." : "Sending OTP..."}
+                <Spinner /> {otpStep ? "Verifying OTP..." : handleGoogleSignUp ? "Signing in with Google..." : "Sending OTP..."}
               </>
             ) : otpStep ? (
               "Verify OTP"
