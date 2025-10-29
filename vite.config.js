@@ -30,7 +30,7 @@ export default defineConfig({
   publicDir: 'public',
   server: {
     headers: {
-      'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://fonts.googleapis.com https://fonts.gstatic.com https://diprkarnataka.duckdns.org https://apis.google.com ; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https: http: blob:; media-src 'self' https: http: blob:; connect-src 'self' data: https://diprkarnataka.duckdns.org https://diprwebapp.gully2global.in https: http: ws: wss:; frame-src 'self' https://www.youtube.com https://youtube.com https://www.youtu.be https://youtu.be https:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests",
+      'Content-Security-Policy': "default-src 'self';  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://fonts.googleapis.com https://fonts.gstatic.com https://diprkarnataka.duckdns.org https://apis.google.com https://www.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https: http: blob:; media-src 'self' https: http: blob:; connect-src 'self' data: https://diprkarnataka.duckdns.org https://diprwebapp.gully2global.in https: http: ws: wss:; frame-src 'self' https://www.youtube.com https://youtube.com https://www.youtu.be https://youtu.be https:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests",
       'X-Frame-Options': 'DENY',
       'X-Content-Type-Options': 'nosniff',
       'Referrer-Policy': 'no-referrer',
