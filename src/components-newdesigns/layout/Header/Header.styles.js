@@ -287,8 +287,8 @@ export const CMImage = styled.img`
   }
 
   @media (max-width: ${theme.breakpoints.tablet}) {
-    max-width: ${theme.spacing(16)};
-    height: 50px;
+    max-width: ${theme.spacing(22)};
+    height: 60px;
     padding: ${theme.spacing(0.3)};
   }
 
