@@ -88,11 +88,11 @@ export const TrendingScroller = styled.div`
 
   /* Slower animation on mobile for better readability */
   @media (max-width: ${theme.breakpoints.tablet}) {
-    animation: scrollTrending 100s linear infinite;
+    animation: scrollTrending 35s linear infinite;
   }
   
   @media (max-width: ${theme.breakpoints.mobile}) {
-    animation: scrollTrending 120s linear infinite;
+    animation: scrollTrending 35s linear infinite;
   }
 `;
 
