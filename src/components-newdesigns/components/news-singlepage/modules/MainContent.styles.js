@@ -8,6 +8,12 @@ export const MainContentContainer = styled.div`
   overflow-x: hidden;
   word-wrap: break-word;
   
+  @media screen and (max-width: 1026px) {
+    padding: 16px;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  
   @media (max-width: ${theme.breakpoints.tablet}) {
     margin-right: 0;
     max-width: 100%;
@@ -178,6 +184,8 @@ export const HeroImage = styled.div`
   height: 400px;
   overflow: hidden;
   margin-bottom: 16px;
+  margin-left: auto;
+  margin-right: auto;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   
   img {
@@ -185,6 +193,11 @@ export const HeroImage = styled.div`
     height: 100%;
     object-fit: cover;
     display: block;
+  }
+  
+  @media screen and (max-width: 1026px) {
+    margin-left: 0;
+    margin-right: 0;
   }
   
   @media (max-width: ${theme.breakpoints.tablet}) {

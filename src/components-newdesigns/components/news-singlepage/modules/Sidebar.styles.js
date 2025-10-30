@@ -168,6 +168,8 @@ export const PopularNewsList = styled.div`
   padding: 16px;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  max-height: 400px;
   gap: 12px;
 `
 
@@ -244,6 +246,8 @@ export const TrendingList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  overflow-y: auto;
+  max-height: 400px;
   
   @media (max-width: ${theme.breakpoints.tablet}) {
     gap: 16px;
