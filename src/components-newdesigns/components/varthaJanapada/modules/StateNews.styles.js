@@ -9,6 +9,7 @@ export const Section = styled.section`
   padding: 0;
   background: ${theme.colors.background};
   box-sizing: border-box;
+  overflow-x: hidden;
 `
 
 // ========================================
@@ -113,6 +114,7 @@ export const PageLayout = styled.div`
     grid-template-columns: 1fr;
     gap: ${theme.spacing1(4)};
   }
+    
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     gap: ${theme.spacing1(3)};

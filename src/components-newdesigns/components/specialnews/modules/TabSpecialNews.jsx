@@ -48,6 +48,32 @@ export default function TabSpecialNews() {
   const { language } = useContext(LanguageContext)
   const navigate = useNavigate()
 
+  // Add responsive styles
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @media (min-width: 851px) and (max-width: 1100px) {
+        .big-cards-container {
+          gap: 12px !important;
+        }
+        .feature-card-responsive {
+          min-width: 240px !important;
+          flex: 1 1 240px !important;
+          max-width: calc(33.333% - 8px) !important;
+        }
+      }
+      @media (max-width: 850px) {
+        .feature-card-responsive {
+          max-width: 100% !important;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   useEffect(() => {
     // get news by type special news
     const fetchNews = async () => {
@@ -153,12 +179,15 @@ export default function TabSpecialNews() {
       </h2>
       <Grid>
         <Column
+          className="big-cards-container"
           style={{
             display: 'flex',
             flexDirection: 'row',
-            gap: '20px',
+            gap: '16px',
             marginBottom: '20px',
             flexWrap: 'wrap',
+            maxWidth: '100%',
+            boxSizing: 'border-box',
           }}
         >
           {bigCardNews.map((item) => (
@@ -169,16 +198,18 @@ export default function TabSpecialNews() {
               aria-labelledby={`feature-title-${item.id}`}
               tabIndex="0"
               onClick={() => navigate(`/newsdetails/${item.id}`)}
+              className="feature-card-responsive"
               style={{
                 cursor: 'pointer',
-                maxWidth: '350px',
+                maxWidth: 'calc(33.333% - 11px)',
+                minWidth: '260px',
                 boxShadow: '0 2px 8px rgba(0,0,0,0.07)',
                 borderRadius: '10px',
                 overflow: 'hidden',
                 display: 'flex',
                 flexDirection: 'column',
-                width: '100%',
-                flex: '1 1 300px',
+                flex: '1 1 260px',
+                boxSizing: 'border-box',
               }}
             >
               <FeatureImage

@@ -25,6 +25,11 @@ export const BannerInner = styled.div`
   @media (max-width: ${theme.breakpoints.tablet}) {
     aspect-ratio: 16 / 9;
   }
+    @media (max-width: 1026px) {
+    aspect-ratio: 16 / 7;
+    width: 100%;
+  }
+  
   
   @media (max-width: ${theme.breakpoints.mobile}) {
     aspect-ratio: 16 / 10;

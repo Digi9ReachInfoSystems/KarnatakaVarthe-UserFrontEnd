@@ -11,10 +11,10 @@ const PageLayout = styled.div`
   padding-bottom: ${theme.spacing(2.5)};
   background: ${theme.colors.background};
 
-  @media (max-width: ${theme.breakpoints.desktop}) {
+  @media (max-width: 1026px) {
     grid-template-columns: 1fr;
-    gap: ${theme.spacing(5)};
-    max-width: 95%;
+    gap: ${theme.spacing(3.5)};
+    max-width: 100%;
     padding: ${theme.spacing(2)};
   }
 

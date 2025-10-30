@@ -4,6 +4,11 @@ const GlobalStyle = createGlobalStyle`
   * {
     font-family: ${(props) => props.theme.fonts.body};
   }
+
+  html {
+    overflow-x: hidden;
+    width: 100%;
+  }
   
   body {
     font-family: ${(props) => props.theme.fonts.body};
@@ -12,6 +17,8 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    width: 100%;
   }
   
   h1, h2, h3, h4, h5, h6 {

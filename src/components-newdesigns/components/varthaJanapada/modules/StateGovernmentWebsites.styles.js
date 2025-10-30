@@ -7,11 +7,15 @@ import theme from "../../../../theme/Theme"
 export const SidebarCard = styled.aside`
   background: ${theme.colors.white};
   overflow: hidden;
+  overflow-x: hidden;
   width: 100%;
   min-height: 100%;
   display: flex;
   flex-direction: column;
-
+  box-sizing: border-box;
+    @media (max-width: 1026px) {
+    min-height: 500px;
+  }
   @media (max-width: ${theme.breakpoints.tablet}) {
     min-height: auto;
   }

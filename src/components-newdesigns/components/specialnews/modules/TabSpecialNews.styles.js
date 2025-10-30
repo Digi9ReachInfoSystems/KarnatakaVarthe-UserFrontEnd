@@ -40,6 +40,14 @@ export const Wrapper = styled.section`
   overflow-x: hidden;
   box-sizing: border-box;
 
+  @media (min-width: 851px) and (max-width: 1100px) {
+    padding: ${theme.spacing(2.5)} ${theme.spacing(2)};
+  }
+
+   @media (max-width: ${theme.breakpoints.tablet}) {
+    padding: ${theme.spacing(2.5)} ${theme.spacing(1.5)};
+  }
+
   @media (max-width: ${theme.breakpoints.tablet}) {
     padding: ${theme.spacing(2.5)} ${theme.spacing(1.5)};
   }
@@ -209,7 +217,9 @@ export const Grid = styled.div`
   grid-template-columns: 1fr;
   gap: ${theme.spacing(3)};
   width: 100%;
+  max-width: 100%;
   overflow-x: hidden;
+  box-sizing: border-box;
 
   @media (min-width: ${theme.breakpoints.desktop}) {
     grid-template-columns: 2fr 1fr; /* left image / right news list */
@@ -229,8 +239,10 @@ export const Grid = styled.div`
 
 export const Column = styled.div`
   width: 100%;
+  max-width: 100%;
   min-width: 0;
   overflow-x: hidden;
+  box-sizing: border-box;
 `
 
 // Left & Right lists

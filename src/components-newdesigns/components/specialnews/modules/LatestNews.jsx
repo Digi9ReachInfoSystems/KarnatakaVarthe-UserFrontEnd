@@ -226,7 +226,7 @@ export default function LatestNews() {
 
         return {
           id: item._id,
-          title: item[langKey]?.title ? item[langKey].title.slice(0, 100) + "..." : "No title",
+          title: item[langKey]?.title ? item[langKey].title.slice(0, 50) + "..." : "No title",
           excerpt: item[langKey]?.description ? item[langKey].description.slice(0, 150) + "..." : "No description",
           image: item.newsImage,
           date: item.publishedAt,

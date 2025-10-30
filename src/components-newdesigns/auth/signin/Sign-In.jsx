@@ -113,29 +113,31 @@ const SignIn = () => {
               showSuccess("Login successful!");
               Cookies.set("token", loginRes.accessToken, {
                 expires: 7,
-
+                httpOnly: true,
                 secure: true,
               });
               Cookies.set("firebaseUID", firebaseUID, {
                 expires: 7,
+                httpOnly: true,
                 secure: true,
               });
               Cookies.set("userId", loginRes.data._id, {
                 expires: 7,
-
+                httpOnly: true,
                 secure: true,
               });
 
               Cookies.set("Phone", loginRes.data.phone_Number, {
                 expires: 7,
+                httpOnly: true,
                 secure: true,
               });
 
               Cookies.set("UserName", loginRes.data.displayName || "", {
                 expires: 7,
-
+                httpOnly: true,
                 secure: true,
-              });
+                });
 
               navigate("/");
             } else {
@@ -180,18 +182,27 @@ const SignIn = () => {
         Cookies.set("firebaseUID", loginRes.data.firebaseUid, {
           expires: 7,
           secure: true,
+          httpOnly: true,
         });
         Cookies.set("token", loginRes.accessToken, {
           expires: 7,
+          secure: true,
+          httpOnly: true,
         });
         Cookies.set("userId", loginRes.data._id, {
           expires: 7,
+          secure: true,
+          httpOnly: true,
         });
         Cookies.set("Email", loginRes.data.email || "", {
           expires: 7,
+          secure: true,
+          httpOnly: true,
         });
         Cookies.set("UserName", loginRes.data.displayName || "", {
           expires: 7,
+          secure: true,
+          httpOnly: true,
         });
       }
 

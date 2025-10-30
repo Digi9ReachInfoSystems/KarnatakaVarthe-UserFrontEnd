@@ -1,5 +1,5 @@
-import styled from "styled-components"
-import theme from "../../../../../theme/Theme"
+import styled from "styled-components";
+import theme from "../../../../../theme/Theme";
 
 // ========================================
 // GOVERNMENT WEBSITES SIDEBAR
@@ -7,15 +7,19 @@ import theme from "../../../../../theme/Theme"
 export const SidebarCard = styled.aside`
   background: ${theme.colors.white};
   overflow: hidden;
+  overflow-x: hidden;
   width: 100%;
   min-height: 100%;
   display: flex;
   flex-direction: column;
-
+  box-sizing: border-box;
+  @media (max-width: 1026px) {
+    min-height: 500px;
+  }
   @media (max-width: ${theme.breakpoints.tablet}) {
     min-height: auto;
   }
-`
+`;
 
 export const SidebarHeader = styled.h3`
   font-family: ${theme.fonts.heading};
@@ -33,7 +37,7 @@ export const SidebarHeader = styled.h3`
     padding: ${theme.spacing1(4)} ${theme.spacing1(3)};
     font-size: clamp(16px, 1.8vw, 18px);
   }
-`
+`;
 
 export const SidebarList = styled.ul`
   list-style: none;
@@ -58,7 +62,7 @@ export const SidebarList = styled.ul`
     padding: ${theme.spacing1(2)};
     max-height: 300px;
   }
-`
+`;
 
 export const SidebarItem = styled.li`
   display: flex;
@@ -81,13 +85,13 @@ export const SidebarItem = styled.li`
   }
 
   &:focus {
-    outline: 2px solid ${theme.colors.primary || '#007bff'};
+    outline: 2px solid ${theme.colors.primary || "#007bff"};
     outline-offset: -2px;
   }
 
   @media (max-width: ${theme.breakpoints.tablet}) {
     padding: ${theme.spacing1(3)};
-    
+
     &:hover {
       transform: none;
     }
@@ -97,14 +101,14 @@ export const SidebarItem = styled.li`
     gap: ${theme.spacing1(2.5)};
     padding: ${theme.spacing1(3)} ${theme.spacing1(2.5)};
   }
-`
+`;
 
 export const Avatar = styled.div`
   flex-shrink: 0;
   width: 48px;
   height: 48px;
   border-radius: ${theme.borderRadius.circle};
-  background-image: url(${props => props.$src || '/state/sidebar.jpg'});
+  background-image: url(${(props) => props.$src || "/state/sidebar.jpg"});
   background-size: cover;
   background-position: center;
   border: 2px solid ${theme.colors.gray[300]};
@@ -113,7 +117,7 @@ export const Avatar = styled.div`
     width: 42px;
     height: 42px;
   }
-`
+`;
 
 export const ItemLabel = styled.span`
   font-family: ${theme.fonts.body};
@@ -125,7 +129,7 @@ export const ItemLabel = styled.span`
   @media (max-width: ${theme.breakpoints.mobile}) {
     font-size: 13px;
   }
-`
+`;
 
 // ========================================
 // SHIMMER/SKELETON LOADING STYLES
@@ -139,7 +143,7 @@ const shimmer = `
       background-position: 1000px 0;
     }
   }
-`
+`;
 
 export const SkeletonItem = styled.div`
   display: flex;
@@ -161,7 +165,7 @@ export const SkeletonItem = styled.div`
     gap: ${theme.spacing1(2.5)};
     padding: ${theme.spacing1(3)} ${theme.spacing1(2.5)};
   }
-`
+`;
 
 export const SkeletonAvatar = styled.div`
   flex-shrink: 0;
@@ -181,7 +185,7 @@ export const SkeletonAvatar = styled.div`
     width: 42px;
     height: 42px;
   }
-`
+`;
 
 export const SkeletonLabel = styled.div`
   flex: 1;
@@ -195,5 +199,4 @@ export const SkeletonLabel = styled.div`
   background-size: 1000px 100%;
   animation: shimmer 2s infinite;
   border-radius: 4px;
-`
-
+`;

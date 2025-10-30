@@ -13,8 +13,21 @@ export const Card = styled.article`
   padding: ${theme.spacing(1.25)};
 
   @media (max-width: ${theme.breakpoints.tablet}) {
-    padding: ${theme.spacing(2)};
-    gap: ${theme.spacing(1.25)};
+    flex-direction: row;
+    padding: ${theme.spacing(1.5)};
+    gap: ${theme.spacing(1.5)};
+    align-items: flex-start;
+  }
+   @media (max-width: $1026px) {
+    flex-direction: row;
+    padding: ${theme.spacing(1.5)};
+    gap: ${theme.spacing(2)};
+    align-items: flex-start;
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    padding: ${theme.spacing(1)};
+    gap: ${theme.spacing(1)};
   }
 `
 
@@ -29,7 +42,17 @@ export const Thumb = styled.img`
   }
 
   @media (max-width: ${theme.breakpoints.tablet}) {
-    width: 100%;
+    width: 140px;
+    min-width: 140px;
+    height: 80px;
+    aspect-ratio: auto;
+    border-radius: 4px;
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    width: 100px;
+    min-width: 100px;
+    height: 60px;
   }
 `
 
@@ -46,8 +69,18 @@ export const Title = styled.h3`
   }
 
   @media (max-width: ${theme.breakpoints.tablet}) {
-    font-size: 15px;
+    font-size: 14px;
     line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    font-size: 13px;
+    line-height: 1.3;
+    -webkit-line-clamp: 2;
   }
 `
 
@@ -59,8 +92,16 @@ export const Excerpt = styled.p`
   font-family: ${theme.fonts.body};
 
   @media (max-width: ${theme.breakpoints.tablet}) {
-    font-size: 13px;
+    font-size: 12px;
     line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    display: none;
   }
 `
 
@@ -73,7 +114,12 @@ export const Meta = styled.div`
 
   @media (max-width: ${theme.breakpoints.tablet}) {
     gap: ${theme.spacing(1)};
-    font-size: 11px;
+    font-size: 10px;
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    font-size: 9px;
+    gap: ${theme.spacing(0.5)};
   }
 `
 
@@ -82,4 +128,20 @@ export const Dot = styled.span`
   height: 4px;
   border-radius: ${theme.borderRadius.circle};
   background: ${theme.colors.gray[300]};
+`
+
+export const ContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing(1)};
+  flex: 1;
+  min-width: 0;
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    gap: ${theme.spacing(0.75)};
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    gap: ${theme.spacing(0.5)};
+  }
 `

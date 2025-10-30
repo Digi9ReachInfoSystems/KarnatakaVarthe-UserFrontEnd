@@ -124,9 +124,15 @@ export const CarouselContainer = styled.div`
   outline-offset: 2px;
   transition: outline-color 0.2s ease;
   overflow: hidden;
+  overflow-x: hidden;
+  box-sizing: border-box;
 
   &:focus-visible {
     outline-color: ${theme.colors.primary || "#0070f3"}; 
+  }
+
+  @media (max-width: 1026px) {
+    padding: ${theme.spacing(0.75)};
   }
   
   @media (max-width: ${theme.breakpoints.tablet}) {
@@ -187,8 +193,10 @@ export const Title = styled.h2`
 export const CarouselWrapper = styled.div`
   width: 100%;
   overflow: hidden;
+  overflow-x: hidden;
   position: relative;
   border-radius: 0;
+  box-sizing: border-box;
 `
 
 export const CarouselTrack = styled.div`

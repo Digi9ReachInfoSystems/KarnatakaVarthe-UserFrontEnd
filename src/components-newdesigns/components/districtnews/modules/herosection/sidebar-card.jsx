@@ -1,4 +1,4 @@
-import { Card, Thumb, Title, Excerpt, Meta, Dot } from "./sidebar-card.styles"
+import { Card, Thumb, Title, Excerpt, Meta, Dot, ContentWrapper } from "./sidebar-card.styles"
 
 export default function SidebarCard({ title, excerpt, date, author, imageSrc, alt = "Story image", index, onClick }) {
   // Limit excerpt to 8 words
@@ -30,6 +30,7 @@ export default function SidebarCard({ title, excerpt, date, author, imageSrc, al
         onClick={onClick}
         style={{ cursor: 'pointer' }}
       />
+      <ContentWrapper>
       <Title id={`sidebar-card-title-${index}`} as="h4" className="text-pretty">
         {title}
       </Title>
@@ -38,7 +39,7 @@ export default function SidebarCard({ title, excerpt, date, author, imageSrc, al
         <time dateTime={parseDateTimeAttr(date)}>{date}</time>
         <Dot aria-hidden="true" />
         <span aria-label={`Author: ${author}`}>{author}</span>
-      </Meta>
+      </Meta></ContentWrapper>
     </Card>
   )
 }
