@@ -5,23 +5,15 @@ export const Card = styled.article`
   display: flex;
   flex-direction: column;
   gap: ${theme.spacing(1.5)};
-  
   background: ${theme.colors.background};
   color: ${theme.colors.gray[800]};
+  padding: ${theme.spacing(1.25)};
   padding-bottom: ${theme.spacing(2.5)};
   border-bottom: 1px solid ${theme.colors.gray[400]};
-  padding: ${theme.spacing(1.25)};
 
-  @media (max-width: ${theme.breakpoints.tablet}) {
-    flex-direction: row;
-    padding: ${theme.spacing(1.5)};
+  @media screen and (max-width: 1026px) {
+    flex-direction: row !important;
     gap: ${theme.spacing(1.5)};
-    align-items: flex-start;
-  }
-   @media (max-width: $1026px) {
-    flex-direction: row;
-    padding: ${theme.spacing(1.5)};
-    gap: ${theme.spacing(2)};
     align-items: flex-start;
   }
 
@@ -37,11 +29,9 @@ export const Thumb = styled.img`
   object-fit: cover;
   border: 1px solid ${theme.colors.gray[200]};
 
-  @media (max-width: ${theme.breakpoints.desktop}) {
-    width: 95%;
-  }
+ 
 
-  @media (max-width: ${theme.breakpoints.tablet}) {
+  @media screen and (max-width: 1026px) {
     width: 140px;
     min-width: 140px;
     height: 80px;
@@ -68,7 +58,7 @@ export const Title = styled.h3`
     font-size: ${theme.fontSizes.large};
   }
 
-  @media (max-width: ${theme.breakpoints.tablet}) {
+  @media screen and (max-width: 1026px) {
     font-size: 14px;
     line-height: 1.4;
     display: -webkit-box;
@@ -80,7 +70,6 @@ export const Title = styled.h3`
   @media (max-width: ${theme.breakpoints.mobile}) {
     font-size: 13px;
     line-height: 1.3;
-    -webkit-line-clamp: 2;
   }
 `
 
@@ -91,7 +80,7 @@ export const Excerpt = styled.p`
   line-height: 1.6;
   font-family: ${theme.fonts.body};
 
-  @media (max-width: ${theme.breakpoints.tablet}) {
+  @media screen and (max-width: 1026px) {
     font-size: 12px;
     line-height: 1.5;
     display: -webkit-box;
@@ -112,7 +101,7 @@ export const Meta = styled.div`
   color: ${theme.colors.gray[500]};
   font-size: ${theme.fontSizes.small};
 
-  @media (max-width: ${theme.breakpoints.tablet}) {
+  @media screen and (max-width: 1026px) {
     gap: ${theme.spacing(1)};
     font-size: 10px;
   }
@@ -137,7 +126,7 @@ export const ContentWrapper = styled.div`
   flex: 1;
   min-width: 0;
 
-  @media (max-width: ${theme.breakpoints.tablet}) {
+  @media screen and (max-width: 1026px) {
     gap: ${theme.spacing(0.75)};
   }
 
