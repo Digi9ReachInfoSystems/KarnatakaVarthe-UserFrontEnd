@@ -15,6 +15,7 @@ export const SidebarCard = styled.aside`
   box-sizing: border-box;
     @media (max-width: 1026px) {
     min-height: 500px;
+    
   }
   @media (max-width: ${theme.breakpoints.tablet}) {
     min-height: auto;
@@ -48,6 +49,13 @@ export const SidebarList = styled.ul`
   overflow-y: auto;
   max-height: 600px;
   flex: 1;
+  @media (max-width:1026px){
+
+    gap: ${theme.spacing1(2)};
+    padding: ${theme.spacing1(3)};
+    max-height: 400px;
+  }
+    
 
   @media (max-width: ${theme.breakpoints.tablet}) {
     display: grid;
