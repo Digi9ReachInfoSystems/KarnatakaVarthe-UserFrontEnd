@@ -111,32 +111,28 @@ const SignIn = () => {
             console.log("Login response:", loginRes);
             if (loginRes.success) {
               showSuccess("Login successful!");
+              const isSecure = window.location.protocol === 'https:';
               Cookies.set("token", loginRes.accessToken, {
                 expires: 7,
-                httpOnly: true,
-                secure: true,
+                secure: isSecure,
               });
               Cookies.set("firebaseUID", firebaseUID, {
                 expires: 7,
-                httpOnly: true,
-                secure: true,
+                secure: isSecure,
               });
               Cookies.set("userId", loginRes.data._id, {
                 expires: 7,
-                httpOnly: true,
-                secure: true,
+                secure: isSecure,
               });
 
               Cookies.set("Phone", loginRes.data.phone_Number, {
                 expires: 7,
-                httpOnly: true,
-                secure: true,
+                secure: isSecure,
               });
 
               Cookies.set("UserName", loginRes.data.displayName || "", {
                 expires: 7,
-                httpOnly: true,
-                secure: true,
+                secure: isSecure,
                 });
 
               navigate("/");
@@ -179,30 +175,26 @@ const SignIn = () => {
       console.log("Login response:", loginRes);
       if (loginRes.success) {
         showSuccess("Login successful!");
+        const isSecure = window.location.protocol === 'https:';
         Cookies.set("firebaseUID", loginRes.data.firebaseUid, {
           expires: 7,
-          secure: true,
-          httpOnly: true,
+          secure: isSecure,
         });
         Cookies.set("token", loginRes.accessToken, {
           expires: 7,
-          secure: true,
-          httpOnly: true,
+          secure: isSecure,
         });
         Cookies.set("userId", loginRes.data._id, {
           expires: 7,
-          secure: true,
-          httpOnly: true,
+          secure: isSecure,
         });
         Cookies.set("Email", loginRes.data.email || "", {
           expires: 7,
-          secure: true,
-          httpOnly: true,
+          secure: isSecure,
         });
         Cookies.set("UserName", loginRes.data.displayName || "", {
           expires: 7,
-          secure: true,
-          httpOnly: true,
+          secure: isSecure,
         });
       }
 
