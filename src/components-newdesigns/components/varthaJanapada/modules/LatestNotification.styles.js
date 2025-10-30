@@ -65,7 +65,11 @@ export const NotificationList = styled.ol`
   &:hover {
     background-color: ${theme.colors.gray[50] || '#f9fafb'};
   }
-
+   @media (max-width: 1026px) {
+    padding: ${theme.spacing1(2.5)};
+    padding-right: 10px;
+    gap: ${theme.spacing1(3)};
+  }
   @media (max-width: ${theme.breakpoints.mobile}) {
     padding: ${theme.spacing1(2)};
     padding-top: 70px;

@@ -40,6 +40,11 @@ export const HeroLayout = styled.section`
     gap: ${theme.spacing1(4)};
     margin-bottom: ${theme.spacing1(3)};
   }
+  @media (max-width: 1026px) {
+    grid-template-columns: 60% 35%;
+    gap: ${theme.spacing1(6)};
+    margin-bottom: ${theme.spacing1(2)};
+  }
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     gap: ${theme.spacing1(3)};
