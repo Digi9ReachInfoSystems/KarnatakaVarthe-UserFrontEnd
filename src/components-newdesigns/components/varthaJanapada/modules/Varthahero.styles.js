@@ -80,7 +80,8 @@ export const ArrowControls = styled.div`
   gap: 8px;
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    display: none;
+    bottom: 10px;
+    right: 10px;
   }
 `
 
@@ -137,7 +138,7 @@ export const HeroOverlay = styled.div`
 `
 
 export const HeroContent = styled.div`
-  position: relative;
+ position: relative;
   z-index: 1;
   display: flex;
   flex-direction: row;

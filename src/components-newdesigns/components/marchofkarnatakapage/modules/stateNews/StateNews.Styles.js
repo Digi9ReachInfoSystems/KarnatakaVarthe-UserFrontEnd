@@ -8,6 +8,7 @@ export const Section = styled.section`
   padding: 0;
   background: ${theme.colors.background};
   box-sizing: border-box;
+  overflow-x: hidden;
 `
 
 // ========================================

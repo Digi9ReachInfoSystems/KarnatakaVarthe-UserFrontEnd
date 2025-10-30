@@ -3,11 +3,15 @@ import theme from '../../../../../theme/Theme';
 
 export const ArticlesSection = styled.section`
   background-color: ${theme.colors.background};
+  overflow-x: hidden;
+  box-sizing: border-box;
 `;
 
 export const Container = styled.div`
   max-width: 100%;
   margin: 0 auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
 `;
 
 export const SectionHeader = styled.div`

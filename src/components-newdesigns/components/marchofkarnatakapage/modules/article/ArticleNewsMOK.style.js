@@ -7,6 +7,10 @@ export const ArticlesSection = styled.section`
   width: 100%;
   box-sizing: border-box;
 
+  @media (max-width: 1026px) {
+    padding: ${theme.spacing1(6)} ${theme.spacing1(1)};
+  }
+
   @media (max-width: ${theme.breakpoints.tablet}) {
     padding: ${theme.spacing1(8)} ${theme.spacing1(2)};
   }
@@ -20,6 +24,7 @@ export const Container = styled.div`
   max-width: 100%;
   margin: 0 auto;
   overflow-x: hidden;
+  box-sizing: border-box;
 `
 
 export const SectionHeader = styled.div`
@@ -69,6 +74,11 @@ export const Title = styled.h2`
 export const CarouselWrapper = styled.div`
   position: relative;
   padding: 0 ${theme.spacing1(8)};
+  overflow-x: hidden;
+
+  @media (max-width: 1026px) {
+    padding: 0 ${theme.spacing1(4)};
+  }
 
   @media (max-width: ${theme.breakpoints.desktop}) {
     padding: 0 ${theme.spacing1(6)};

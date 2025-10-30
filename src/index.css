@@ -4,6 +4,7 @@
 
 html {
   font-size: var(--global-font-size);
+  overflow-x: hidden;
 }
 
 body {
@@ -13,6 +14,8 @@ body {
     "Helvetica Neue", sans-serif;
   background-color: #f9f9f9;
   font-size: inherit;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 * {

@@ -17,6 +17,20 @@ export const Container = styled.div`
   max-width: 95%;
   margin: 0 auto;
   padding: 0 ${theme.spacing(2)};
+
+  @media (max-width: 1024px) {
+    max-width: 98%;
+    padding: 0 ${theme.spacing(1.5)};
+  }
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    max-width: 100%;
+    padding: 0 ${theme.spacing(1)};
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    padding: 0 ${theme.spacing(0.5)};
+  }
 `;
 
 export const HeaderContent = styled.div`
@@ -25,6 +39,20 @@ export const HeaderContent = styled.div`
   align-items: center;
   justify-content: space-between;
   position: relative;
+
+  @media (max-width: 1024px) {
+    height: 52px;
+    gap: ${theme.spacing(1)};
+  }
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    height: 48px;
+    gap: ${theme.spacing(0.5)};
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    height: 44px;
+  }
 `;
 
 export const MobileMenuButton = styled.button`
@@ -46,8 +74,12 @@ export const MobileMenuButton = styled.button`
     outline-offset: 2px;
   }
 
-  @media (min-width: ${theme.breakpoints.tablet}) {
+  @media (min-width: 1025px) {
     display: none;
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    padding: ${theme.spacing(0.5)};
   }
 `;
 
@@ -56,8 +88,12 @@ export const DesktopNav = styled.nav`
   align-items: center;
   gap: ${theme.spacing(1)};
 
-  @media (min-width: ${theme.breakpoints.tablet}) {
+  @media (min-width: 1025px) {
     display: flex;
+  }
+
+  @media (min-width: 1025px) and (max-width: 1280px) {
+    gap: ${theme.spacing(0.5)};
   }
 `;
 
@@ -75,6 +111,17 @@ export const NavLinkStyled = styled(NavLink)`
   border-radius: ${theme.borderRadius.small};
   transition: all 0.2s ease;
   display: block;
+  white-space: nowrap;
+
+  @media (max-width: 1280px) {
+    padding: ${theme.spacing(0.75)} ${theme.spacing(1.5)};
+    font-size: ${theme.fontSizes.small};
+  }
+
+  @media (max-width: 1024px) {
+    padding: ${theme.spacing(0.5)} ${theme.spacing(1)};
+    font-size: 12px;
+  }
 
   &:hover {
     background-color: ${theme.colors.gray[100]};
@@ -95,6 +142,14 @@ export const NavLinkStyled = styled(NavLink)`
   &.kannada-text {
     font-weight: 700;
     font-size: ${theme.fontSizes.medium};
+
+    @media (max-width: 1280px) {
+      font-size: ${theme.fontSizes.small};
+    }
+
+    @media (max-width: 1024px) {
+      font-size: 12px;
+    }
   }
 `;
 
@@ -125,10 +180,26 @@ export const LoginButton = styled(NavLink)`
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
   
+  @media (max-width: 1280px) {
+    font-size: 11px;
+    padding: ${theme.spacing(0.75)} ${theme.spacing(1.5)};
+  }
+
+  @media (max-width: 1024px) {
+    font-size: 10px;
+    padding: ${theme.spacing(0.5)} ${theme.spacing(1)};
+  }
+
   @media (max-width: 940px) {
     font-size: ${theme.fontSizes.xsmall};
     padding: ${theme.spacing(0.5)} ${theme.spacing(1.5)};
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    font-size: 9px;
+    padding: ${theme.spacing(0.4)} ${theme.spacing(1)};
   }
 
   &:hover {
@@ -159,7 +230,7 @@ export const Overlay = styled.div`
   visibility: ${props => props.isOpen ? 'visible' : 'hidden'};
   transition: opacity 0.3s ease, visibility 0.3s ease;
 
-  @media (min-width: ${theme.breakpoints.tablet}) {
+  @media (min-width: 1025px) {
     display: none;
   }
 `;
@@ -181,8 +252,13 @@ export const MobileNav = styled.nav`
   display: flex;
   flex-direction: column;
 
-  @media (min-width: ${theme.breakpoints.tablet}) {
+  @media (min-width: 1025px) {
     display: none;
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    width: 260px;
+    max-width: 90vw;
   }
 `;
 
@@ -250,6 +326,12 @@ export const MobileNavLink = styled(NavLink)`
   border-radius: ${theme.borderRadius.small};
   margin: 0 ${theme.spacing(2)};
 
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    padding: ${theme.spacing(1.5)} ${theme.spacing(2)};
+    font-size: ${theme.fontSizes.small};
+    margin: 0 ${theme.spacing(1)};
+  }
+
   &:hover {
     background-color: ${theme.colors.gray[100]};
     color: ${theme.colors.primary};
@@ -296,6 +378,10 @@ export const MobileNavLink = styled(NavLink)`
   &.kannada-text {
     font-weight: 700;
     font-size: ${theme.fontSizes.medium};
+
+    @media (max-width: ${theme.breakpoints.mobile}) {
+      font-size: ${theme.fontSizes.small};
+    }
   }
 
   &.active.kannada-text {
@@ -311,12 +397,29 @@ export const HeaderLogo = styled.div`
   font-size: ${theme.fontSizes.large};
   font-weight: 600;
   color: ${theme.colors.primary};
+
+  @media (max-width: 1024px) {
+    font-size: ${theme.fontSizes.medium};
+    gap: ${theme.spacing(0.5)};
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    font-size: ${theme.fontSizes.small};
+  }
 `;
 
 export const HeaderActions = styled.div`
   display: flex;
   align-items: center;
   gap: ${theme.spacing(2)};
+
+  @media (max-width: 1024px) {
+    gap: ${theme.spacing(1)};
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    gap: ${theme.spacing(0.5)};
+  }
 `;
 
 // Animation keyframes
@@ -377,6 +480,18 @@ export const ProfileButton = styled.button`
   transition: all ${theme.transitions.fast};
   font-size: 18px;
   
+  @media (max-width: 1024px) {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+
   &:hover {
     background-color: #1565C0;
     transform: scale(1.05);
@@ -390,6 +505,16 @@ export const ProfileButton = styled.button`
   svg {
     width: 24px;
     height: 24px;
+
+    @media (max-width: 1024px) {
+      width: 20px;
+      height: 20px;
+    }
+
+    @media (max-width: ${theme.breakpoints.mobile}) {
+      width: 18px;
+      height: 18px;
+    }
   }
 `;
 
@@ -407,6 +532,11 @@ export const DropdownMenu = styled.div`
   transform: ${props => props.isOpen ? 'translateY(0)' : 'translateY(-10px)'};
   transition: all 0.2s ease;
   border: 1px solid ${theme.colors.gray[200]};
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    min-width: 180px;
+    right: -8px;
+  }
 `;
 
 export const DropdownItem = styled.button`
@@ -423,6 +553,12 @@ export const DropdownItem = styled.button`
   align-items: center;
   gap: ${theme.spacing(1.5)};
   font-family: ${theme.fonts.body};
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    padding: ${theme.spacing(1)} ${theme.spacing(1.5)};
+    font-size: ${theme.fontSizes.small};
+    gap: ${theme.spacing(1)};
+  }
 
   &:first-child {
     border-radius: ${theme.borderRadius.medium} ${theme.borderRadius.medium} 0 0;
@@ -445,6 +581,11 @@ export const DropdownItem = styled.button`
   svg {
     width: 18px;
     height: 18px;
+
+    @media (max-width: ${theme.breakpoints.mobile}) {
+      width: 16px;
+      height: 16px;
+    }
   }
 
   &.kannada-text {
@@ -468,6 +609,12 @@ export const DropdownLink = styled(NavLink)`
   text-decoration: none;
   font-family: ${theme.fonts.body};
 
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    padding: ${theme.spacing(1)} ${theme.spacing(1.5)};
+    font-size: ${theme.fontSizes.small};
+    gap: ${theme.spacing(1)};
+  }
+
   &:first-child {
     border-radius: ${theme.borderRadius.medium} ${theme.borderRadius.medium} 0 0;
   }
@@ -489,6 +636,11 @@ export const DropdownLink = styled(NavLink)`
   svg {
     width: 18px;
     height: 18px;
+
+    @media (max-width: ${theme.breakpoints.mobile}) {
+      width: 16px;
+      height: 16px;
+    }
   }
 
   &.kannada-text {
@@ -499,6 +651,10 @@ export const DropdownLink = styled(NavLink)`
 export const UserInfo = styled.div`
   padding: ${theme.spacing(2)};
   border-bottom: 1px solid ${theme.colors.gray[200]};
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    padding: ${theme.spacing(1.5)};
+  }
 `;
 
 export const UserName = styled.div`
@@ -506,9 +662,17 @@ export const UserName = styled.div`
   color: ${theme.colors.text};
   font-size: ${theme.fontSizes.medium};
   margin-bottom: ${theme.spacing(0.5)};
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    font-size: ${theme.fontSizes.small};
+  }
 `;
 
 export const UserEmail = styled.div`
   font-size: ${theme.fontSizes.small};
   color: ${theme.colors.gray[600]};
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    font-size: 11px;
+  }
 `;

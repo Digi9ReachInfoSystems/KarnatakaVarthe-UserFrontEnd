@@ -181,7 +181,7 @@ export const Badge = styled.span`
 `
 
 export const DateText = styled.span`
-  color: ${theme.colors.gray[600]};
+  color: ${theme.colors.gray};
   font-size: ${theme.fontSizes.small};
   font-family: ${theme.fonts.body};
 
@@ -253,7 +253,8 @@ export const FeatureOverlay = styled.div`
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, rgba(10,10,10,0.0) 20%, rgba(10,10,10,0.75) 85%);
-`
+  
+  `
 
 export const FeatureContent = styled.div`
   position: absolute;
@@ -283,8 +284,9 @@ export const FeatureTitle = styled.h3`
   margin-top: ${theme.spacing(1.25)};
   color: ${theme.colors.white};
 
-  @media (min-width: ${theme.breakpoints.desktop}) {
-    font-size: 2rem;
+  @media (min-width: 1026px) {
+    font-size: 1.75rem;
+    overflow-x: hidden;
   }
 
   @media (max-width: ${theme.breakpoints.tablet}) {

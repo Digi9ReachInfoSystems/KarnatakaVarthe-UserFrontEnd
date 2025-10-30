@@ -8,6 +8,8 @@ export const Section = styled.section`
   padding-bottom: ${theme.spacing(6)};
   color: ${theme.colors.text};
   font-family: ${theme.fonts.body};
+  overflow-x: hidden;
+  box-sizing: border-box;
 `
 
 export const SectionHeader = styled.div`
@@ -82,6 +84,12 @@ export const GalleryContainer = styled.div`
   padding: ${theme.spacing(2.5)} ${theme.spacing(6)};
   background: ${theme.colors.background};
   flex-wrap: nowrap;
+  overflow-x: hidden;
+
+  @media (max-width: 1026px) {
+    padding: ${theme.spacing(2)} ${theme.spacing(1)};
+    gap: ${theme.spacing(1)};
+  }
 
   @media (max-width: ${theme.breakpoints.desktop}) {
     gap: ${theme.spacing(1.5)};
@@ -169,6 +177,13 @@ export const CentralCarousel = styled.div`
   min-width: 400px;
   flex-shrink: 0;
 
+  @media (max-width: 1026px) {
+    max-width: 100%;
+    min-width: auto;
+    width: 100%;
+    flex: 1;
+  }
+
   @media (max-width: ${theme.breakpoints.desktop}) {
     max-width: 500px;
     min-width: 350px;
@@ -176,7 +191,8 @@ export const CentralCarousel = styled.div`
 
   @media (max-width: ${theme.breakpoints.tablet}) {
     max-width: 100%;
-    min-width: 300px;
+    min-width: auto;
+    width: 100%;
     flex: 1;
   }
 

@@ -8,8 +8,19 @@ export const Container = styled.div`
   max-width: 100%;
   margin: 0 auto;
   padding: ${theme.spacing1(9)} ${theme.spacing1(15)};
+  overflow: hidden;
 
+  @media (max-width: 1100px) {
+    padding: ${theme.spacing1(9)} ${theme.spacing1(8)};
+  }
 
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    padding: ${theme.spacing1(6)} ${theme.spacing1(4)};
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    padding: ${theme.spacing1(4)} ${theme.spacing1(2)};
+  }
 `;
 
 export const SectionHeader = styled.div`
@@ -60,6 +71,8 @@ export const ArticlesGrid = styled.div`
   display: flex;
   justify-content: space-between;
   gap: ${theme.spacing(1)};
+  overflow-x: hidden;
+  width: 100%;
 
   @media (min-width: ${theme.breakpoints.tablet}) {
     gap: ${theme.spacing(2)};
@@ -74,14 +87,27 @@ export const MainArticle = styled.article`
 
 export const SmallArticlesGrid = styled.div`
   display: flex;
-  justify-content: space-between;
-  gap: ${theme.spacing(1)};
+  flex-direction: column;
+  gap: ${theme.spacing(1.5)};
+  width: 100%;
+  overflow-x: hidden;
 
   @media (min-width: ${theme.breakpoints.mobile}) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: ${theme.spacing(1)};
+  }
+
+  @media (min-width: ${theme.breakpoints.tablet}) and (max-width: 1100px) {
+    gap: ${theme.spacing(0.75)};
+  }
+
+  @media (min-width: 1100px) {
+    flex-wrap: nowrap;
     gap: ${theme.spacing(1.5)};
   }
 
-  @media (min-width: ${theme.breakpoints.tablet}) {
+  @media (min-width: 1280px) {
     gap: ${theme.spacing(2)};
   }
 `;
@@ -123,23 +149,35 @@ export const SmallArticle = styled.article`
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  min-width: 220px;
-  max-width: 1fr;
-  flex: 1 1 0;
+  width: 100%;
+  flex: 1 1 100%;
 
-  @media (min-width: ${theme.breakpoints.mobile}) {
+  @media (min-width: ${theme.breakpoints.mobile}) and (max-width: ${theme.breakpoints.tablet}) {
+    flex: 1 1 calc(50% - ${theme.spacing(0.5)});
+    max-width: calc(50% - ${theme.spacing(0.5)});
+    min-width: 0;
+    padding: ${theme.spacing(0.875)};
+  }
+
+  @media (min-width: ${theme.breakpoints.tablet}) and (max-width: 1100px) {
+    flex: 1 1 calc(25% - ${theme.spacing(0.75)});
+    max-width: calc(25% - ${theme.spacing(0.75)});
+    min-width: 190px;
+    padding: ${theme.spacing(0.875)};
+  }
+
+  @media (min-width: 1100px) and (max-width: ${theme.breakpoints.large}) {
     padding: ${theme.spacing(1)};
+    flex: 1 1 0;
     min-width: 220px;
+    max-width: none;
   }
 
-  @media (min-width: ${theme.breakpoints.tablet}) {
-    padding: ${theme.spacing(1.25)};
-    min-width: 240px;
-  }
-
-  @media (min-width: ${theme.breakpoints.desktop}) {
+  @media (min-width: ${theme.breakpoints.large}) {
     padding: ${theme.spacing(1.5)};
+    flex: 1 1 0;
     min-width: 260px;
+    max-width: none;
   }
 `;
 
@@ -398,14 +436,27 @@ export const ShimmerSmallArticlesGrid = styled.div`
 `;
 export const ShimmerThumbnail = styled.div`
   display: flex;
-  gap: ${theme.spacing(1)};
+  flex-direction: column;
+  gap: ${theme.spacing(1.5)};
   width: 100%;
-  
+  overflow-x: hidden;
+
   @media (min-width: ${theme.breakpoints.mobile}) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: ${theme.spacing(1)};
+  }
+
+  @media (min-width: ${theme.breakpoints.tablet}) and (max-width: 1100px) {
+    gap: ${theme.spacing(0.75)};
+  }
+  
+  @media (min-width: 1100px) {
+    flex-wrap: nowrap;
     gap: ${theme.spacing(1.5)};
   }
 
-  @media (min-width: ${theme.breakpoints.tablet}) {
+  @media (min-width: 1280px) {
     gap: ${theme.spacing(2)};
   }
 `;
@@ -416,6 +467,8 @@ export const ShimmerSmallArticle = styled.div`
   border-radius: 4px;
   overflow: hidden;
   position: relative;
+  width: 100%;
+  flex: 1 1 100%;
   
   &::after {
     content: '';
@@ -429,15 +482,23 @@ export const ShimmerSmallArticle = styled.div`
     animation: ${shimmer} 1.5s infinite linear;
   }
 
-  @media (min-width: ${theme.breakpoints.mobile}) {
+  @media (min-width: ${theme.breakpoints.mobile}) and (max-width: ${theme.breakpoints.tablet}) {
+    flex: 1 1 calc(50% - ${theme.spacing(0.5)});
+    max-width: calc(50% - ${theme.spacing(0.5)});
     height: 160px;
   }
 
-  @media (min-width: ${theme.breakpoints.tablet}) {
+  @media (min-width: ${theme.breakpoints.tablet}) and (max-width: 1100px) {
+    flex: 1 1 calc(25% - ${theme.spacing(0.75)});
+    max-width: calc(25% - ${theme.spacing(0.75)});
+    min-width: 190px;
     height: 170px;
   }
 
-  @media (min-width: ${theme.breakpoints.desktop}) {
+  @media (min-width: 1100px) {
+    flex: 1 1 0;
+    min-width: 220px;
+    max-width: none;
     height: 180px;
   }
 `;
