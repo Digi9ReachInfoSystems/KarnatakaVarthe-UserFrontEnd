@@ -284,7 +284,7 @@ const Sidebar = () => {
             ))
           ) : news.length > 0 ? (
             // Dynamic news based on newsType
-            news.slice(0, 5).map((article, index) => (
+            news.map((article, index) => (
               <PopularNewsItem
                 key={article._id || index}
                 as="li"
@@ -367,7 +367,7 @@ const Sidebar = () => {
             ))
           ) : allNews.length > 0 ? (
             // Show all latest news from getNews API
-            allNews.slice(0, 5).map((article, index) => (
+            allNews.map((article, index) => (
               <TrendingItem
                 key={article._id || index}
                 as="li"
@@ -408,7 +408,7 @@ const Sidebar = () => {
             </TrendingItem>
           )}
         </TrendingList>
-        <SeeMoreButton as="button" type="button" aria-label="Load more latest articles">Read More</SeeMoreButton>
+        {/* <SeeMoreButton as="button" type="button" aria-label="Load more latest articles">Read More</SeeMoreButton> */}
       </SidebarSection>
 
 

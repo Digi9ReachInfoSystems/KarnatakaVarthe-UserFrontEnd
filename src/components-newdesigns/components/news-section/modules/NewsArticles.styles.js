@@ -7,10 +7,14 @@ export const Container = styled.div`
   background: ${theme.colors.background};
   padding: ${theme.spacing(4)} 0;
 
+  @media screen and (max-width: 1026px) {
+    padding: ${theme.spacing(2)} 0;
+  }
+
   @media (min-width: ${theme.breakpoints.tablet}) {
     padding: ${theme.spacing(4)} 0;
   }
-  
+
   @media (min-width: ${theme.breakpoints.desktop}) {
     padding: ${theme.spacing(5)} 0;
   }
@@ -20,6 +24,10 @@ export const GridLayout = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   gap: ${theme.spacing(2)};
+
+  @media screen and (max-width: 1026px) {
+    gap: ${theme.spacing(1.5)};
+  }
 
   @media (min-width: ${theme.breakpoints.tablet}) {
     grid-template-columns: repeat(2, 1fr);
@@ -53,6 +61,11 @@ export const FeaturedImage = styled.div`
   aspect-ratio: 16 / 9;
   background: ${theme.colors.gray[100]};
 
+  @media screen and (max-width: 1026px) {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+  }
+
   @media (min-width: ${theme.breakpoints.tablet}) {
     width: 95%;
     aspect-ratio: 4 / 3;
@@ -67,10 +80,14 @@ export const FeaturedImage = styled.div`
 export const FeaturedContent = styled.div`
   padding: ${theme.spacing(1.5)} 0;
 
+  @media screen and (max-width: 1026px) {
+    padding: ${theme.spacing(1)} 0;
+  }
+
   @media (min-width: ${theme.breakpoints.tablet}) {
     padding: ${theme.spacing(2.5)} 0;
   }
-  
+
   @media (min-width: ${theme.breakpoints.desktop}) {
     padding: ${theme.spacing(3)} 0;
   }
@@ -92,11 +109,16 @@ export const FeaturedTitle = styled.h2`
   line-height: 1.3;
   margin-bottom: ${theme.spacing(1)};
 
+  @media screen and (max-width: 1026px) {
+    font-size: 1.1rem;
+    margin-bottom: ${theme.spacing(0.75)};
+  }
+
   @media (min-width: ${theme.breakpoints.tablet}) {
     font-size: 1.75rem;
     margin-bottom: ${theme.spacing(1.5)};
   }
-  
+
   @media (min-width: ${theme.breakpoints.desktop}) {
     font-size: 2rem;
   }
@@ -146,34 +168,41 @@ export const NewsList = styled.div`
   gap: ${theme.spacing(1.5)};
   max-height: 1200px;
   overflow-y: auto;
-  
 
-  
   /* Custom scrollbar styling */
   scrollbar-width: thin;
   scrollbar-color: ${theme.colors.gray[400]} ${theme.colors.gray[100]};
-  
+
   &::-webkit-scrollbar {
     width: 6px;
   }
-  
+
   &::-webkit-scrollbar-track {
     background: ${theme.colors.gray[100]};
     border-radius: 3px;
   }
-  
+
   &::-webkit-scrollbar-thumb {
     background: ${theme.colors.gray[400]};
     border-radius: 3px;
-    
+
     &:hover {
       background: ${theme.colors.gray[500]};
     }
   }
 
-  @media (min-width: ${theme.breakpoints.tablet}) {
+  @media screen and (max-width: 1026px) {
+    max-height: 600px;
+    gap: ${theme.spacing(1)};
+  }
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
     gap: ${theme.spacing(2)};
-    max-height: 800px;
+    max-height: 400px;
+  }
+      @media (max-width: ${theme.breakpoints.mobile}) {
+    gap: ${theme.spacing(2)};
+    max-height: 300px;
   }
 `
 
@@ -187,6 +216,10 @@ export const NewsItem = styled.article`
     transform: translateY(-2px);
   }
 
+  @media screen and (max-width: 1026px) {
+    padding: ${theme.spacing(1)} 0;
+  }
+
   @media (min-width: ${theme.breakpoints.tablet}) {
     padding: ${theme.spacing(2)} 0;
   }
@@ -197,6 +230,11 @@ export const NewsItem = styled.article`
     line-height: 1.4;
     color: ${theme.colors.lightText};
     margin: ${theme.spacing(0.5)} 0 0 0;
+
+    @media screen and (max-width: 1026px) {
+      font-size: 11px;
+      margin: ${theme.spacing(0.25)} 0 0 0;
+    }
 
     @media (min-width: ${theme.breakpoints.tablet}) {
       font-size: ${theme.fontSizes.medium};
@@ -223,6 +261,11 @@ export const NewsTitle = styled.h4`
   color: ${theme.colors.text};
   line-height: 1.3;
   margin: 0;
+
+  @media screen and (max-width: 1026px) {
+    font-size: 0.9rem;
+    line-height: 1.2;
+  }
 
   @media (min-width: ${theme.breakpoints.tablet}) {
     font-size: 1.1rem;
@@ -269,6 +312,11 @@ export const PopularItem = styled.article`
     transform: translateY(-2px);
   }
 
+  @media screen and (max-width: 1026px) {
+    gap: ${theme.spacing(0.75)};
+    padding: ${theme.spacing(0.75)} 0;
+  }
+
   @media (min-width: ${theme.breakpoints.tablet}) {
     gap: ${theme.spacing(1.5)};
     padding: ${theme.spacing(1.25)} 0;
@@ -282,6 +330,11 @@ export const PopularThumbnail = styled.div`
   flex-shrink: 0;
   overflow: hidden;
   background: ${theme.colors.gray[100]};
+
+  @media screen and (max-width: 1026px) {
+    width: 60px;
+    height: 60px;
+  }
 
   @media (min-width: ${theme.breakpoints.tablet}) {
     width: 90px;
@@ -312,6 +365,11 @@ export const PopularTitle = styled.h5`
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+
+  @media screen and (max-width: 1026px) {
+    font-size: 0.8rem;
+    -webkit-line-clamp: 1;
+  }
 
   @media (min-width: ${theme.breakpoints.tablet}) {
     font-size: 0.95rem;
@@ -352,6 +410,12 @@ export const SeeMoreBtn = styled.button`
   width: 100%;
   font-family: ${theme.fonts.body};
   transition: ${theme.transitions.fast};
+
+  @media screen and (max-width: 1026px) {
+    margin-top: ${theme.spacing(2)};
+    padding: ${theme.spacing(1.25)} ${theme.spacing(2)};
+    font-size: 13px;
+  }
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     margin-top: ${theme.spacing(2.5)};

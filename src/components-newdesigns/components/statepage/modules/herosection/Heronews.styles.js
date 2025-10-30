@@ -50,10 +50,12 @@ export const OverlayCard = styled.div`
   margin: 0 ${theme.spacing(1.25)};
   z-index: 10;
 
-  @media (max-width: ${theme.breakpoints.desktop}) {
-    width: min(80%, 600px);
-    padding: ${theme.spacing(6.25)} ${theme.spacing(2.5)} ${theme.spacing(5)} ${theme.spacing(2.5)};
-    min-height: 280px;
+  @media screen and (max-width: 1026px) {
+    width: 90%;
+    padding: ${theme.spacing(2)} ${theme.spacing(1.5)};
+    min-height: auto;
+    max-height: none;
+    bottom: 20px;
   }
 
   @media (max-width: ${theme.breakpoints.tablet}) {
@@ -84,6 +86,12 @@ export const Title = styled.h2`
     font-size: 20px;
   }
 
+  @media screen and (max-width: 1026px) {
+    font-size: 16px;
+    margin-bottom: ${theme.spacing(1)};
+    line-height: 1.3;
+  }
+
   @media (max-width: ${theme.breakpoints.tablet}) {
     font-size: 18px;
     text-align: left;
@@ -97,6 +105,15 @@ export const Excerpt = styled.p`
   margin: 0;
   text-align: center;
   font-family: ${theme.fonts.body};
+
+  @media screen and (max-width: 1026px) {
+    font-size: 12px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 
   @media (max-width: ${theme.breakpoints.tablet}) {
     text-align: left;
@@ -113,6 +130,15 @@ export const BottomBar = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  @media screen and (max-width: 1026px) {
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    margin-top: ${theme.spacing(1.5)};
+    padding: 0;
+  }
 
   @media (max-width: ${theme.breakpoints.tablet}) {
     position: relative;
