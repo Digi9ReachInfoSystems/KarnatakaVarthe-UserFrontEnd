@@ -3,7 +3,7 @@ import { PageLayout } from './Articles.style'
 import Banner from './modules/Banner'
 import SideBar from './modules/SideBar'
 import Featurednews from './modules/Featurednews'
-import TabSection from './modules/TabSection.JSx'
+import TabSection from './modules/TabSection.jsx'
 
 
 function Articles() {
