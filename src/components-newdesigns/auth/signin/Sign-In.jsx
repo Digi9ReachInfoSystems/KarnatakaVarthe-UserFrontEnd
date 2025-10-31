@@ -49,6 +49,7 @@ const SignIn = () => {
   const [otpStep, setOtpStep] = useState(false);
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [confirmationResult, setConfirmationResult] = useState(null);
+  const [authLoadingType, setAuthLoadingType] = useState(null); // 'google' | 'phone' | 'verify' | null
   const { showSuccess, showError, showWarning } = useToast();
   const navigate = useNavigate();
   const googleProvider = new GoogleAuthProvider();
@@ -69,6 +70,8 @@ const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // indicate which auth flow started
+    setAuthLoadingType(otpStep ? 'verify' : 'phone');
     setLoading(true);
     try {
       if (!otpStep) {
@@ -153,9 +156,11 @@ const SignIn = () => {
       }
     } finally {
       setLoading(false);
+      setAuthLoadingType(null);
     }
   };
   const handleGoogleSignIn = async () => {
+    setAuthLoadingType('google');
     setLoading(true);
     try {
       const result = await signInWithPopup(auth, googleProvider);
@@ -203,6 +208,7 @@ const SignIn = () => {
       showError(err.message || "Error during Google sign-in.");
     } finally {
       setLoading(false);
+      setAuthLoadingType(null);
     }
   };
 
@@ -344,9 +350,9 @@ const SignIn = () => {
             {loading ? (
               <>
                 <Spinner />
-                {otpStep
+                {authLoadingType === 'verify'
                   ? "Verifying OTP..."
-                  : handleGoogleSignIn
+                  : authLoadingType === 'google'
                   ? "Signing in with Google..."
                   : "Sending OTP..."}
               </>

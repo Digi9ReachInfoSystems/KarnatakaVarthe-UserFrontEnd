@@ -21,6 +21,10 @@ import {
   PopularContent,
   PopularTitle,
   PopularDate,
+  CombinedColumn,
+  TabContainer,
+  Tab,
+  TabContent,
   SkeletonFeaturedCard,
   SkeletonFeaturedImage,
   SkeletonFeaturedContent,
@@ -41,6 +45,7 @@ const NewsArticles = () => {
   const [latestNews, setLatestNews] = useState([])
   const { language } = useContext(LanguageContext)
   const [popularNews, setPopularNews] = useState([])
+  const [activeTab, setActiveTab] = useState('latest')
   const navigate = useNavigate()
   // Parse date for datetime attribute
  useEffect(() => {
@@ -153,6 +158,24 @@ const NewsArticles = () => {
               ))}
             </NewsList>
           </NewsColumn>
+
+          {/* Combined column skeleton for tablet/mobile */}
+          <CombinedColumn>
+            <TabContainer>
+              <Tab active={true}>Latest News</Tab>
+              <Tab active={false}>Popular News</Tab>
+            </TabContainer>
+            <NewsList>
+              {[1, 2, 3, 4].map((i) => (
+                <SkeletonNewsItem key={`skeleton-${i}`}>
+                  <SkeletonLine width="100px" height="14px" />
+                  <SkeletonLine width="90%" height="20px" />
+                  <SkeletonLine width="100%" height="14px" />
+                  <SkeletonLine width="80%" height="14px" />
+                </SkeletonNewsItem>
+              ))}
+            </NewsList>
+          </CombinedColumn>
         </GridLayout>
       </Container>
     )
@@ -287,6 +310,87 @@ const NewsArticles = () => {
             ))}
           </NewsList>
         </NewsColumn>
+
+        {/* Combined column with tabs for tablet/mobile */}
+        <CombinedColumn>
+          <TabContainer>
+            <Tab active={activeTab === 'latest'} onClick={() => setActiveTab('latest')}>
+              Latest News
+            </Tab>
+            <Tab active={activeTab === 'popular'} onClick={() => setActiveTab('popular')}>
+              Popular News
+            </Tab>
+          </TabContainer>
+
+          <TabContent active={activeTab === 'latest'}>
+            <NewsList role="feed" aria-label="Latest news articles" aria-busy="false">
+              {newsData.map((item, index) => (
+                <NewsItem
+                  key={`tab-latest-${item.id}`}
+                  as="article"
+                  role="article"
+                  aria-labelledby={`tab-latest-news-${index}`}
+                  tabIndex="0"
+                  onClick={() => navigate(`/newsdetails/${item.id}`)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <NewsItemContent>
+                    <NewsDate as="time" dateTime={parseDateTimeAttr(item.date)}>
+                      {formatDate(item.date)}
+                    </NewsDate>
+                    <NewsAuthor aria-label={`Author: ${item.author}`}>
+                      {item.author}
+                    </NewsAuthor>
+                    <NewsTitle id={`tab-latest-news-${index}`} as="h4">
+                      {item.title}
+                    </NewsTitle>
+                    <p>{item.excerpt}</p>
+                  </NewsItemContent>
+                </NewsItem>
+              ))}
+            </NewsList>
+          </TabContent>
+
+          <TabContent active={activeTab === 'popular'}>
+            <NewsList role="feed" aria-label="Popular news articles" aria-busy="false">
+              {popularNews.map((item, index) => (
+                <PopularItem
+                  key={`tab-popular-${item.id}`}
+                  as="article"
+                  role="article"
+                  aria-labelledby={`tab-popular-news-${index}`}
+                  tabIndex="0"
+                  onClick={() => navigate(`/newsdetails/${item.id}`)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <PopularThumbnail>
+                    <img
+                      src={item.image || "/state/2ndimage.jpg"}
+                      alt={`Thumbnail: ${item.title}`}
+                      loading="lazy"
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        cursor: 'pointer'
+                      }}
+                    />
+                  </PopularThumbnail>
+                  <PopularContent>
+                    <PopularDate as="time" dateTime={parseDateTimeAttr(item.date)}>
+                      {formatDate(item.date)}
+                    </PopularDate>
+                    <PopularTitle id={`tab-popular-news-${index}`} as="h4">
+                      {item.title}
+                    </PopularTitle>
+                  </PopularContent>
+                </PopularItem>
+              ))}
+            </NewsList>
+          </TabContent>
+        </CombinedColumn>
       </GridLayout>
     </Container>
   )
