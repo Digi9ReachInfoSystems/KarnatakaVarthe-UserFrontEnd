@@ -61,14 +61,25 @@ const HeaderTab = () => {
         Kannada: "March of Karnataka", // Keep English by default, translate only when tab is active
         Hindi: "March of Karnataka"
       }
-    },
+    },   
+    
     { 
-      name: "State", 
-      path: "/state",
+      name: "Special news", 
+      path: "/specialnews",
       translations: {
-        English: "State",
-        Kannada: "ರಾಜ್ಯ",
-        Hindi: "राज्य"
+        English: "Special News",
+        Kannada: "ವಿಶೇಷ ಸುದ್ದಿ",
+        Hindi: "विशेष समाचार"
+      }
+    },
+    //Article tab
+    { 
+      name: "Articles",
+      path: "/articles",
+      translations: {
+        English: "Articles",
+        Kannada: "ಲೇಖನಗಳು",
+        Hindi: "लेख"
       }
     },
     { 
@@ -81,21 +92,23 @@ const HeaderTab = () => {
       }
     },
     { 
-      name: "Special news", 
-      path: "/specialnews",
+      name: "State", 
+      path: "/state",
       translations: {
-        English: "Special News",
-        Kannada: "ವಿಶೇಷ ಸುದ್ದಿ",
-        Hindi: "विशेष समाचार"
+        English: "State",
+        Kannada: "ರಾಜ್ಯ",
+        Hindi: "राज्य"
       }
     },
+    
+ //All News tab
     { 
-      name: "News", 
+      name: "All News",
       path: "/news",
       translations: {
-        English: "News",
-        Kannada: "ಸುದ್ದಿ",
-        Hindi: "समाचार"
+        English: "All News",
+        Kannada: "ಎಲ್ಲಾ ಸುದ್ದಿ",
+        Hindi: "सभी समाचार"
       }
     },
     { 
@@ -124,7 +137,8 @@ const HeaderTab = () => {
         Kannada: "ಫೋಟೋಗಳು",
         Hindi: "फोटो"
       }
-    }
+    },
+    
   ];
 
   // Get translated name for nav item

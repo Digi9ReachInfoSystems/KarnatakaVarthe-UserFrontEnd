@@ -6,6 +6,11 @@ import {
   Title,
   Grid,
   Column,
+  SectionTitle,
+  TabContainer,
+  Tab,
+  TabContent,
+  CombinedColumn,
   List,
   Item,
   MetaRow,
@@ -189,6 +194,7 @@ export default function LatestNews() {
   const [popularNews, setPopularNews] = useState([])
   const { language } = useContext(LanguageContext)
   const [centerNews, setCenterNews] = useState([])
+  const [activeTab, setActiveTab] = useState('latest')
   const navigate = useNavigate()
   // Parse date for datetime attribute
   useEffect(() => {
@@ -274,6 +280,7 @@ export default function LatestNews() {
         <Grid>
           {/* Left column skeleton */}
           <Column>
+            <SectionTitle>Latest News</SectionTitle>
             <List className="custom-scrollbar">
               {[1, 2, 3, 4, 5].map((i) => (
                 <SkeletonItem key={i}>
@@ -292,6 +299,7 @@ export default function LatestNews() {
 
           {/* Center feature skeleton */}
           <Column>
+            <SectionTitle>Featured Story</SectionTitle>
             <SkeletonFeatureCard>
               <SkeletonFeatureContent>
                 <div style={{ display: 'flex', gap: '8px' }}>
@@ -308,6 +316,7 @@ export default function LatestNews() {
 
           {/* Right column skeleton */}
           <Column>
+            <SectionTitle>Popular News</SectionTitle>
             <List className="custom-scrollbar">
               {[1, 2, 3, 4, 5].map((i) => (
                 <SkeletonItem key={i}>
@@ -323,6 +332,28 @@ export default function LatestNews() {
               ))}
             </List>
           </Column>
+
+          {/* Combined column skeleton for tablet/mobile */}
+          <CombinedColumn>
+            <TabContainer>
+              <Tab active={true}>Latest News</Tab>
+              <Tab active={false}>Popular News</Tab>
+            </TabContainer>
+            <List className="custom-scrollbar">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <SkeletonItem key={`skeleton-${i}`}>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <SkeletonLine width="80px" height="24px" />
+                    <SkeletonLine width="120px" height="14px" />
+                  </div>
+                  <SkeletonLine width="90%" height="20px" />
+                  <SkeletonLine width="100%" height="14px" />
+                  <SkeletonLine width="100%" height="14px" />
+                  <SkeletonLine width="60%" height="14px" />
+                </SkeletonItem>
+              ))}
+            </List>
+          </CombinedColumn>
         </Grid>
       </Wrapper>
     )
@@ -346,6 +377,7 @@ export default function LatestNews() {
       <Grid>
         {/* Left column */}
         <Column as="div" role="region" aria-labelledby="latest-news-title">
+          <SectionTitle id="section-latest-news">Latest News</SectionTitle>
           <List className="custom-scrollbar" role="feed" aria-label="Latest news articles" aria-busy="false">
             {newsData.map((n, idx) => (
               <Item 
@@ -371,6 +403,7 @@ export default function LatestNews() {
 
         {/* Center feature */}
         <Column as="div" role="region" aria-labelledby="featured-story-title">
+          <SectionTitle id="section-featured-story">Featured Story</SectionTitle>
           <h3 
             id="featured-story-title" 
             style={{ position: 'absolute', left: '-9999px', top: 'auto', width: '1px', height: '1px', overflow: 'hidden' }}
@@ -410,6 +443,7 @@ export default function LatestNews() {
 
         {/* Right column */}
         <Column as="div" role="region" aria-labelledby="popular-news-title">
+          <SectionTitle id="section-popular-news">Popular News</SectionTitle>
           <List className="custom-scrollbar" role="feed" aria-label="Popular news articles" aria-busy="false">
             {popularNews.map((n, idx) => (
               <Item
@@ -432,6 +466,64 @@ export default function LatestNews() {
             ))}
           </List>
         </Column>
+
+        {/* Combined column with tabs for tablet/mobile */}
+        <CombinedColumn>
+          <TabContainer>
+            <Tab active={activeTab === 'latest'} onClick={() => setActiveTab('latest')}>
+              Latest News
+            </Tab>
+            <Tab active={activeTab === 'popular'} onClick={() => setActiveTab('popular')}>
+              Popular News
+            </Tab>
+          </TabContainer>
+
+          <TabContent active={activeTab === 'latest'}>
+            <List className="custom-scrollbar" role="feed" aria-label="Latest news articles" aria-busy="false">
+              {newsData.map((n, idx) => (
+                <Item 
+                  key={`tab-latest-${idx}`}
+                  as="article" 
+                  role="article"
+                  aria-labelledby={`tab-latest-news-${idx}`}
+                  tabIndex="0"
+                  onClick={() => navigate(`/newsdetails/${n.id}`)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <MetaRow>
+                    <DateText as="time" dateTime={formatDate(n.date)}>{formatDate(n.date)}</DateText>
+                  </MetaRow>
+                  <Headline id={`tab-latest-news-${idx}`} as="h4">{n.title}</Headline>
+                  <Summary>{n.excerpt}</Summary>
+                  <Divider aria-hidden="true" />
+                </Item>
+              ))}
+            </List>
+          </TabContent>
+
+          <TabContent active={activeTab === 'popular'}>
+            <List className="custom-scrollbar" role="feed" aria-label="Popular news articles" aria-busy="false">
+              {popularNews.map((n, idx) => (
+                <Item
+                  key={`tab-popular-${idx}`}
+                  as="article"
+                  role="article"
+                  aria-labelledby={`tab-popular-news-${idx}`}
+                  tabIndex="0"
+                  onClick={() => navigate(`/newsdetails/${n.id}`)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <MetaRow>
+                    <DateText as="time" dateTime={formatDate(n.date)}>{formatDate(n.date)}</DateText>
+                  </MetaRow>
+                  <Headline id={`tab-popular-news-${idx}`} as="h4">{n.title}</Headline>
+                  <Summary>{n.excerpt}</Summary>
+                  <Divider aria-hidden="true" />
+                </Item>
+              ))}
+            </List>
+          </TabContent>
+        </CombinedColumn>
       </Grid>
     </Wrapper>
   )

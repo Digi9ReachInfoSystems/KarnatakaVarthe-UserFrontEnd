@@ -94,6 +94,15 @@ export default function MarchKarnatakaGallery() {
     // Fallback to default field
     return magazine[field] || '';
   };
+  // Helper to remove any <mark> tags left in search/content snippets
+  const stripMarkTags = (html) => {
+    if (!html && html !== '') return '';
+    try {
+      return String(html).replace(/<\/?mark[^>]*>/gi, '');
+    } catch (e) {
+      return String(html || '');
+    }
+  };
 // call getmagzinebyContent
 const getMagazineByContent = async (content) => {
   try {
@@ -339,7 +348,7 @@ const performSearch = async (query) => {
                 color: '#333',
                 marginBottom: '15px'
               }}>
-                {filteredMagazines[0].description}
+                {stripMarkTags(filteredMagazines[0].description)}
               </h3>
               {filteredMagazines[0].content && (
                 <div style={{
@@ -350,8 +359,8 @@ const performSearch = async (query) => {
                   overflow: 'hidden',
                   textOverflow: 'ellipsis'
                 }}>
-                  {filteredMagazines[0].content}
-                  
+                  {stripMarkTags(filteredMagazines[0].content)}
+
                 </div>
               )}
             </div>

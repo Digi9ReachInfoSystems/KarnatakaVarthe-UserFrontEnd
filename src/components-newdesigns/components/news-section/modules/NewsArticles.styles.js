@@ -142,6 +142,10 @@ export const NewsColumn = styled.div`
   flex-direction: column;
   gap: ${theme.spacing(1.5)};
 
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    display: none;
+  }
+
   @media (min-width: ${theme.breakpoints.tablet}) {
     gap: ${theme.spacing(2)};
   }
@@ -159,6 +163,10 @@ export const ColumnHeader = styled.h3`
   @media (min-width: ${theme.breakpoints.tablet}) {
     font-size: ${theme.fontSizes.large};
     margin-bottom: 0;
+  }
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    display: none;
   }
 `
 
@@ -558,6 +566,57 @@ export const SkeletonThumbnail = styled.div`
   @media (min-width: ${theme.breakpoints.tablet}) {
     width: 90px;
     height: 90px;
+  }
+    
+`
+export const CombinedColumn = styled.div`
+  display: none;
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    display: block;
+    order: 2;
+  }
+`
+export const TabContainer = styled.div`
+  display: none;
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    display: flex;
+    gap: ${theme.spacing(1)};
+    margin-bottom: ${theme.spacing(2)};
+    border-bottom: 2px solid ${theme.colors.gray[200]};
+  }
+`
+export const Tab = styled.button`
+  background: none;
+  border: none;
+  padding: ${theme.spacing(1.5)} ${theme.spacing(2)};
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: ${theme.fonts.heading};
+  color: ${({ active }) => active ? theme.colors.black : theme.colors.gray[500]};
+  border-bottom: 3px solid ${({ active }) => active ? theme.colors.primary : 'transparent'};
+  cursor: pointer;
+  transition: ${theme.transitions.fast};
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: -2px;
+
+  &:hover {
+    color: ${theme.colors.black};
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    font-size: 0.85rem;
+    padding: ${theme.spacing(1.25)} ${theme.spacing(1.5)};
+    letter-spacing: 0.2px;
+  }
+`
+export const TabContent = styled.div`
+  display: block;
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    display: ${({ active }) => active ? 'block' : 'none'};
   }
 `
 

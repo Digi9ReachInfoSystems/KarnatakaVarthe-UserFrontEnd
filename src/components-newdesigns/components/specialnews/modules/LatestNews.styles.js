@@ -55,17 +55,7 @@ export const HeaderRow = styled.div`
   gap: ${theme.spacing(2)};
 
   @media (max-width: ${theme.breakpoints.tablet}) {
-    margin-bottom: ${theme.spacing(2)};
-    gap: ${theme.spacing(2)};
-  }
-
-  @media (max-width: ${theme.breakpoints.mobile}) {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: ${theme.spacing(2)};
-    gap: ${theme.spacing(1)};
-    flex-wrap: wrap;
+    display: none;
   }
 `
 
@@ -107,7 +97,7 @@ export const Grid = styled.div`
   gap: ${theme.spacing(3)};
 
   @media (min-width: ${theme.breakpoints.desktop}) {
-    grid-template-columns: 1fr 1.4fr 1fr; /* left / center / right */
+    grid-template-columns: 1fr 1.4fr 1fr;
     gap: ${theme.spacing(3.5)};
   }
 
@@ -122,7 +112,97 @@ export const Grid = styled.div`
   }
 `
 
-export const Column = styled.div``
+export const Column = styled.div`
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    &:nth-child(2) {
+      order: 1;
+    }
+    &:nth-child(1) {
+      display: none;
+    }
+    &:nth-child(3) {
+      display: none;
+    }
+  }
+`
+
+export const SectionTitle = styled.h3`
+  display: none;
+  font-size: 1.125rem;
+  font-weight: 700;
+  font-family: ${theme.fonts.heading};
+  letter-spacing: 0.5px;
+  color: ${theme.colors.black};
+  text-transform: uppercase;
+  margin: 0 0 ${theme.spacing(2)} 0;
+  text-align: left;
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    display: block;
+    font-size: 1rem;
+    letter-spacing: 0.3px;
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    font-size: 0.85rem;
+    letter-spacing: 0.2px;
+    margin-bottom: ${theme.spacing(1.5)};
+  }
+`
+
+export const TabContainer = styled.div`
+  display: none;
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    display: flex;
+    gap: ${theme.spacing(1)};
+    margin-bottom: ${theme.spacing(2)};
+    border-bottom: 2px solid ${theme.colors.gray[200]};
+  }
+`
+
+export const Tab = styled.button`
+  background: none;
+  border: none;
+  padding: ${theme.spacing(1.5)} ${theme.spacing(2)};
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: ${theme.fonts.heading};
+  color: ${({ active }) => active ? theme.colors.black : theme.colors.gray[500]};
+  border-bottom: 3px solid ${({ active }) => active ? theme.colors.primary : 'transparent'};
+  cursor: pointer;
+  transition: ${theme.transitions.fast};
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: -2px;
+
+  &:hover {
+    color: ${theme.colors.black};
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    font-size: 0.85rem;
+    padding: ${theme.spacing(1.25)} ${theme.spacing(1.5)};
+    letter-spacing: 0.2px;
+  }
+`
+
+export const TabContent = styled.div`
+  display: block;
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    display: ${({ active }) => active ? 'block' : 'none'};
+  }
+`
+
+export const CombinedColumn = styled.div`
+  display: none;
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    display: block;
+    order: 2;
+  }
+`
 
 // Left & Right lists
 export const List = styled.div`

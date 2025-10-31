@@ -53,6 +53,7 @@ import ShortsVIdeo from "./components-newdesigns/components/Shorts/ShortsVIdeo";
 import SavedListItems from "./components-newdesigns/components/SavedItems/SavedListItems";
 import ShowPhotos from "./components-newdesigns/components/photos/ShowPhotos";
 import Settings from "./components-newdesigns/components/settings/modules/Settings";
+import Articles from "./components-newdesigns/components/articles/Articles";
 
 
 const App = () => {
@@ -122,6 +123,7 @@ const App = () => {
                   <Route path="/shorts" element={<ShortsVIdeo />} />
                   <Route path="/photos" element={<ShowPhotos />} />
                   <Route path="/settings" element={<Settings />} />
+                  <Route path="/articles" element={<Articles />} />
                 </Route>
                 <Route path="/login" element={<Login />} />
                 {/* <Route path="/marchofkarnatakaV1" element={<MarchofKarnatakaV1 />} /> */}

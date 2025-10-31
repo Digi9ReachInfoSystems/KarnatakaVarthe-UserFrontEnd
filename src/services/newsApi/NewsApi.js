@@ -91,3 +91,12 @@ export const getNewsByTypeSpecialnews = async () => {
   }
 }
 
+//get articles by type news
+export const getNewsByTypeArticles = async () => {
+  try {
+    const response = await apiClient.get("api/news/getNewsByNewsType/articles");
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
