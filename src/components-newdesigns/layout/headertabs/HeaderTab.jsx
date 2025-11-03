@@ -107,7 +107,7 @@ const HeaderTab = () => {
       path: "/news",
       translations: {
         English: "All News",
-        Kannada: "ಎಲ್ಲಾ ಸುದ್ದಿ",
+        Kannada: "ಸುದ್ದಿಗಳು",
         Hindi: "सभी समाचार"
       }
     },

@@ -18,13 +18,11 @@ export const PageLayout = styled.div`
     gap: ${theme.spacing(4)};
     padding: ${theme.spacing(3)} ${theme.spacing(3)};
   }
-  // desktop responsive
   @media (max-width: 1026px) {
     gap: ${theme.spacing(3)};
     padding: ${theme.spacing(2)} ${theme.spacing(2)};
     max-width: 100%;
   }
-
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     gap: ${theme.spacing(3)};

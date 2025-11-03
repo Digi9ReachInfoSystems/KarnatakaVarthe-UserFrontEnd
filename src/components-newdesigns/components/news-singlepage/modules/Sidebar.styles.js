@@ -24,12 +24,10 @@ export const SidebarSection = styled.div`
   overflow: hidden;
   
   @media (max-width: ${theme.breakpoints.tablet}) {
-    margin-bottom: 20px;
+    display: none;
   }
   
-  @media (max-width: ${theme.breakpoints.mobile}) {
-    margin-bottom: 16px;
-  }
+
 `
 
 export const SectionTitle = styled.h3`
@@ -597,4 +595,57 @@ export const SkeletonThumbnail = styled.div`
 export const SkeletonTrendingItem = styled.div`
   padding: 16px;
   ${shimmer}
+`
+export const CombinedColumn = styled.div`
+  display: none;
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    display: block;
+    order: 2;
+  }
+`
+
+export const TabContainer = styled.div`
+  display: none;
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    display: flex;
+    gap: ${theme.spacing(1)};
+    margin-bottom: ${theme.spacing(2)};
+    border-bottom: 2px solid ${theme.colors.gray[200]};
+  }
+`
+
+export const Tab = styled.button`
+  background: none;
+  border: none;
+  padding: ${theme.spacing(1.5)} ${theme.spacing(2)};
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: ${theme.fonts.heading};
+  color: ${({ active }) => active ? theme.colors.black : theme.colors.gray[500]};
+  border-bottom: 3px solid ${({ active }) => active ? theme.colors.primary : 'transparent'};
+  cursor: pointer;
+  transition: ${theme.transitions.fast};
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: -2px;
+
+  &:hover {
+    color: ${theme.colors.black};
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    font-size: 0.85rem;
+    padding: ${theme.spacing(1.25)} ${theme.spacing(1.5)};
+    letter-spacing: 0.2px;
+  }
+`
+
+export const TabContent = styled.div`
+  display: block;
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    display: ${({ active }) => active ? 'block' : 'none'};
+  }
 `
