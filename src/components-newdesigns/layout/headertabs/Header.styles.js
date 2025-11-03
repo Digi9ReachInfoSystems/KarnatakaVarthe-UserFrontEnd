@@ -7,6 +7,7 @@ export const HeaderContainer = styled.header`
   top: 0;
   z-index: 50;
   width: 100%;
+  overflow: visible;
   background-color: ${theme.colors.background};
   // box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   border-bottom: 1px solid ${theme.colors.gray[300]};
@@ -39,19 +40,16 @@ export const HeaderContent = styled.div`
   align-items: center;
   justify-content: space-between;
   position: relative;
+  gap: ${theme.spacing(1)};
 
-  @media (max-width: 1024px) {
+  @media (min-width: 1040px) and (max-width: 1391px) {
     height: 52px;
-    gap: ${theme.spacing(1)};
+    gap: ${theme.spacing(0.75)};
   }
 
-  @media (max-width: ${theme.breakpoints.tablet}) {
+  @media (max-width: 1039px) {
     height: 48px;
     gap: ${theme.spacing(0.5)};
-  }
-
-  @media (max-width: ${theme.breakpoints.mobile}) {
-    height: 44px;
   }
 `;
 
@@ -87,18 +85,23 @@ export const DesktopNav = styled.nav`
   display: none;
   align-items: center;
   gap: ${theme.spacing(1)};
+  flex: 1;
+  min-width: 0;
 
-  @media (min-width: 1025px) {
+  @media (min-width: 1026px) {
     display: flex;
   }
 
-  @media (min-width: 1025px) and (max-width: 1280px) {
+  @media (min-width: 1040px) and (max-width: 1391px) {
     gap: ${theme.spacing(0.5)};
+    flex-shrink: 1;
   }
 `;
 
 export const NavItem = styled.div`
   position: relative;
+  flex-shrink: 1;
+  min-width: 0;
 `;
 
 export const NavLinkStyled = styled(NavLink)`
@@ -113,14 +116,14 @@ export const NavLinkStyled = styled(NavLink)`
   display: block;
   white-space: nowrap;
 
-  @media (max-width: 1280px) {
-    padding: ${theme.spacing(0.75)} ${theme.spacing(1.5)};
-    font-size: ${theme.fontSizes.small};
+  @media (min-width: 1040px) and (max-width: 1391px) {
+    padding: ${theme.spacing(0.625)} ${theme.spacing(1.25)};
+    font-size: clamp(10px, 0.85vw, 13px);
   }
 
-  @media (max-width: 1024px) {
+  @media (max-width: 1039px) {
     padding: ${theme.spacing(0.5)} ${theme.spacing(1)};
-    font-size: 12px;
+    font-size: 11px;
   }
 
   &:hover {
@@ -141,14 +144,13 @@ export const NavLinkStyled = styled(NavLink)`
 
   &.kannada-text {
     font-weight: 700;
-    font-size: ${theme.fontSizes.medium};
-
-    @media (max-width: 1280px) {
-      font-size: ${theme.fontSizes.small};
+    
+    @media (min-width: 1040px) and (max-width: 1391px) {
+      font-size: clamp(10px, 0.85vw, 13px);
     }
 
-    @media (max-width: 1024px) {
-      font-size: 12px;
+    @media (max-width: 1039px) {
+      font-size: 11px;
     }
   }
 `;
@@ -181,25 +183,16 @@ export const LoginButton = styled(NavLink)`
   align-items: center;
   justify-content: center;
   white-space: nowrap;
+  flex-shrink: 0;
   
-  @media (max-width: 1280px) {
-    font-size: 11px;
-    padding: ${theme.spacing(0.75)} ${theme.spacing(1.5)};
+  @media (min-width: 1040px) and (max-width: 1391px) {
+    font-size: clamp(9px, 0.8vw, 11px);
+    padding: ${theme.spacing(0.625)} ${theme.spacing(1.25)};
   }
 
-  @media (max-width: 1024px) {
+  @media (max-width: 1039px) {
     font-size: 10px;
     padding: ${theme.spacing(0.5)} ${theme.spacing(1)};
-  }
-
-  @media (max-width: 940px) {
-    font-size: ${theme.fontSizes.xsmall};
-    padding: ${theme.spacing(0.5)} ${theme.spacing(1.5)};
-  }
-
-  @media (max-width: ${theme.breakpoints.mobile}) {
-    font-size: 9px;
-    padding: ${theme.spacing(0.4)} ${theme.spacing(1)};
   }
 
   &:hover {
@@ -464,6 +457,7 @@ export const mediaQueries = {
 export const ProfileContainer = styled.div`
   position: relative;
   display: inline-block;
+  z-index: 1001;
 `;
 
 export const ProfileButton = styled.button`
@@ -479,17 +473,18 @@ export const ProfileButton = styled.button`
   cursor: pointer;
   transition: all ${theme.transitions.fast};
   font-size: 18px;
+  flex-shrink: 0;
   
-  @media (max-width: 1024px) {
+  @media (min-width: 1040px) and (max-width: 1391px) {
     width: 36px;
     height: 36px;
     font-size: 16px;
   }
 
-  @media (max-width: ${theme.breakpoints.mobile}) {
-    width: 32px;
-    height: 32px;
-    font-size: 14px;
+  @media (max-width: 1039px) {
+    width: 34px;
+    height: 34px;
+    font-size: 15px;
   }
 
   &:hover {
@@ -506,12 +501,12 @@ export const ProfileButton = styled.button`
     width: 24px;
     height: 24px;
 
-    @media (max-width: 1024px) {
+    @media (min-width: 1040px) and (max-width: 1391px) {
       width: 20px;
       height: 20px;
     }
 
-    @media (max-width: ${theme.breakpoints.mobile}) {
+    @media (max-width: 1039px) {
       width: 18px;
       height: 18px;
     }
@@ -526,12 +521,13 @@ export const DropdownMenu = styled.div`
   border-radius: ${theme.borderRadius.medium};
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   min-width: 200px;
-  z-index: 1000;
+  z-index: 1002;
   opacity: ${props => props.isOpen ? 1 : 0};
   visibility: ${props => props.isOpen ? 'visible' : 'hidden'};
   transform: ${props => props.isOpen ? 'translateY(0)' : 'translateY(-10px)'};
   transition: all 0.2s ease;
   border: 1px solid ${theme.colors.gray[200]};
+  pointer-events: ${props => props.isOpen ? 'auto' : 'none'};
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     min-width: 180px;

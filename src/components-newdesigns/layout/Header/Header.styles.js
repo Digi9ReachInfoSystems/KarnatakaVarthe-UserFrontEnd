@@ -112,11 +112,14 @@ export const TitleSection = styled.div`
   flex: 1;
   min-width: 0;
 
-  @media (max-width: ${theme.breakpoints.tablet}) {
+  @media (max-width: 1026px) {
     align-items: center;
     text-align: center;
     flex: none;
   }
+@media (max-width: ${theme.breakpoints.desktop}) {
+  padding: 18px ${theme.spacing(2)} 0 ${theme.spacing(2)};
+}
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     align-items: center;
