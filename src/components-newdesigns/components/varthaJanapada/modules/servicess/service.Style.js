@@ -89,14 +89,12 @@ export const ServiceList = styled.ol`
     max-height: 270px;
   }
 
-  /* Optional: Scrollbar styling for WebKit */
+  /* Hide scrollbar for Chrome, Safari and Opera */
   &::-webkit-scrollbar {
-    width: 6px;
+    display: none;
   }
-  &::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 3px;
-  }
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
 `;
 
 export const ServiceItem = styled.li`
