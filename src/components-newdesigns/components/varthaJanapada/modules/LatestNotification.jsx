@@ -98,7 +98,7 @@ export default function LatestNotification({ notifications = [] }) {
             // Scroll down by 1 pixel for smooth scrolling
             scrollContainer.scrollTop += 1
           }
-        }, 30)
+        }, 60)
 
         return () => clearInterval(interval)
       }

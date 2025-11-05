@@ -65,7 +65,7 @@ function Services() {
           } else {
             scrollContainer.scrollTop += 1;
           }
-        }, 30);
+        }, 60);
         return () => clearInterval(interval);
       }
     }
