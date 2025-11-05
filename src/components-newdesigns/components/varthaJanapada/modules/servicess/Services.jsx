@@ -10,7 +10,7 @@ import {
   SkeletonLine,
 } from "./service.Style";
 import { LanguageContext } from "../../../../../context/LanguageContext";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState ,useRef} from "react";
 import { getLatestService } from "../../../../../services/latestnotification/LatestNotification";
 
 const headerText = {
@@ -32,6 +32,8 @@ function Services() {
   const { language } = useContext(LanguageContext);
   const [service, setService] = useState([]);
   const [loading, setLoading] = useState(true);
+  const listRef = useRef(null);
+  const [isHovered, setIsHovered] = useState(false);
 
   //get latest services from api and set to service state
   useEffect(() => {
@@ -49,8 +51,26 @@ function Services() {
     };
     fetchServices();
   }, []);
+  
+  // Auto-scroll effect for the service list
+  useEffect(() => {
+    if (service.length > 0 && listRef.current && !isHovered) {
+      const scrollContainer = listRef.current;
+      const scrollHeight = scrollContainer.scrollHeight;
+      const clientHeight = scrollContainer.clientHeight;
+      if (scrollHeight > clientHeight) {
+        const interval = setInterval(() => {
+          if (scrollContainer.scrollTop >= scrollHeight - clientHeight - 10) {
+            scrollContainer.scrollTop = 0;
+          } else {
+            scrollContainer.scrollTop += 1;
+          }
+        }, 30);
+        return () => clearInterval(interval);
+      }
+    }
+  }, [service.length, isHovered]);
   return (
-    // Placeholder for Services component
     <Card>
       <CardHeader>{headerText[language]}</CardHeader>
       {loading ? (
@@ -63,11 +83,20 @@ function Services() {
         </CardBodySkeleton>
       ) : (
         <CardBody>
-          <ServiceList>
+          <ServiceList
+            ref={listRef}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            aria-label="Services list"
+          >
             {Array.isArray(service) &&
               service.map((item, index) => (
                 <ServiceItem key={index}>
-                  <span>{item[languageMap[language]]}</span>
+                  <span>
+                    {item[languageMap[language]] && item[languageMap[language]].length > 100
+                      ? item[languageMap[language]].slice(0, 100) + '...'
+                      : item[languageMap[language]]}
+                  </span>
                   <ListLink
                     as="a"
                     href={
