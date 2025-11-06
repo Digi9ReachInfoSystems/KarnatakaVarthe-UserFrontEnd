@@ -7,7 +7,10 @@ import {
   CardBody,
   ItemAction,
   CardBodySkeleton,
-  SkeletonLine,
+  ShimmerItem,
+  ShimmerContent,
+  ShimmerText,
+  ShimmerAction,
 } from "./service.Style";
 import { LanguageContext } from "../../../../../context/LanguageContext";
 import { useContext, useEffect, useState ,useRef} from "react";
@@ -75,11 +78,41 @@ function Services() {
       <CardHeader>{headerText[language]}</CardHeader>
       {loading ? (
         <CardBodySkeleton>
-          <SkeletonLine width="80%" />
-          <SkeletonLine width="60%" />
-          <SkeletonLine width="90%" />
-          <SkeletonLine width="70%" />
-          <SkeletonLine width="50%" />
+          <ShimmerItem>
+            <ShimmerContent>
+              <ShimmerText width="70%" />
+              <ShimmerText width="50%" />
+            </ShimmerContent>
+            <ShimmerAction />
+          </ShimmerItem>
+          <ShimmerItem>
+            <ShimmerContent>
+              <ShimmerText width="60%" />
+              <ShimmerText width="40%" />
+            </ShimmerContent>
+            <ShimmerAction />
+          </ShimmerItem>
+          <ShimmerItem>
+            <ShimmerContent>
+              <ShimmerText width="80%" />
+              <ShimmerText width="55%" />
+            </ShimmerContent>
+            <ShimmerAction />
+          </ShimmerItem>
+          <ShimmerItem>
+            <ShimmerContent>
+              <ShimmerText width="65%" />
+              <ShimmerText width="45%" />
+            </ShimmerContent>
+            <ShimmerAction />
+          </ShimmerItem>
+          <ShimmerItem>
+            <ShimmerContent>
+              <ShimmerText width="75%" />
+              <ShimmerText width="50%" />
+            </ShimmerContent>
+            <ShimmerAction />
+          </ShimmerItem>
         </CardBodySkeleton>
       ) : (
         <CardBody>
