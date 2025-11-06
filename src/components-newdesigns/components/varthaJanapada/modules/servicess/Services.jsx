@@ -113,6 +113,13 @@ function Services() {
             </ShimmerContent>
             <ShimmerAction />
           </ShimmerItem>
+              <ShimmerItem>
+            <ShimmerContent>
+              <ShimmerText width="70%" />
+              <ShimmerText width="50%" />
+            </ShimmerContent>
+            <ShimmerAction />
+          </ShimmerItem>
         </CardBodySkeleton>
       ) : (
         <CardBody>
