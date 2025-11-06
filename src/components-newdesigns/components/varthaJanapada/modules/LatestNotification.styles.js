@@ -1,6 +1,14 @@
-import styled from "styled-components"
+import styled ,{keyframes} from "styled-components"
 import theme from "../../../../theme/Theme"
 
+const shimmer = keyframes`
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+`;
 export const NotificationPanel = styled.aside`
   background-color: ${theme.colors.white};
   overflow: hidden;
@@ -191,7 +199,7 @@ export const ShimmerIndex = styled.div`
   height: 16px;
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+  animation: ${shimmer} 1.5s infinite;
   border-radius: 4px;
 `
 
@@ -206,7 +214,7 @@ export const ShimmerText = styled.div`
   height: 16px;
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+  animation: ${shimmer} 1.5s infinite;
   border-radius: 4px;
   width: ${props => props.width || '100%'};
   margin-bottom: ${props => props.marginBottom || '0'};
@@ -217,7 +225,7 @@ export const ShimmerLink = styled.div`
   width: 80px;
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+  animation: ${shimmer} 1.5s infinite;
   border-radius: 4px;
   margin-left: auto;
   margin-top: ${theme.spacing1(1)};
