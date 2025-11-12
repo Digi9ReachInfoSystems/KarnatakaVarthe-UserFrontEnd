@@ -295,7 +295,7 @@ export default function MagzineIdview() {
       <RecommendedSection>
         <RecommendedHeader>
           <RecommendedTitle>{t.recommendedTitle}</RecommendedTitle>
-          <SeeMoreButton onClick={() => navigate('/varthamagazines')} aria-label={t.seeMore}>
+          <SeeMoreButton onClick={() => navigate('/magazinesvartha')} aria-label={t.seeMore}>
             {t.seeMore}
             <IoArrowForwardOutline aria-hidden="true" />
           </SeeMoreButton>
