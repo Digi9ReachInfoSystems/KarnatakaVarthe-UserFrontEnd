@@ -7,6 +7,7 @@ import ArticlesNews from "./modules/articlescrool/ArticlesNews";
 import LongVideos from "./modules/longvideos/LongVideos";
 import GallerySection from "./modules/gallery/GallerySection";
 import ShortsCarousel from "./modules/shortvideos/ShortVideosSection";
+import NewsArticlesNews from "./modules/newsarticles/NewsArtilces";
 
 export default function VarthaJanapadasection() {
   return (
@@ -17,6 +18,7 @@ export default function VarthaJanapadasection() {
           <StateNews />
           <StateGovernmentWebsites />
         </FlexContainer>
+        <NewsArticlesNews />
         <ArticlesNews />
         <LongVideos />
         <ShortsCarousel />

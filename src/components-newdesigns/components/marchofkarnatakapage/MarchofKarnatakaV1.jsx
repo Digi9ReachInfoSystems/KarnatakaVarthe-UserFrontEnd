@@ -9,6 +9,7 @@ import ShortsCarouselsMOK from './modules/shortVideo/ShortsCarouselsMOK'
 import GalleryMOK from './modules/GalleryMOK/GalleryMOK'
 import { LanguageContext } from '../../../context/LanguageContext.jsx'
 import { useContext, useEffect } from 'react'
+import NewsMarchArticles from './modules/newarticles/Newarticlepage.jsx'
 
 function MarchofKarnatakaV1() {
   const { setPageLanguage, resetToGlobalLanguage } = useContext(LanguageContext)
@@ -30,6 +31,7 @@ function MarchofKarnatakaV1() {
         <StateNewsOfMarchOfKarnataka/>
         <NewsGovermentWebsite/>
         </FlexContainer>
+        <NewsMarchArticles/>
         <ArticleNewsMarchOfKarnatala/>
         <LongVideoMOK/>
         <ShortsCarouselsMOK/>
