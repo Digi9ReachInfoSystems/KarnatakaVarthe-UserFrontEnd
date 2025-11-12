@@ -43,6 +43,7 @@ import {
   getNewsByTypeSpecialnews,
   getNews,
   getNewsByid,
+  getNewsByTypeArticles,
 } from "../../../../services/newsApi/NewsApi";
 
 import { useParams, useNavigate } from "react-router-dom";
@@ -119,7 +120,19 @@ const Sidebar = () => {
       setRawNews([]);
     }
   };
-
+//get  news by articles
+const fetchNewsByTypeArticles = async () => {
+  try{
+         const response = await getNewsByTypeArticles();
+         if(response?.data){
+          setRawNews(Array.isArray(response.data)? response.data : []);
+         }
+  }
+  catch(err){
+    console.error("Error fetching articles news:", err);
+    setRawNews([]);
+  }
+}
   const fetchNewsByTypeSpecialnews = async () => {
     try {
       const response = await getNewsByTypeSpecialnews();
@@ -142,7 +155,11 @@ const Sidebar = () => {
         fetchNewsByTypeDistrict();
       } else if (newsId.newsType === "specialnews") {
         fetchNewsByTypeSpecialnews();
-      } else {
+      }
+        else if(newsId.newsType === "articles"){
+          fetchNewsByTypeArticles();
+        }
+      else {
         setRawNews([]);
       }
     }
@@ -506,7 +523,7 @@ const Sidebar = () => {
               }
             }}
           >
-            Latest News
+            Popular News
           </Tab>
           <Tab
             active={activeTab === "popular"}
