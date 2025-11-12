@@ -267,14 +267,18 @@ const fetchNewsByTypeArticles = async () => {
           {/* No loading state needed for social media buttons as they're static */}
           <SocialMediaItem role="listitem">
             <SocialMediaButton
+              as="a"
+              href="https://www.facebook.com/KarnatakaVarthe.Official/"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{ backgroundColor: "#1877F2" }}
-              aria-label="Follow us on Facebook - 135,684 fans"
+              aria-label="Follow us on Facebook - 315K fans"
             >
               <SocialMediaIcon>
                 <FaFacebookF aria-hidden="true" />
               </SocialMediaIcon>
               <SocialMediaInfo>
-                <SocialMediaStats>135,684</SocialMediaStats>
+                <SocialMediaStats>315K</SocialMediaStats>
                 <SocialMediaName>Facebook fans</SocialMediaName>
               </SocialMediaInfo>
             </SocialMediaButton>
@@ -282,14 +286,18 @@ const fetchNewsByTypeArticles = async () => {
 
           <SocialMediaItem role="listitem">
             <SocialMediaButton
+              as="a"
+              href="https://x.com/KarnatakaVarthe"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{ backgroundColor: "#1DA1F2" }}
-              aria-label="Follow us on Twitter - 87,043 followers"
+              aria-label="Follow us on Twitter - 157.7K followers"
             >
               <SocialMediaIcon>
                 <FaTwitter aria-hidden="true" />
               </SocialMediaIcon>
               <SocialMediaInfo>
-                <SocialMediaStats>87,043</SocialMediaStats>
+                <SocialMediaStats>157.7K</SocialMediaStats>
                 <SocialMediaName>Twitter followers</SocialMediaName>
               </SocialMediaInfo>
             </SocialMediaButton>
@@ -297,33 +305,23 @@ const fetchNewsByTypeArticles = async () => {
 
           <SocialMediaItem role="listitem">
             <SocialMediaButton
+              as="a"
+              href="https://www.instagram.com/karnatakavarthe"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{ backgroundColor: "#E4405F" }}
-              aria-label="Follow us on Instagram - 64,350 followers"
+              aria-label="Follow us on Instagram - 5,187 followers"
             >
               <SocialMediaIcon>
                 <RiInstagramFill aria-hidden="true" />
               </SocialMediaIcon>
               <SocialMediaInfo>
-                <SocialMediaStats>64,350</SocialMediaStats>
+                <SocialMediaStats>5,187</SocialMediaStats>
                 <SocialMediaName>Instagram followers</SocialMediaName>
               </SocialMediaInfo>
             </SocialMediaButton>
           </SocialMediaItem>
 
-          <SocialMediaItem role="listitem">
-            <SocialMediaButton
-              style={{ backgroundColor: "#0077B5" }}
-              aria-label="Follow us on LinkedIn - 42,341 followers"
-            >
-              <SocialMediaIcon>
-                <FaLinkedinIn aria-hidden="true" />
-              </SocialMediaIcon>
-              <SocialMediaInfo>
-                <SocialMediaStats>42,341</SocialMediaStats>
-                <SocialMediaName>LinkedIn followers</SocialMediaName>
-              </SocialMediaInfo>
-            </SocialMediaButton>
-          </SocialMediaItem>
         </SocialMediaList>
       </SidebarSection>
 
