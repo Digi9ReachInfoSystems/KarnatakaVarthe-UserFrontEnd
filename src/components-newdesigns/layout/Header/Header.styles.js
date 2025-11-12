@@ -71,10 +71,13 @@ export const LogoSection = styled.div`
 
 // Accessible link wrapper for logo (WCAG 2.1 - 2.4.4, 2.5.5)
 export const LogoLink = styled(Link)`
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-decoration: none;
   border-radius: ${theme.borderRadius.small};
   outline-offset: 2px;
+  height: 100%;
 
   &:focus {
     outline: 3px solid ${theme.colors.primary};
@@ -92,7 +95,7 @@ export const LogoLink = styled(Link)`
 `;
 
 export const Logo = styled.img`
-  max-width: ${theme.spacing(9)};
+  max-width: ${theme.spacing(12)};
   height: auto;
   flex-shrink: 0;
   display: block;
