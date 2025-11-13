@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from "react"
 import { MdOutlineFileDownload } from "react-icons/md"
-import { IoChevronDownOutline } from "react-icons/io5"
 import { IoArrowForwardOutline } from "react-icons/io5"
 import { useParams, useNavigate } from "react-router-dom"
 import {
@@ -11,9 +10,6 @@ import {
   Breadcrumb,
   HeaderSection,
   MainDownloadButton,
-  YearFilterWrapper,
-  YearFilterIcon,
-  YearFilter,
   ContentWrapper,
   MainPdfViewer,
   RecommendedSection,
@@ -80,7 +76,6 @@ export default function MarchKarnatakIdview() {
   const [magazine, setMagazine] = useState(null)
   const [recommendedMagazines, setRecommendedMagazines] = useState([])
   const [loading, setLoading] = useState(true)
-  const [availableYears, setAvailableYears] = useState([])
   const [selectedYear, setSelectedYear] = useState('')
   const [isMobile, setIsMobile] = useState(false)
   
@@ -148,10 +143,6 @@ export default function MarchKarnatakIdview() {
           .sort((a, b) => new Date(b.last_updated) - new Date(a.last_updated))
           .slice(0, 4)
         setRecommendedMagazines(latest)
-        
-        // Get unique years for March of Karnataka filter
-        const years = [...new Set(response.data.map(mag => mag.publishedYear))].sort((a, b) => b - a)
-        setAvailableYears(years)
       }
     } catch (error) {
       console.error('Error fetching recommended magazines:', error)
@@ -166,11 +157,6 @@ export default function MarchKarnatakIdview() {
     }
   }
 
-  const handleYearChange = (e) => {
-    const year = e.target.value
-    setSelectedYear(year)
-    // Navigate to magazines page with year filter if needed
-  }
 
   const handleRecommendedDownload = (magazinePdf) => {
     if (magazinePdf) {
@@ -191,9 +177,6 @@ export default function MarchKarnatakIdview() {
               <ShimmerTitle style={{ width: '300px' }} />
               <ShimmerTitle style={{ width: '200px', height: '16px' }} />
             </TitleWrapper>
-            <YearFilterWrapper>
-              <ShimmerTitle style={{ width: '150px', height: '40px' }} />
-            </YearFilterWrapper>
           </SectionHeader>
 
           <ShimmerHeaderBox />
@@ -246,17 +229,6 @@ export default function MarchKarnatakIdview() {
           <PageTitle>{t.title}</PageTitle>
           <Breadcrumb>{selectedYear} / {getLocalizedMagazineData(magazine, 'title')}</Breadcrumb>
         </TitleWrapper>
-        <YearFilterWrapper>
-          <YearFilter value={selectedYear} onChange={handleYearChange} aria-label={t.selectYear}>
-            <option value="">{t.selectYear}</option>
-            {availableYears.map((year) => (
-              <option key={year} value={year}>{year}</option>
-            ))}
-          </YearFilter>
-          <YearFilterIcon aria-hidden="true">
-            <IoChevronDownOutline />
-          </YearFilterIcon>
-        </YearFilterWrapper>
       </SectionHeader>
 
       <HeaderSection>
