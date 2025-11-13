@@ -7,7 +7,6 @@ import {
     HeroLayout,
     HeroRoot,
     HeroBackground,
-    HeroOverlay,
     HeroContent,
     HeroTitle,
 
@@ -43,7 +42,7 @@ function MarchOfKarnatakaHero( {notifications = []} ) {
     const carouselData = [
 
       {
-        image: "MarchOfkarnataka/newimagesmarch.png",
+        image: "MarchOfkarnataka/newimage2.png",
         magazineType: "magazine2",
         subtitle: "",
         link: "/marchofkarnatakmagzine"
@@ -76,7 +75,6 @@ function MarchOfKarnatakaHero( {notifications = []} ) {
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}>
         <HeroBackground src={`/${carouselData[0].image}`} />
-        <HeroOverlay aria-hidden="true" />
 
                         <HeroContent>
                           <HeroTitle className="text-balance">

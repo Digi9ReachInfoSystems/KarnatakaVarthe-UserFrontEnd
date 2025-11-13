@@ -162,7 +162,7 @@ export const HeroBackground = styled.div`
   background-image: url(${props => props.src});
   background-size: 100% 100%;
   background-position: center;
-  filter: brightness(0.7);
+  filter: brightness(0.9);
 `
 
 export const HeroOverlay = styled.div`
@@ -177,7 +177,7 @@ export const HeroContent = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: ${theme.spacing1(3)};
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(8px);
   border-radius: ${theme.borderRadius.medium} ${theme.borderRadius.medium} 0 0;
   width: 100%;
