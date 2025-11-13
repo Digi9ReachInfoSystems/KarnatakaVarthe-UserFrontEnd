@@ -43,7 +43,7 @@ function MarchOfKarnatakaHero( {notifications = []} ) {
     const carouselData = [
 
       {
-        image: "MarchOfkarnataka/MOK.png",
+        image: "MarchOfkarnataka/newimagesmarch.png",
         magazineType: "magazine2",
         subtitle: "",
         link: "/marchofkarnatakmagzine"
