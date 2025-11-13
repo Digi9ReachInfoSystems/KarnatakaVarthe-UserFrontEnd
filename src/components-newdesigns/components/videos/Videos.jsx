@@ -53,6 +53,7 @@ function Videos() {
             const response = await getLongVideos();
             if (response && Array.isArray(response.data)) {
               setArticles(response.data);
+              
             } else {
               setArticles([]);
               setError('Failed to load videos');
@@ -119,7 +120,7 @@ function Videos() {
           );
         }
          const mainArticle = articles[0];
-  const smallArticles = articles.slice(1, 5);
+  const smallArticles = articles.slice(0, 5);
 
   const handlePlayClick = (articleId, videoSrc) => {
     setPlayingVideo(playingVideo === articleId ? null : articleId);
