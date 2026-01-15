@@ -54,7 +54,7 @@ import SavedListItems from "./components-newdesigns/components/SavedItems/SavedL
 import ShowPhotos from "./components-newdesigns/components/photos/ShowPhotos";
 import Settings from "./components-newdesigns/components/settings/modules/Settings";
 import Articles from "./components-newdesigns/components/articles/Articles";
-
+import ScrollToTop from "./components/ScrollToTop";
 
 const App = () => {
   
@@ -87,6 +87,7 @@ const App = () => {
           <GlobalStyle />
           <ToastProvider>
             <Router>
+              <ScrollToTop />
               <Routes>
                 <Route path="/" element={<Applayout />}>
                   {/* <Route index element={<Home />} /> */}
