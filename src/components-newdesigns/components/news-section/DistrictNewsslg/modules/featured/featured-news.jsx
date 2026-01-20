@@ -140,14 +140,19 @@ export default function FeaturedNewsSection({ districtSlug, dateFilter = null })
 
       // First item is main featured, next 2 are sidebar items
       const mainFeatured = normalized[0] || initialFeatured
-      const sidebarItems = normalized.slice(1, 3).length > 0 ? normalized.slice(1, 3) : initialSideItems
+      // Only set sidebar items if there are actual items (length > 1)
+      const sidebarItems = normalized.length > 1 ? normalized.slice(1, 3) : []
       setFeatured(mainFeatured)
       setSideItems(sidebarItems)
+    } else {
+      // Reset to empty when no data
+      setFeatured(initialFeatured)
+      setSideItems([])
     }
   }, [language, rawData, categories])
 
   // Shimmer loading component
-  if (loading || rawData.length === 0) {
+  if (loading) {
     return (
       <Section as="section" aria-labelledby="featured-news-heading" role="region">
         <h2 
@@ -196,6 +201,11 @@ export default function FeaturedNewsSection({ districtSlug, dateFilter = null })
     )
   }
 
+  // Hide section when no data (after loading completes)
+  if (!loading && rawData.length === 0) {
+    return null
+  }
+
   return (
     <Section as="section" aria-labelledby="featured-news-heading" role="region">
       <h2 
@@ -224,44 +234,47 @@ export default function FeaturedNewsSection({ districtSlug, dateFilter = null })
           <p>{featured.excerpt}</p>
         </MainContent>
 
-        <Sidebar 
-          as="aside" 
-          role="complementary" 
-          aria-labelledby="featured-sidebar-heading"
-        >
-          <h4 
-            id="featured-sidebar-heading" 
-            style={{ position: 'absolute', left: '-9999px', top: 'auto', width: '1px', height: '1px', overflow: 'hidden' }}
+        {/* Only show sidebar if there are side items */}
+        {sideItems.length > 0 && (
+          <Sidebar 
+            as="aside" 
+            role="complementary" 
+            aria-labelledby="featured-sidebar-heading"
           >
-            Related Stories
-          </h4>
-          {sideItems.slice(0, 2).map((item, idx) => (
-            <SideCard 
-              key={idx} 
-              as="article" 
-              role="article"
-              aria-labelledby={`featured-side-title-${idx}`}
-              tabIndex="0"
+            <h4 
+              id="featured-sidebar-heading" 
+              style={{ position: 'absolute', left: '-9999px', top: 'auto', width: '1px', height: '1px', overflow: 'hidden' }}
             >
-              <div className="thumb">
-                <img 
-                  src={item.image || "/placeholder.svg"} 
-                  alt={`Related story: ${item.title}`}
-                  loading="lazy"
-                  onClick={() => navigate(`/districtnewsdetails/${item._id}`)}
-                  style={{ cursor: 'pointer' }}
-                />
-              </div>
-              <div>
-                <MetaRow>
-                  <DateText as="time" dateTime={parseDateTimeAttr(item.date)}>{item.date}</DateText>
-                </MetaRow>
-                <h5 id={`featured-side-title-${idx}`}>{item.title}</h5>
-                <p>{item.excerpt}</p>
-              </div>
-            </SideCard>
-          ))}
-        </Sidebar>
+              Related Stories
+            </h4>
+            {sideItems.map((item, idx) => (
+              <SideCard 
+                key={idx} 
+                as="article" 
+                role="article"
+                aria-labelledby={`featured-side-title-${idx}`}
+                tabIndex="0"
+              >
+                <div className="thumb">
+                  <img 
+                    src={item.image || "/placeholder.svg"} 
+                    alt={`Related story: ${item.title}`}
+                    loading="lazy"
+                    onClick={() => navigate(`/districtnewsdetails/${item._id}`)}
+                    style={{ cursor: 'pointer' }}
+                  />
+                </div>
+                <div>
+                  <MetaRow>
+                    <DateText as="time" dateTime={parseDateTimeAttr(item.date)}>{item.date}</DateText>
+                  </MetaRow>
+                  <h5 id={`featured-side-title-${idx}`}>{item.title}</h5>
+                  <p>{item.excerpt}</p>
+                </div>
+              </SideCard>
+            ))}
+          </Sidebar>
+        )}
       </Container>
     </Section>
   )

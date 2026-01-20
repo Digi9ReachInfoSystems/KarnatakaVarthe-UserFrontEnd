@@ -24,9 +24,10 @@ import {
   SkeletonLine,
 } from "./MostArticles.styles"
 import { LanguageContext } from "../../../../context/LanguageContext"
-import { getNews } from "../../../../services/newsApi/NewsApi"
+import { getAllNews } from "../../../../services/newsApi/newsducks"
 import { useNavigate } from "react-router-dom"
 import { useEffect, useContext, useState } from "react"
+import EmptyState from "../../districtnews/modules/DateFilter/EmptyState"
 
 export default function TabSection({ dateFilter = null }) {
   const [news, setNews] = useState([])
@@ -39,10 +40,24 @@ export default function TabSection({ dateFilter = null }) {
   useEffect(() => {
     // get news
     const fetchNews = async () => {
+      console.log('🔍 MostArticles - Fetching with dateFilter:', dateFilter, 'Type:', typeof dateFilter)
       setLoading(true)
-      const res = await getNews(dateFilter)
-      if (res?.success && Array.isArray(res.data)) {
-        setRawNews(res.data)
+      try {
+        // Ensure dateFilter is string or null
+        const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
+        console.log('🔍 MostArticles - Clean dateFilter:', cleanDateFilter)
+        const res = await getAllNews(cleanDateFilter)
+        console.log('✅ MostArticles - API response:', res)
+        if (res?.success && Array.isArray(res.data.news)) {
+          console.log('📰 MostArticles - News count:', res.data.news.length)
+          setRawNews(res.data.news)
+        } else {
+          console.warn('⚠️ MostArticles - No data or invalid format')
+          setRawNews([])
+        }
+      } catch (error) {
+        console.error('❌ MostArticles - Error:', error)
+        setRawNews([])
       }
       setLoading(false)
     }
@@ -52,20 +67,25 @@ export default function TabSection({ dateFilter = null }) {
   // Transform raw news to localized news
   useEffect(() => {
     if (rawNews.length > 0) {
+      console.log('🔄 MostArticles - Processing rawNews, count:', rawNews.length)
       const langKey =
         language === "Hindi" ? "hindi" : language === "Kannada" ? "kannada" : "English"
 
       const localized = rawNews.map((item) => {
+        // Extract proper ID and date from MongoDB format
+        const newsId = item._id?.$oid || item._id
+        const publishedDate = item.publishedAt?.$date || item.publishedAt
+        
         const localizedTitle = item[langKey]?.title || item.title || ""
         const localizedDesc = item[langKey]?.description || item.description || ""
 
         return {
-          _id: item._id,
-          id: item._id,
+          _id: newsId,
+          id: newsId,
           title: localizedTitle ? (localizedTitle.length > 50 ? localizedTitle.slice(0, 50) + "..." : localizedTitle) : "",
           excerpt: localizedDesc ? (localizedDesc.length > 150 ? localizedDesc.slice(0, 150) + "..." : localizedDesc) : "",
-          date: item.publishedAt
-            ? new Date(item.publishedAt).toLocaleDateString("en-US", {
+          date: publishedDate
+            ? new Date(publishedDate).toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
@@ -75,7 +95,11 @@ export default function TabSection({ dateFilter = null }) {
           alt: item.title || "",
         }
       })
+      console.log('✅ MostArticles - Localized news, count:', localized.length)
       setNews(localized)
+    } else {
+      console.log('⚠️ MostArticles - No rawNews to process')
+      setNews([])
     }
   }, [language, rawNews])
 
@@ -148,6 +172,23 @@ export default function TabSection({ dateFilter = null }) {
               </SideList>
             </Sidebar>
           </Layout>
+        </Container>
+      </Section>
+    )
+  }
+
+  // Show empty state when no data available (after loading)
+  if (!loading && rawNews.length === 0) {
+    return (
+      <Section as="section" aria-labelledby="most-articles-heading" role="region">
+        <Container>
+          <h2
+            id="most-articles-heading"
+            style={{ position: 'absolute', left: '-9999px', top: 'auto', width: '1px', height: '1px', overflow: 'hidden' }}
+          >
+            Karnataka News
+          </h2>
+          <EmptyState />
         </Container>
       </Section>
     )

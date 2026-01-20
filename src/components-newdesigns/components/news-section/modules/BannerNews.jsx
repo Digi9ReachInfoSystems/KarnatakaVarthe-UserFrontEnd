@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import { LanguageContext } from "../../../../context/LanguageContext";
-import { getNews } from "../../../../services/newsApi/NewsApi";
+import { getAllNews } from "../../../../services/newsApi/newsducks";
 import { formatDate } from "../../../../utils/formatters";
 import {
   BannerWrap,
@@ -20,6 +20,7 @@ import {
   SkeletonTitle,
 } from "./BannerNews.styles"
 import { useNavigate } from "react-router-dom"
+import EmptyState from "../../districtnews/modules/DateFilter/EmptyState"
 export default function Banner({ dateFilter = null }) {
   const { language } = useContext(LanguageContext)
   const [item, setItem] = useState(null)
@@ -29,31 +30,44 @@ export default function Banner({ dateFilter = null }) {
   useEffect(() => {
     let mounted = true
     ;(async () => {
+      console.log('🔍 Banner - Fetching with dateFilter:', dateFilter, 'Type:', typeof dateFilter)
       try {
         setLoading(true)
-        const res = await getNews(dateFilter)
-        if (!mounted || !res?.success || !Array.isArray(res.data)) {
+        // Ensure dateFilter is string or null
+        const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
+        console.log('🔍 Banner - Clean dateFilter:', cleanDateFilter)
+        const res = await getAllNews(cleanDateFilter)
+        console.log('✅ Banner - API response:', res)
+        if (!mounted || !res?.success || !Array.isArray(res.data.news)) {
+          console.warn('⚠️ Banner - No data or invalid format')
           if (mounted) setLoading(false)
           return
         }
 
+        console.log('📰 Banner - News count:', res.data.news.length)
+        const newsData = res.data.news
+
         // pick most-recent by publishedAt (fallback to createdAt)
-        const latest = res.data.reduce((best, cur) => {
-          const b = new Date(best?.publishedAt ?? best?.createdAt ?? 0)
-          const c = new Date(cur?.publishedAt ?? cur?.createdAt ?? 0)
+        const latest = newsData.reduce((best, cur) => {
+          const bDate = best?.publishedAt?.$date || best?.publishedAt || best?.createdAt?.$date || best?.createdAt || 0
+          const cDate = cur?.publishedAt?.$date || cur?.publishedAt || cur?.createdAt?.$date || cur?.createdAt || 0
+          const b = new Date(bDate)
+          const c = new Date(cDate)
           return c > b ? cur : best
-        }, res.data[0])
+        }, newsData[0])
 
         if (!latest) {
+          console.warn('⚠️ Banner - No latest news found')
           if (mounted) setLoading(false)
           return
         }
         
+        console.log('✅ Banner - Latest news selected:', latest)
         const title = latest[langKey]?.title ?? latest.title ?? ""
         const excerpt = latest[langKey]?.description ?? latest.description ?? ""
         const imageSrc = latest.newsImage ?? "/placeholder.svg"
-        const date = latest.publishedAt ?? latest.createdAt ?? ""
-        const id = latest._id ?? latest.id ?? ""
+        const date = latest.publishedAt?.$date || latest.publishedAt || latest.createdAt?.$date || latest.createdAt || ""
+        const id = latest._id?.$oid || latest._id || latest.id || ""
 
         // Extract category name based on language context
         let categoryName = "News"
@@ -71,11 +85,12 @@ export default function Banner({ dateFilter = null }) {
         const href = `/newsdetails/${id}`
 
         if (mounted) {
+          console.log('✅ Banner - Setting item:', { title, id })
           setItem({ title, excerpt, imageSrc, date, badge, href, id })
           setLoading(false)
         }
       } catch (e) {
-        console.error(e)
+        console.error('❌ Banner - Error:', e)
         if (mounted) {
           setItem(null)
           setLoading(false)
@@ -108,7 +123,10 @@ export default function Banner({ dateFilter = null }) {
     )
   }
 
-  if (!item) return null
+  // Show empty state when no data available (after loading)
+  if (!loading && !item) {
+    return <EmptyState />
+  }
 
   return (
     <BannerWrap 

@@ -118,6 +118,10 @@ export const LanguageSelector = styled.div`
       font-weight: 700;
     }
 
+    &.english-text {
+      font-weight: 700;
+    }
+
     @media (max-width: ${theme.breakpoints.tablet}) {
       min-width: 150px;
       padding: ${theme.spacing(1)} ${theme.spacing(1.75)};
@@ -211,7 +215,15 @@ export const LanguageDropdown = styled.div`
       font-weight: 700;
     }
 
+    &.english-text {
+      font-weight: 700;
+    }
+
     &.active.kannada-text {
+      font-weight: 700;
+    }
+
+    &.active.english-text {
       font-weight: 700;
     }
     
@@ -298,6 +310,10 @@ export const SearchText = styled.span`
   font-weight: 500;
 
   &.kannada-text {
+    font-weight: 700;
+  }
+
+  &.english-text {
     font-weight: 700;
   }
 

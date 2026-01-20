@@ -40,6 +40,7 @@ export default function NewsHero({ districtSlug, dateFilter = null }) {
     const fetchDistrictNews = async () => {
       try {
         setLoading(true);
+        console.log('🏛️ HeroNews - Fetching with dateFilter:', dateFilter);
         if (!districtSlug) {
           // Keep loading true to show shimmer loader
           if (mounted) {
@@ -49,8 +50,10 @@ export default function NewsHero({ districtSlug, dateFilter = null }) {
           return;
         }
         
+        console.log('🌐 HeroNews - Calling API with:', { districtSlug, dateFilter });
         const response = await PhotosApi.getDistrictNews(districtSlug, dateFilter);
         const newsData = response?.news || [];
+        console.log('📦 HeroNews - Received news count:', newsData.length);
         
         if (mounted) {
           setRawData(newsData);
@@ -138,7 +141,7 @@ export default function NewsHero({ districtSlug, dateFilter = null }) {
   }
 
   // Shimmer loading component
-  if (loading || districtNews.length === 0) {
+  if (loading) {
     return (
       <SkeletonHeroWrap>
         <SkeletonImage />
@@ -163,6 +166,11 @@ export default function NewsHero({ districtSlug, dateFilter = null }) {
         <RightDivider aria-hidden="true" />
       </SkeletonHeroWrap>
     )
+  }
+
+  // Hide section when no data (after loading completes)
+  if (!loading && districtNews.length === 0) {
+    return null
   }
 
   return (

@@ -33,10 +33,11 @@ import {
   SkeletonPopularItem,
   SkeletonThumbnail,
 } from "./NewsArticles.styles"
-import { getLatestNews } from "../../../../services/newsApi/NewsApi";
+import { getAllNews } from "../../../../services/newsApi/newsducks";
 import { LanguageContext } from "../../../../context/LanguageContext";
 import { formatDate } from "../../../../utils/formatters";
 import { useNavigate } from "react-router-dom";
+import EmptyState from "../../districtnews/modules/DateFilter/EmptyState";
 
 const NewsArticles = ({ dateFilter = null }) => {
   const [newsData, setNewsData] = useState([])
@@ -50,10 +51,24 @@ const NewsArticles = ({ dateFilter = null }) => {
   // Parse date for datetime attribute
  useEffect(() => {
   const fetchNews = async () => {
+    console.log('🔍 NewsArticles - Fetching with dateFilter:', dateFilter, 'Type:', typeof dateFilter)
     setLoading(true)
-    const response = await getLatestNews(dateFilter)
-    if (response?.success && Array.isArray(response.data)) {
-      setRawData(response.data)
+    try {
+      // Ensure dateFilter is string or null
+      const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
+      console.log('🔍 NewsArticles - Clean dateFilter:', cleanDateFilter)
+      const response = await getAllNews(cleanDateFilter)
+      console.log('✅ NewsArticles - API response:', response)
+      if (response?.success && Array.isArray(response.data.news)) {
+        console.log('📰 NewsArticles - News count:', response.data.news.length)
+        setRawData(response.data.news)
+      } else {
+        console.warn('⚠️ NewsArticles - No data or invalid format')
+        setRawData([])
+      }
+    } catch (error) {
+      console.error('❌ NewsArticles - Error:', error)
+      setRawData([])
     }
     setLoading(false)
   }
@@ -62,29 +77,45 @@ const NewsArticles = ({ dateFilter = null }) => {
  // get popular news
  useEffect(() => {
   if (rawData.length > 0) {
+    console.log('🔄 NewsArticles - Processing rawData, count:', rawData.length)
     const langKey = language === "English" ? "English" : language === "Hindi" ? "hindi" : "kannada"
       // Sort by most recent date
   const sortedData = [...rawData].sort(
-    (a, b) => new Date(b.publishedAt) - new Date(a.publishedAt)
+    (a, b) => {
+      const aDate = new Date(a.publishedAt?.$date || a.publishedAt || 0)
+      const bDate = new Date(b.publishedAt?.$date || b.publishedAt || 0)
+      return bDate - aDate
+    }
   )
-    const mappedData = sortedData.map((item) => ({
-      id: item._id,
+    const mappedData = sortedData.map((item) => {
+      // Extract proper ID and date from MongoDB format
+      const newsId = item._id?.$oid || item._id
+      const publishedDate = item.publishedAt?.$date || item.publishedAt
+      
+      return {
+      id: newsId,
       title: item[langKey]?.title ? item[langKey].title.slice(0, 100) + "..." : "No title",
       excerpt: item[langKey]?.description ? item[langKey].description.slice(0, 150) + "..." : "No description",
       image: item.newsImage,
-      date: item.publishedAt,
+      date: publishedDate,
       author: item.author || "Unknown",
-    }))
+    }})
+    console.log('🗺️ NewsArticles - Mapped data, count:', mappedData.length)
+    
+    // Popular news: always filter by last 45 days (date filter already applied at API level)
     const now = new Date()
     const popular = mappedData.filter(item => {
-      const diffHrs = (now - new Date(item.date)) / (1000 * 60 * 60 * 24)
-      return diffHrs >= 0 && diffHrs <= 45
+      const diffDays = (now - new Date(item.date)) / (1000 * 60 * 60 * 24)
+      return diffDays >= 0 && diffDays <= 45
     })
+    console.log('📆 NewsArticles - Popular news (last 45 days), count:', popular.length)
+    
     setNewsData(mappedData.slice(1))    
        // all except top one
   setLatestNews(mappedData.slice(0, 1))  
 
   setPopularNews(popular)
+  console.log('✅ NewsArticles - Data processing complete')
   }
  }, [rawData, language])
 
@@ -176,6 +207,23 @@ const NewsArticles = ({ dateFilter = null }) => {
               ))}
             </NewsList>
           </CombinedColumn>
+        </GridLayout>
+      </Container>
+    )
+  }
+
+  // Show empty state when no data available (after loading)
+  if (!loading && rawData.length === 0) {
+    return (
+      <Container as="section" aria-labelledby="news-articles-heading" role="region">
+        <h2 
+          id="news-articles-heading" 
+          style={{ position: 'absolute', left: '-9999px', top: 'auto', width: '1px', height: '1px', overflow: 'hidden' }}
+        >
+          Featured, Latest and Popular News
+        </h2>
+        <GridLayout>
+          <EmptyState />
         </GridLayout>
       </Container>
     )

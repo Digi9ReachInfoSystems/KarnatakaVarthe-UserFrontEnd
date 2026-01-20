@@ -110,7 +110,7 @@ const LanguageNavbar = () => {
 
       <LanguageSelector ref={dropdownRef}>
         <button 
-          className={`language-button ${language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}`}
+          className={`language-button ${language === "Kannada" || language === "Hindi" ? "kannada-text" : ""} ${language === "English" ? "english-text" : ""}`}
           onClick={toggleLanguageDropdown}
           aria-label={`Current language: ${language}. Click to change`}
           aria-expanded={isLanguageOpen}
@@ -127,7 +127,7 @@ const LanguageNavbar = () => {
                 <button
                   key={lang.code}
                   onClick={() => handleLanguageSelect(lang)}
-                  className={`${language === lang.name ? 'active' : ''} ${lang.name === "Kannada" || lang.name === "Hindi" ? 'kannada-text' : ''}`}
+                  className={`${language === lang.name ? 'active' : ''} ${lang.name === "Kannada" || lang.name === "Hindi" ? 'kannada-text' : ''} ${lang.name === "English" ? 'english-text' : ''}`}
                   role="menuitem"
                   aria-label={`Select ${lang.name}`}
                 >
@@ -153,7 +153,7 @@ const LanguageNavbar = () => {
         <SearchIcon>
           <Search size={20} />
         </SearchIcon>
-        <SearchText className={language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}>
+        <SearchText className={language === "Kannada" || language === "Hindi" ? "kannada-text" : language === "English" ? "english-text" : ""}>
           {getSearchText()}
         </SearchText>
       </SearchContainer>

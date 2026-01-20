@@ -1,4 +1,4 @@
-import { getLatestNews } from "../../../../services/newsApi/NewsApi"
+import { getSpecialNews } from "../../../../services/newsApi/newsducks"
 import {
   GlobalScrollbars,
   Wrapper,
@@ -198,11 +198,26 @@ export default function LatestNews({ dateFilter = null }) {
   const navigate = useNavigate()
   // Parse date for datetime attribute
   useEffect(() => {
+    // get special news using new API
     const fetchNews = async () => {
+      console.log('🔍 LatestNews - Fetching with dateFilter:', dateFilter, 'Type:', typeof dateFilter)
       setLoading(true)
-      const response = await getLatestNews(dateFilter)
-      if (response?.success && Array.isArray(response.data)) {
-        setRawData(response.data)
+      try {
+        // Ensure dateFilter is string or null, never an object
+        const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
+        console.log('🔍 LatestNews - Clean dateFilter:', cleanDateFilter)
+        const response = await getSpecialNews(cleanDateFilter)
+        console.log('✅ LatestNews - API response:', response)
+        if (response?.success && Array.isArray(response.data.news)) {
+          console.log('📰 LatestNews - News count:', response.data.news.length)
+          setRawData(response.data.news)
+        } else {
+          console.warn('⚠️ LatestNews - No data or invalid format')
+          setRawData([])
+        }
+      } catch (error) {
+        console.error('❌ LatestNews - Error:', error)
+        setRawData([])
       }
       setLoading(false)
     }
@@ -210,11 +225,18 @@ export default function LatestNews({ dateFilter = null }) {
    }, [language, dateFilter])
    useEffect(() => {
     if (rawData.length > 0) {
+      console.log('🔄 LatestNews - Processing rawData, count:', rawData.length, 'dateFilter:', dateFilter)
       const langKey = language === "English" ? "English" : language === "Hindi" ? "hindi" : "kannada"
-        // Sort by most recent date
+        // Sort by most recent date - handle MongoDB date format
     const sortedData = [...rawData].sort(
-      (a, b) => new Date(b.publishedAt) - new Date(a.publishedAt)
+      (a, b) => {
+        const dateA = a.publishedAt?.$date || a.publishedAt
+        const dateB = b.publishedAt?.$date || b.publishedAt
+        return new Date(dateB) - new Date(dateA)
+      }
     )
+    console.log('📊 LatestNews - Sorted data, count:', sortedData.length)
+    
       const mappedData = sortedData.map((item) => {
         // Extract category name based on language context
         let categoryName = "News"
@@ -230,27 +252,45 @@ export default function LatestNews({ dateFilter = null }) {
           }
         }
 
+        // Extract proper ID from MongoDB format
+        const newsId = item._id?.$oid || item._id
+        
+        // Extract proper date from MongoDB format
+        const publishedDate = item.publishedAt?.$date || item.publishedAt
+
         return {
-          id: item._id,
+          id: newsId,
           title: item[langKey]?.title ? item[langKey].title.slice(0, 50) + "..." : "No title",
           excerpt: item[langKey]?.description ? item[langKey].description.slice(0, 150) + "..." : "No description",
           image: item.newsImage,
-          date: item.publishedAt,
+          date: publishedDate,
           author: item.author || "Unknown",
           category: categoryName,
         }
       })
+      
+      console.log('🗺️ LatestNews - Mapped data, count:', mappedData.length)
+      
+      // Popular news: always filter by last 45 days (date filter already applied at API level)
       const now = new Date()
       const popular = mappedData.filter(item => {
         const diffDays = (now - new Date(item.date)) / (1000 * 60 * 60 * 24)
         return diffDays >= 0 && diffDays <= 45
       })
-      setNewsData(mappedData)       // all except top one
-    setLatestNews(mappedData.slice(0, 1))  
-    setCenterNews(mappedData[0])
-    setPopularNews(popular)
+      console.log('📆 LatestNews - Popular news (last 45 days), count:', popular.length)
+      
+      setNewsData(mappedData)
+      setLatestNews(mappedData.slice(0, 1))  
+      setCenterNews(mappedData[0])
+      setPopularNews(popular)
+      
+      console.log('✅ LatestNews - Final state set:', {
+        latest: mappedData.length,
+        popular: popular.length,
+        center: mappedData[0] ? 'YES' : 'NO'
+      })
     }
-   }, [rawData, language])
+   }, [rawData, language, dateFilter])
   const parseDateTimeAttr = (dateStr) => {
     try {
       const parsed = new Date(dateStr);

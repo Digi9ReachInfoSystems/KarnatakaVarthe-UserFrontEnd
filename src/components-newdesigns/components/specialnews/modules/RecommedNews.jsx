@@ -19,7 +19,7 @@ import {
 import { useContext, useState, useEffect } from "react"
 import { LanguageContext } from "../../../../context/LanguageContext"
 import { CategoryApi } from "../../../../services/categoryapi/CategoryApi"
-import { getNews } from "../../../../services/newsApi/NewsApi"
+import { getSpecialNews } from "../../../../services/newsApi/newsducks"
 
 const items = Array.from({ length: 6 }).map((_, i) => ({
   id: i + 1,
@@ -52,25 +52,41 @@ export default function Recommrednews({ dateFilter = null }) {
     getCategories()
   }, [])
   useEffect(() => {
-    // get news by type state
-const fetchNews = async () => {
-  setLoading(true)
-  const res = await getNews(dateFilter)
-
-  if (res?.success && Array.isArray(res.data)) {
-    setRawNews(res.data)
-  }
-  setLoading(false)
-}
-fetchNews()
+    // get special news using new API
+    const fetchNews = async () => {
+      console.log('🔍 RecommedNews - Fetching with dateFilter:', dateFilter, 'Type:', typeof dateFilter)
+      setLoading(true)
+      try {
+        // Ensure dateFilter is string or null, never an object
+        const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
+        console.log('🔍 RecommedNews - Clean dateFilter:', cleanDateFilter)
+        const res = await getSpecialNews(cleanDateFilter)
+        console.log('✅ RecommedNews - API response:', res)
+        if (res?.success && Array.isArray(res.data.news)) {
+          console.log('📰 RecommedNews - News count:', res.data.news.length)
+          setRawNews(res.data.news)
+        } else {
+          console.warn('⚠️ RecommedNews - No data or invalid format')
+          setRawNews([])
+        }
+      } catch (error) {
+        console.error('❌ RecommedNews - Error:', error)
+        setRawNews([])
+      }
+      setLoading(false)
+    }
+    fetchNews()
   }, [language, dateFilter])
 
 
   // get news by type state based on active category
   useEffect(() => {
-    if (!rawNews.length) return
+    if (!rawNews.length) {
+      console.log('⚠️ RecommedNews - No rawNews to process')
+      return
+    }
 
-
+    console.log('🔄 RecommedNews - Processing rawNews, count:', rawNews.length)
 
     const langKey =
       language === "Hindi" ? "hindi" : language === "Kannada" ? "kannada" : "English"
@@ -96,13 +112,20 @@ fetchNews()
     const categoryName =
       (categoryObj && (categoryObj[langKey]?.name || categoryObj.name || categoryObj.title)) ||
       ""
+      
+      // Extract proper ID from MongoDB format
+      const newsId = item._id?.$oid || item._id
+      
+      // Extract proper date from MongoDB format
+      const publishedDate = item.publishedAt?.$date || item.publishedAt
+      
       return {
       
-      id: item._id,
-      title: item[langKey]?.title.slice(0, 50) + "..." || item.title || "",
-      excerpt: item[langKey]?.description.slice(0, 150) + "..." || item.description || "",
-      date: item.publishedAt
-        ? new Date(item.publishedAt).toLocaleDateString("en-US", {
+      id: newsId,
+      title: item[langKey]?.title?.slice(0, 50) + "..." || item.title?.slice(0, 50) + "..." || "",
+      excerpt: item[langKey]?.description?.slice(0, 150) + "..." || item.description?.slice(0, 150) + "..." || "",
+      date: publishedDate
+        ? new Date(publishedDate).toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
             day: "numeric",
@@ -115,10 +138,12 @@ fetchNews()
       alt: item.title || "",
     }})
 
+    console.log('✅ RecommedNews - Localized news, count:', localized.length)
     setNews(localized)
     const mostRead = localized.slice(3,6)
+    console.log('📚 RecommedNews - Most read, count:', mostRead.length)
     setMostRead(mostRead)
-  }, [language, rawNews])
+  }, [language, rawNews, categories, dateFilter])
   
   // Show shimmer while loading
   if (loading) {

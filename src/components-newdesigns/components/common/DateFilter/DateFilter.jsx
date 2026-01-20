@@ -1,5 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from 'react'
-import { LanguageContext } from '../../../../../context/LanguageContext'
+import { LanguageContext } from '../../../../context/LanguageContext'
 import {
   DateFilterContainer,
   FilterLabel,
@@ -72,8 +72,8 @@ export default function DateFilter({ onDateChange }) {
     console.log('📅 DateFilter - Date selected:', dateStr)
     setSelectedDate(dateStr)
     setShowCalendar(false)
-    console.log('🚀 DateFilter - Calling onDateChange with:', { date: dateStr })
-    onDateChange({ date: dateStr })
+    console.log('🚀 DateFilter - Calling onDateChange with date string:', dateStr)
+    onDateChange(dateStr) // Pass just the date string
   }
 
   const handleClear = () => {

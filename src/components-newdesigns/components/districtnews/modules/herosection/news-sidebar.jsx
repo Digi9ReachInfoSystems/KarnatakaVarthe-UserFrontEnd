@@ -9,8 +9,9 @@ import {
 } from "./news-sidebar.styles"
 import { useContext, useState, useEffect } from "react"
 import { LanguageContext } from "../../../../../context/LanguageContext"
-import { getNewsByTypeDistrict } from "../../../../../services/newsApi/NewsApi"
+import { getDistrictNews } from "../../../../../services/newsApi/newsducks"
 import { useNavigate } from "react-router-dom"
+import EmptyState from "../DateFilter/EmptyState"
 
 export default function NewsSidebar({
   items = [
@@ -38,12 +39,23 @@ export default function NewsSidebar({
   const navigate = useNavigate()
   useEffect(() => {
     const fetchNews = async () => {
+      console.log('🔍 NewsSidebar - Fetching with dateFilter:', dateFilter, 'Type:', typeof dateFilter)
       setLoading(true)
-      const response = await getNewsByTypeDistrict(dateFilter)
-      console.log(response)
-      if (response?.success && Array.isArray(response.data)) {
-        setRawData(response.data)
-      } else {
+      try {
+        // Ensure dateFilter is string or null, never an object
+        const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
+        console.log('🔍 NewsSidebar - Clean dateFilter:', cleanDateFilter)
+        const response = await getDistrictNews(cleanDateFilter)
+        console.log('✅ NewsSidebar - API response:', response)
+        if (response?.success && Array.isArray(response.data.news)) {
+          console.log('📰 NewsSidebar - News count:', response.data.news.length)
+          setRawData(response.data.news)
+        } else {
+          console.warn('⚠️ NewsSidebar - No data or invalid format')
+          setRawData([])
+        }
+      } catch (error) {
+        console.error('❌ NewsSidebar - Error:', error)
         setRawData([])
       }
       setLoading(false)
@@ -53,20 +65,45 @@ export default function NewsSidebar({
   
     useEffect(() => {
       if (rawData.length > 0) {
+        console.log('🔄 NewsSidebar - Processing rawData, count:', rawData.length)
         const normalized = rawData.map((item) => {
           const langKey = language === "English" ? "English" : language === "Hindi" ? "hindi" : "kannada"
+          
+          // Extract proper ID from MongoDB format
+          const newsId = item._id?.$oid || item._id
+          
+          // Extract and format date from MongoDB format
+          const publishedDate = item.publishedAt?.$date || item.publishedAt || item.date
+          let formattedDate = 'N/A'
+          if (publishedDate) {
+            try {
+              const dateObj = new Date(publishedDate)
+              // Format as: Jan 13, 2026
+              formattedDate = dateObj.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric' 
+              })
+            } catch (error) {
+              console.error('Error formatting date:', error)
+              formattedDate = 'N/A'
+            }
+          }
+          
           return {
-            _id: item._id,
+            _id: newsId,
             title: (item[langKey]?.title.slice(0, 50)??" ") + "..." ,
             excerpt: (item[langKey]?.description.slice(0, 150)??" " ) + "..." ,
-            date: item.date,
-            author: item.author,
-            imageSrc: item.newsImage ?? "/placeholder.svg", // Fixed the double ?? operator issue
+            date: formattedDate,
+            author: item.author || 'Karnataka Varthe',
+            imageSrc: item.newsImage ?? "/placeholder.svg",
           }
         })
   
         const shuffled = [...normalized].sort(() => Math.random() - 0.5)
         const randomTwo = shuffled.slice(0, 2)
+        console.log('✅ NewsSidebar - Random news selected, count:', randomTwo.length)
+        console.log('📅 NewsSidebar - Sample news dates:', randomTwo.map(n => n.date))
         setDistrictNews(randomTwo)
       }
     }, [language, rawData])

@@ -3,13 +3,17 @@ import { PageLayout, FilterContainer } from './NewsSection.styles'
 import Banner from './modules/BannerNews'
 import NewsArticles from './modules/NewsArticles'
 import MostArticles from './modules/MostArticles'
-import DateFilter from '../districtnews/modules/DateFilter/DateFilter'
+import DateFilter from '../common/DateFilter/DateFilter'
 
 export default function NewsSection() {
   const [dateFilter, setDateFilter] = useState(null)
 
   const handleDateChange = (filter) => {
-    setDateFilter(filter)
+    console.log('🗓️ NewsSection - Date changed (raw):', filter, 'Type:', typeof filter)
+    // Ensure we only pass string or null, never an object
+    const cleanFilter = (filter && typeof filter === 'string') ? filter : null
+    console.log('🗓️ NewsSection - Date changed (clean):', cleanFilter)
+    setDateFilter(cleanFilter)
   }
 
   return (

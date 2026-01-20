@@ -24,8 +24,9 @@ import {
   SkeletonArrow,
 } from "./Heronews.styles"
 import { LanguageContext } from "../../../../../context/LanguageContext"
-import { getNewsByTypeDistrict } from "../../../../../services/newsApi/NewsApi"
+import { getDistrictNews } from "../../../../../services/newsApi/newsducks"
 import { useNavigate } from "react-router-dom"
+import EmptyState from "../DateFilter/EmptyState"
 
 const FALLBACK_ITEMS = [
   {
@@ -59,20 +60,26 @@ const [loading, setLoading] = useState(true)
 useEffect(() => {
   let mounted = true;
   const fetchDistrictNews = async () => {
+    console.log('🔍 HeroNews - Fetching with dateFilter:', dateFilter, 'Type:', typeof dateFilter)
     try {
       setLoading(true);
-      const response = await getNewsByTypeDistrict(dateFilter);
-      console.log("District news:", response.data);
-      if (response?.success && Array.isArray(response.data)) {
+      // Ensure dateFilter is string or null, never an object
+      const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
+      console.log('🔍 HeroNews - Clean dateFilter:', cleanDateFilter)
+      const response = await getDistrictNews(cleanDateFilter);
+      console.log('✅ HeroNews - API response:', response)
+      if (response?.success && Array.isArray(response.data.news)) {
+        console.log('📰 HeroNews - News count:', response.data.news.length)
         if (mounted) {
-          setRawData(response.data);
-          setIndex(0); // reset carousel to start of API data
+          setRawData(response.data.news);
+          setIndex(0);
         }
       } else {
+        console.warn('⚠️ HeroNews - No data or invalid format')
         if (mounted) setRawData([]);
       }
     } catch (err) {
-      console.error("Error fetching district news:", err);
+      console.error("❌ HeroNews - Error fetching district news:", err);
       if (mounted) setRawData([]);
     } finally {
       if (mounted) setLoading(false);
@@ -86,19 +93,25 @@ useEffect(() => {
 
 useEffect(() => {
   if (rawData.length > 0) {
+    console.log('🔄 HeroNews - Processing rawData, count:', rawData.length)
     const langKey =
       language === "English"
         ? "English"
         : language === "Hindi"
         ? "hindi"
         : "kannada";
-    const normalized = rawData.map((it, i) => ({
-      _id: it._id,
-      id: it._id ?? it.id ?? `api-${i}`,
+    const normalized = rawData.map((it, i) => {
+      // Extract proper ID from MongoDB format
+      const newsId = it._id?.$oid || it._id
+      
+      return {
+      _id: newsId,
+      id: newsId ?? `api-${i}`,
       title: (it[langKey]?.title.slice(0, 50) ?? " ") + "..." ,
       excerpt: (it[langKey]?.description.slice(0, 150)?? " ") + "..." ,
       image: it.newsImage ?? "/placeholder.svg",
-    }));
+    }});
+    console.log('✅ HeroNews - Normalized news, count:', normalized.length)
     setDistrictNews(normalized);
   }
 }, [language, rawData]);
@@ -137,7 +150,7 @@ useEffect(() => {
   }
 
   // Shimmer loading component
-  if (loading || districtNews.length === 0) {
+  if (loading) {
     return (
       <SkeletonHeroWrap>
         <SkeletonImage />
@@ -162,6 +175,11 @@ useEffect(() => {
         <RightDivider aria-hidden="true" />
       </SkeletonHeroWrap>
     )
+  }
+
+  // Show empty state when no data available (after loading)
+  if (!loading && districtNews.length === 0) {
+    return <EmptyState />
   }
 
   return (

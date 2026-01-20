@@ -4,14 +4,18 @@ import Banner from './modules/Banner'
 import SideBar from './modules/SideBar'
 import Featurednews from './modules/Featurednews'
 import TabSection from './modules/TabSection.jsx'
-import DateFilter from '../districtnews/modules/DateFilter/DateFilter'
+import DateFilter from '../common/DateFilter/DateFilter'
 
 
 function Articles() {
   const [dateFilter, setDateFilter] = useState(null)
 
   const handleDateChange = (filter) => {
-    setDateFilter(filter)
+    console.log('🗓️ Articles - Date changed (raw):', filter, 'Type:', typeof filter)
+    // Ensure we only pass string or null, never an object
+    const cleanFilter = (filter && typeof filter === 'string') ? filter : null
+    console.log('🗓️ Articles - Date changed (clean):', cleanFilter)
+    setDateFilter(cleanFilter)
   }
 
   return (

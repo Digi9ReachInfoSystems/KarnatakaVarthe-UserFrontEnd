@@ -18,9 +18,10 @@ import {
 } from "./featured-news.styles"
 import { useContext, useState, useEffect } from "react"
 import { LanguageContext } from "../../../../../context/LanguageContext"
-import { getNewsByTypeDistrict } from "../../../../../services/newsApi/NewsApi"
+import { getDistrictNews } from "../../../../../services/newsApi/newsducks"
 import { CategoryApi } from "../../../../../services/categoryapi/CategoryApi"
 import { useNavigate } from "react-router-dom"
+import EmptyState from "../DateFilter/EmptyState"
 
 const initialFeatured = {
   image: "/placeholder.svg",
@@ -75,16 +76,22 @@ export default function FeaturedNewsSection({ dateFilter = null }) {
   }, [])
   useEffect(() => {
     const fetchFeaturedNews = async () => {
+      console.log('🔍 FeaturedNewsSection - Fetching with dateFilter:', dateFilter, 'Type:', typeof dateFilter)
       try {
-        const response = await getNewsByTypeDistrict(dateFilter)
-        if (response?.success && Array.isArray(response.data)) {
-          setRawData(response.data)
+        // Ensure dateFilter is string or null, never an object
+        const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
+        console.log('🔍 FeaturedNewsSection - Clean dateFilter:', cleanDateFilter)
+        const response = await getDistrictNews(cleanDateFilter)
+        console.log('✅ FeaturedNewsSection - API response:', response)
+        if (response?.success && Array.isArray(response.data.news)) {
+          console.log('📰 FeaturedNewsSection - News count:', response.data.news.length)
+          setRawData(response.data.news)
    
         } else {
-         
+          console.warn('⚠️ FeaturedNewsSection - No data or invalid format')
         }
       } catch (error) {
-        console.error("Error fetching news data:", error)
+        console.error("❌ FeaturedNewsSection - Error:", error)
       } finally {
         setLoading(false)
       }
@@ -94,6 +101,7 @@ export default function FeaturedNewsSection({ dateFilter = null }) {
 
   useEffect(() => {
     if (rawData.length > 0) {
+      console.log('🔄 FeaturedNewsSection - Processing rawData, count:', rawData.length)
       const normalized = rawData.map((item) => {
         const langKey = language === "English" ? "English" : language === "Hindi" ? "hindi" : "kannada"
       
@@ -107,9 +115,11 @@ export default function FeaturedNewsSection({ dateFilter = null }) {
         const category = categoryId ? categories.find((cat) => cat._id === categoryId) : null
         const categoryName = category ? (language === "English" ? category.name : language === "Hindi" ? category.hindi : category.kannada) : "Uncategorized"
 
+        // Extract proper ID from MongoDB format
+        const newsId = item._id?.$oid || item._id
 
         return {
-          _id: item._id,
+          _id: newsId,
           image: item.newsImage || "/placeholder.svg",
           category: categoryName || "",
           date: item[langKey]?.date || "",
@@ -121,13 +131,14 @@ export default function FeaturedNewsSection({ dateFilter = null }) {
       const shuffled = [...normalized].sort(() => Math.random() - 0.5)
       const randomOne = shuffled[0] || initialFeatured
       const randomTwo = shuffled.slice(1, 3) || initialSideItems
+      console.log('✅ FeaturedNewsSection - Featured and side items selected')
       setFeatured(randomOne)
       setSideItems(randomTwo)
     }
   }, [language, rawData, categories])
 
   // Shimmer loading component
-  if (loading || rawData.length === 0) {
+  if (loading) {
     return (
       <Section as="section" aria-labelledby="featured-news-heading" role="region">
         <h2 
@@ -171,6 +182,23 @@ export default function FeaturedNewsSection({ dateFilter = null }) {
               </SkeletonSideCard>
             ))}
           </Sidebar>
+        </Container>
+      </Section>
+    )
+  }
+
+  // Show empty state when no data available (after loading)
+  if (!loading && rawData.length === 0) {
+    return (
+      <Section as="section" aria-labelledby="featured-news-heading" role="region">
+        <h2 
+          id="featured-news-heading" 
+          style={{ position: 'absolute', left: '-9999px', top: 'auto', width: '1px', height: '1px', overflow: 'hidden' }}
+        >
+          Featured District News
+        </h2>
+        <Container>
+          <EmptyState />
         </Container>
       </Section>
     )

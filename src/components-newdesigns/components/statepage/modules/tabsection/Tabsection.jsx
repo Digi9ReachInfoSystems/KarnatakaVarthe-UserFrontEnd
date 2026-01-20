@@ -28,7 +28,7 @@ import {
   SkeletonSideItem,
 } from "./Tabsection.styles"
 import { LanguageContext } from "../../../../../context/LanguageContext"
-import { getNewsByTypeState } from "../../../../../services/newsApi/NewsApi"
+import { getStateNews } from "../../../../../services/newsApi/newsducks"
 import { useNavigate } from "react-router-dom"
 
 export default function TabSection({ dateFilter = null }) {
@@ -42,9 +42,23 @@ export default function TabSection({ dateFilter = null }) {
   useEffect(() => {
     // get news by type state
     const fetchNews = async () => {
-      const res = await getNewsByTypeState(dateFilter)
-      if (res?.success && Array.isArray(res.data)) {
-        setRawNews(res.data)
+      console.log('🔍 TabSection - Fetching with dateFilter:', dateFilter, 'Type:', typeof dateFilter)
+      try {
+        // Ensure dateFilter is string or null, never an object
+        const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
+        console.log('🔍 TabSection - Clean dateFilter:', cleanDateFilter)
+        const res = await getStateNews(cleanDateFilter)
+        console.log('✅ TabSection - API response:', res)
+        if (res?.success && Array.isArray(res.data.news)) {
+          console.log('📰 TabSection - News count:', res.data.news.length)
+          setRawNews(res.data.news)
+        } else {
+          console.warn('⚠️ TabSection - No data or invalid format')
+          setRawNews([])
+        }
+      } catch (error) {
+        console.error('❌ TabSection - Error:', error)
+        setRawNews([])
       }
     }
     fetchNews()
@@ -53,16 +67,24 @@ export default function TabSection({ dateFilter = null }) {
   // Transform raw news to localized news
   useEffect(() => {
     if (rawNews.length > 0) {
+      console.log('🔄 TabSection - Processing rawNews, count:', rawNews.length)
       const langKey =
         language === "Hindi" ? "hindi" : language === "Kannada" ? "kannada" : "English"
 
-      const localized = rawNews.map((item) => ({
-        _id: item._id,
-        id: item._id,
+      const localized = rawNews.map((item) => {
+        // Extract proper ID from MongoDB format
+        const newsId = item._id?.$oid || item._id
+        
+        // Extract proper date from MongoDB format
+        const publishedDate = item.publishedAt?.$date || item.publishedAt
+        
+        return {
+        _id: newsId,
+        id: newsId,
         title: item[langKey]?.title?.slice(0, 50) + "..." || item.title || "",
         excerpt: item[langKey]?.description?.slice(0, 150) + "..." || item.description || "",
-        date: item.publishedAt
-          ? new Date(item.publishedAt).toLocaleDateString("en-US", {
+        date: publishedDate
+          ? new Date(publishedDate).toLocaleDateString("en-US", {
               year: "numeric",
               month: "long",
               day: "numeric",
@@ -70,8 +92,13 @@ export default function TabSection({ dateFilter = null }) {
           : "",
         image: item.newsImage || "/placeholder.svg",
         alt: item.title || "",
-      }))
+      }})
+      console.log('✅ TabSection - Localized news, count:', localized.length)
       setNews(localized)
+      setLoading(false)
+    } else {
+      console.log('⚠️ TabSection - No rawNews to process')
+      setNews([])
       setLoading(false)
     }
   }, [language, rawNews])
