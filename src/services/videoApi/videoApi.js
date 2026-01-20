@@ -1,4 +1,5 @@
 import apiClient from "../apiClient";
+import axios from "axios";
 
 // Fetch all videos
 export const getVideos = async () => {
@@ -109,3 +110,32 @@ export const ShortVideoaddComment = async (commentData) => {
   }
 };
 
+// Fetch video categories
+export const getVideoCategories = async () => {
+  try {
+    // Use axios directly with full URL - same pattern as photo categories
+    const response = await axios.get('https://diprkarnataka.duckdns.org/api/video-category/list');
+    
+    if (!response || !response.data) {
+      throw new Error("No data received from video categories API");
+    }
+    
+    // API response structure: { success: true, data: { video_categories: [...], ... } }
+    const categories = response.data?.data?.video_categories || response.data?.video_categories || [];
+    
+    // Normalize the category data
+    const normalizedCategories = categories.map(category => ({
+      _id: category._id?.$oid || category._id,
+      name: category.category_name || category.english,
+      english: category.english,
+      hindi: category.hindi,
+      kannada: category.kannada,
+      date_created: category.date_created?.$date || category.date_created
+    }));
+    
+    return normalizedCategories;
+  } catch (err) {
+    console.error("Error fetching video categories:", err);
+    throw err;
+  }
+};

@@ -10,6 +10,10 @@ import {
   PhotoLabel,
   ShimmerContainer,
   ShimmerThumbnail,
+  CategoryDropdownContainer,
+  CategorySelect,
+  CategorySelectWrapper,
+  FilterLabel,
 } from "./ShowPhotos.Styles";
 import { LanguageContext } from "../../../context/LanguageContext";
 import { useContext, useEffect, useState } from "react";
@@ -20,14 +24,52 @@ const titleText = {
   Hindi: "फोटो",
 };
 
+const allTabText = {
+  English: "All",
+  Kannada: "ಎಲ್ಲಾ",
+  Hindi: "सभी",
+};
+
+const noPhotosText = {
+  English: "No photos available",
+  Kannada: "ಯಾವುದೇ ಫೋಟೋಗಳು ಲಭ್ಯವಿಲ್ಲ",
+  Hindi: "कोई फोटो उपलब्ध नहीं",
+};
+
 function ShowPhotos() {
   const [photos, setPhotos] = useState([]);
+  const [allPhotos, setAllPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [categories, setCategories] = useState([]);
+  const [activeCategory, setActiveCategory] = useState(null);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
   const { language } = useContext(LanguageContext);
 
+  // Fetch categories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setCategoriesLoading(true);
+        const response = await PhotosApi.getPhotoCategories();
+        if (response && Array.isArray(response) && response.length > 0) {
+          setCategories(response);
+        } else {
+          console.warn("Empty photo category API response.");
+        }
+      } catch (error) {
+        console.error("Error fetching photo categories:", error);
+      } finally {
+        setCategoriesLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // Fetch photos
   useEffect(() => {
     const fetchPhotos = async () => {
       try {
@@ -48,6 +90,17 @@ function ShowPhotos() {
 
             const title = photo[langKey] || photo.title || "Untitled";
 
+            // Handle category - support both string ID and object format
+            let categoryId = null;
+            if (photo.category) {
+              // Handle MongoDB ObjectId format ($oid) or plain string
+              if (typeof photo.category === "object") {
+                categoryId = photo.category.$oid || photo.category._id;
+              } else {
+                categoryId = photo.category;
+              }
+            }
+
             return {
               src: photo.photoImage,
               alt: title,
@@ -56,11 +109,11 @@ function ShowPhotos() {
               english: photo.english,
               kannada: photo.kannada,
               hindi: photo.hindi,
+              categoryId: categoryId,
             };
           });
 
-        setPhotos(formattedPhotos);
-
+        setAllPhotos(formattedPhotos);
         setError(null);
       } catch (err) {
         console.error("Error loading gallery photos:", err);
@@ -73,6 +126,22 @@ function ShowPhotos() {
     fetchPhotos();
   }, [language]);
 
+  // Filter photos based on active category
+  useEffect(() => {
+    if (activeCategory === null) {
+      // Show all photos
+      setPhotos(allPhotos);
+    } else {
+      // Filter by category ID
+      const filtered = allPhotos.filter((photo) => {
+        return photo.categoryId === activeCategory;
+      });
+      setPhotos(filtered);
+    }
+    // Reset lightbox when category changes
+    setSelectedPhoto(null);
+  }, [activeCategory, allPhotos]);
+
   const openLightbox = (photo, index) => {
     setSelectedPhoto(photo);
     setCurrentIndex(index);
@@ -83,15 +152,33 @@ function ShowPhotos() {
   };
 
   const showNext = () => {
+    if (photos.length === 0) return;
     const nextIndex = (currentIndex + 1) % photos.length;
     setCurrentIndex(nextIndex);
     setSelectedPhoto(photos[nextIndex]);
   };
 
   const showPrevious = () => {
+    if (photos.length === 0) return;
     const prevIndex = (currentIndex - 1 + photos.length) % photos.length;
     setCurrentIndex(prevIndex);
     setSelectedPhoto(photos[prevIndex]);
+  };
+
+  // Get localized category name
+  const getLocalizedCategoryName = (category) => {
+    if (!category) return "";
+    if (language === "English") {
+      return category.name || category.english || "";
+    } else if (language === "Hindi") {
+      return category.hindi || category.name || "";
+    } else {
+      return category.kannada || category.name || "";
+    }
+  };
+
+  const handleTabClick = (categoryId) => {
+    setActiveCategory(categoryId);
   };
 
   const handleKeyDown = (e) => {
@@ -111,7 +198,46 @@ function ShowPhotos() {
     <Container>
       <SectionHeader>
         <Title>{titleText[language]}</Title>
+        {/* Category Dropdown Filter */}
+        {!categoriesLoading && categories.length > 0 && (
+          <CategoryDropdownContainer>
+            <FilterLabel>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                style={{ flexShrink: 0 }}
+              >
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+              </svg>
+              {language === "English" ? "Filter:" : language === "Hindi" ? "फ़िल्टर:" : "ಫಿಲ್ಟರ್:"}
+            </FilterLabel>
+            <CategorySelectWrapper>
+              <CategorySelect
+                value={activeCategory || ""}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  handleTabClick(value === "" ? null : value);
+                }}
+                aria-label="Filter photos by category"
+              >
+                <option value="">{allTabText[language]}</option>
+                {categories.map((category) => (
+                  <option key={category._id} value={category._id}>
+                    {getLocalizedCategoryName(category)}
+                  </option>
+                ))}
+              </CategorySelect>
+            </CategorySelectWrapper>
+          </CategoryDropdownContainer>
+        )}
       </SectionHeader>
+
       {loading ? (
         <Photos>
           <PhotoGrid>
@@ -144,7 +270,16 @@ function ShowPhotos() {
           </PhotoGrid>
         </Photos>
       ) : (
-        <p>No photos available</p>
+        <Photos>
+          <div style={{
+            textAlign: "center",
+            padding: "40px 20px",
+            color: "#666",
+            fontSize: "18px",
+          }}>
+            {noPhotosText[language]}
+          </div>
+        </Photos>
       )}
 
       {selectedPhoto && (
