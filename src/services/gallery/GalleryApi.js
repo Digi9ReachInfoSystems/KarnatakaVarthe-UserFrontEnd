@@ -89,10 +89,20 @@ export const PhotosApi = {
       throw err;
     }
   },
-  getDistrictNews: async (districtSlug) => {
+  getDistrictNews: async (districtSlug, dateFilter = null) => {
     try {
+      // Build query string with date parameters
+      let url = `https://diprkarnataka.duckdns.org/api/districts/news/${districtSlug}`;
+      if (dateFilter) {
+        const params = new URLSearchParams();
+        if (dateFilter.date) params.append('date', dateFilter.date);
+        if (dateFilter.start_date) params.append('start_date', dateFilter.start_date);
+        if (dateFilter.end_date) params.append('end_date', dateFilter.end_date);
+        if (params.toString()) url += `?${params.toString()}`;
+      }
+      
       // Use axios directly with full URL - same pattern as LatestNotification.js
-      const response = await axios.get(`https://diprkarnataka.duckdns.org/api/districts/news/${districtSlug}`);
+      const response = await axios.get(url);
       
       if (!response || !response.data) {
         throw new Error("No data received from district news API");

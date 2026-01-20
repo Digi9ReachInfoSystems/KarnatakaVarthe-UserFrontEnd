@@ -38,7 +38,7 @@ import { LanguageContext } from "../../../../context/LanguageContext";
 import { formatDate } from "../../../../utils/formatters";
 import { useNavigate } from "react-router-dom";
 
-const NewsArticles = () => {
+const NewsArticles = ({ dateFilter = null }) => {
   const [newsData, setNewsData] = useState([])
   const [loading, setLoading] = useState(true)
   const [rawData, setRawData] = useState([])
@@ -51,14 +51,14 @@ const NewsArticles = () => {
  useEffect(() => {
   const fetchNews = async () => {
     setLoading(true)
-    const response = await getLatestNews()
+    const response = await getLatestNews(dateFilter)
     if (response?.success && Array.isArray(response.data)) {
       setRawData(response.data)
     }
     setLoading(false)
   }
   fetchNews()
- }, [language])
+ }, [language, dateFilter])
  // get popular news
  useEffect(() => {
   if (rawData.length > 0) {

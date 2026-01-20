@@ -34,7 +34,7 @@ const sectionTitleText = {
   Hindi: "नवीनतम समाचार",
 }
 
-export default function LatestNewsSection({ districtSlug }) {
+export default function LatestNewsSection({ districtSlug, dateFilter = null }) {
   const [news, setNews] = useState([])
   const [rawNews, setRawNews] = useState([])
   const [loading, setLoading] = useState(true)
@@ -50,7 +50,7 @@ export default function LatestNewsSection({ districtSlug }) {
       }
       
       try {
-        const response = await PhotosApi.getDistrictNews(districtSlug)
+        const response = await PhotosApi.getDistrictNews(districtSlug, dateFilter)
         const newsData = response?.news || []
         
         // Sort by publishedAt date (newest first)
@@ -60,22 +60,30 @@ export default function LatestNewsSection({ districtSlug }) {
           return dateB - dateA
         })
         
-        // Exclude first 6 items (3 for hero + 3 for featured)
-        const newsAfterHeroAndFeatured = sortedNews.slice(6)
-        
-        // Get latest news (last 7 days, excluding hero and featured)
-        const sevenDaysAgo = new Date()
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
-        
-        const latestNews = newsAfterHeroAndFeatured.filter(item => {
-          const itemDate = new Date(item.publishedAt?.$date || item.publishedAt || 0)
-          return itemDate >= sevenDaysAgo
-        })
-        
-        // If less than 5 items in last 7 days (after hero/featured), take next 10 items
-        const finalLatestNews = latestNews.length >= 5 ? latestNews : newsAfterHeroAndFeatured.slice(0, 10)
-        
-        setRawNews(finalLatestNews)
+        // If date filter is active, show all filtered results (API already filtered by date)
+        // Otherwise, apply the existing logic for latest news
+        if (dateFilter) {
+          // Exclude first 6 items (3 for hero + 3 for featured) when date filter is active
+          const newsAfterHeroAndFeatured = sortedNews.slice(6)
+          setRawNews(newsAfterHeroAndFeatured)
+        } else {
+          // Exclude first 6 items (3 for hero + 3 for featured)
+          const newsAfterHeroAndFeatured = sortedNews.slice(6)
+          
+          // Get latest news (last 7 days, excluding hero and featured)
+          const sevenDaysAgo = new Date()
+          sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+          
+          const latestNews = newsAfterHeroAndFeatured.filter(item => {
+            const itemDate = new Date(item.publishedAt?.$date || item.publishedAt || 0)
+            return itemDate >= sevenDaysAgo
+          })
+          
+          // If less than 5 items in last 7 days (after hero/featured), take next 10 items
+          const finalLatestNews = latestNews.length >= 5 ? latestNews : newsAfterHeroAndFeatured.slice(0, 10)
+          
+          setRawNews(finalLatestNews)
+        }
       } catch (error) {
         console.error("Error fetching district news:", error)
         setRawNews([])
@@ -84,7 +92,7 @@ export default function LatestNewsSection({ districtSlug }) {
       }
     }
     fetchNews()
-  }, [language, districtSlug])
+  }, [language, districtSlug, dateFilter])
 
   // Transform raw news to localized news
   useEffect(() => {

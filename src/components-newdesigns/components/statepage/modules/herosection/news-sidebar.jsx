@@ -31,6 +31,7 @@ export default function NewsSidebar({
       imageSrc: "/state/sidebar2.jpg",
     },
   ],
+  dateFilter = null,
 }) {
   const { language } = useContext(LanguageContext)
 
@@ -42,7 +43,7 @@ const navigate = useNavigate()
 useEffect(() => {
   const fetchNews = async () => {
     setLoading(true)
-    const response = await getNewsByTypeState()
+    const response = await getNewsByTypeState(dateFilter)
     console.log(response)
     if (response?.success && Array.isArray(response.data)) {
       setRawData(response.data)
@@ -52,7 +53,7 @@ useEffect(() => {
     setLoading(false)
   }
   fetchNews()
-}, [language])
+}, [language, dateFilter])
 
   useEffect(() => {
     if (rawData.length > 0) {

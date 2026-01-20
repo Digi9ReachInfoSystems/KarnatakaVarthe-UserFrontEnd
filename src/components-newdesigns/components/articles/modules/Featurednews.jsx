@@ -47,7 +47,7 @@ const initialSideItems = [
     excerpt: "",
   },
 ]
-function Featurednews() {
+function Featurednews({ dateFilter = null }) {
     //Featured news for articles page
     const [rawData, setRawData] = useState([])
       const [loading, setLoading] = useState(true)
@@ -62,7 +62,7 @@ function Featurednews() {
       useEffect(() => {
         const fetchFeaturedNews = async () => {
           try {
-            const response = await getNewsByTypeArticles()
+            const response = await getNewsByTypeArticles(dateFilter)
             if (response?.success && Array.isArray(response.data)) {
               setRawData(response.data)
        
@@ -76,7 +76,7 @@ function Featurednews() {
           }
         }
         fetchFeaturedNews()
-      }, [language])
+      }, [language, dateFilter])
     
       useEffect(() => {
         if (rawData.length > 0) {

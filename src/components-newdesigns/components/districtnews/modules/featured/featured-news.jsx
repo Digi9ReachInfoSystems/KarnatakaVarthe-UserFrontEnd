@@ -46,7 +46,7 @@ const initialSideItems = [
     excerpt: "",
   },
 ]
-export default function FeaturedNewsSection() {
+export default function FeaturedNewsSection({ dateFilter = null }) {
   // Parse date for datetime attribute
   const parseDateTimeAttr = (dateStr) => {
     try {
@@ -76,7 +76,7 @@ export default function FeaturedNewsSection() {
   useEffect(() => {
     const fetchFeaturedNews = async () => {
       try {
-        const response = await getNewsByTypeDistrict()
+        const response = await getNewsByTypeDistrict(dateFilter)
         if (response?.success && Array.isArray(response.data)) {
           setRawData(response.data)
    
@@ -90,7 +90,7 @@ export default function FeaturedNewsSection() {
       }
     }
     fetchFeaturedNews()
-  }, [language])
+  }, [language, dateFilter])
 
   useEffect(() => {
     if (rawData.length > 0) {

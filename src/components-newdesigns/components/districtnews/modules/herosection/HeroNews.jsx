@@ -47,7 +47,7 @@ const FALLBACK_ITEMS = [
   },
 ]
 
-export default function NewsHero() {
+export default function NewsHero({ dateFilter = null }) {
   const [index, setIndex] = React.useState(0)
   const { language } = useContext(LanguageContext)
   const navigate = useNavigate()
@@ -61,7 +61,7 @@ useEffect(() => {
   const fetchDistrictNews = async () => {
     try {
       setLoading(true);
-      const response = await getNewsByTypeDistrict();
+      const response = await getNewsByTypeDistrict(dateFilter);
       console.log("District news:", response.data);
       if (response?.success && Array.isArray(response.data)) {
         if (mounted) {
@@ -82,7 +82,7 @@ useEffect(() => {
   return () => {
     mounted = false;
   };
-}, [language]);
+}, [language, dateFilter]);
 
 useEffect(() => {
   if (rawData.length > 0) {

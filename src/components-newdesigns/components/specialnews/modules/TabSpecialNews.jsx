@@ -41,7 +41,7 @@ import { useState, useContext, useEffect } from 'react'
 import { getNewsByTypeSpecialnews } from '../../../../services/newsApi/NewsApi'
 import { useNavigate } from "react-router-dom"
 
-export default function TabSpecialNews() {
+export default function TabSpecialNews({ dateFilter = null }) {
   const [news, setNews] = useState([])
   const [rawNews, setRawNews] = useState([])
   const [loading, setLoading] = useState(true)
@@ -78,14 +78,14 @@ export default function TabSpecialNews() {
     // get news by type special news
     const fetchNews = async () => {
       setLoading(true)
-      const res = await getNewsByTypeSpecialnews()
+      const res = await getNewsByTypeSpecialnews(dateFilter)
       if (res?.success && Array.isArray(res.data)) {
         setRawNews(res.data)
       }
       setLoading(false)
     }
     fetchNews()
-  }, [language])
+  }, [language, dateFilter])
 
   // Transform raw news to localized news
   useEffect(() => {

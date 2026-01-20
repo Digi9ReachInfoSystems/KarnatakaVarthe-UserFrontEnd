@@ -186,7 +186,7 @@ const rightNews = [
   },
 ]
 
-export default function LatestNews() {
+export default function LatestNews({ dateFilter = null }) {
   const [newsData, setNewsData] = useState([])
   const [loading, setLoading] = useState(true)
   const [rawData, setRawData] = useState([])
@@ -200,14 +200,14 @@ export default function LatestNews() {
   useEffect(() => {
     const fetchNews = async () => {
       setLoading(true)
-      const response = await getLatestNews()
+      const response = await getLatestNews(dateFilter)
       if (response?.success && Array.isArray(response.data)) {
         setRawData(response.data)
       }
       setLoading(false)
     }
     fetchNews()
-   }, [language])
+   }, [language, dateFilter])
    useEffect(() => {
     if (rawData.length > 0) {
       const langKey = language === "English" ? "English" : language === "Hindi" ? "hindi" : "kannada"

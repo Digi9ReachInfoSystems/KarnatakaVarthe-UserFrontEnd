@@ -31,7 +31,7 @@ import { LanguageContext } from "../../../../context/LanguageContext"
 import { getNewsByTypeArticles } from "../../../../services/newsApi/NewsApi"
 import { useNavigate } from "react-router-dom"
 
-function TabSection() {
+function TabSection({ dateFilter = null }) {
     // Article tab section component code to be implemented here
     const [news, setNews] = useState([])
       const [rawNews, setRawNews] = useState([])
@@ -43,13 +43,13 @@ function TabSection() {
       useEffect(() => {
         // get news by type articles
         const fetchNews = async () => {
-          const res = await getNewsByTypeArticles()
+          const res = await getNewsByTypeArticles(dateFilter)
           if (res?.success && Array.isArray(res.data)) {
             setRawNews(res.data)
           }
         }
         fetchNews()
-      }, [language])
+      }, [language, dateFilter])
     
       // Transform raw news to localized news
       useEffect(() => {

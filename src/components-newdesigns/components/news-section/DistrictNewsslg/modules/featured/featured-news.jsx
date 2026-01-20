@@ -47,7 +47,7 @@ const initialSideItems = [
   },
 ]
 
-export default function FeaturedNewsSection({ districtSlug }) {
+export default function FeaturedNewsSection({ districtSlug, dateFilter = null }) {
   // Parse date for datetime attribute
   const parseDateTimeAttr = (dateStr) => {
     try {
@@ -85,7 +85,7 @@ export default function FeaturedNewsSection({ districtSlug }) {
           return
         }
         
-        const response = await PhotosApi.getDistrictNews(districtSlug)
+        const response = await PhotosApi.getDistrictNews(districtSlug, dateFilter)
         const newsData = response?.news || []
         setRawData(newsData)
       } catch (error) {
@@ -95,7 +95,7 @@ export default function FeaturedNewsSection({ districtSlug }) {
       }
     }
     fetchFeaturedNews()
-  }, [language, districtSlug])
+  }, [language, districtSlug, dateFilter])
 
   useEffect(() => {
     if (rawData.length > 0) {

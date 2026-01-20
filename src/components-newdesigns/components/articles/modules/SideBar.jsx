@@ -11,7 +11,7 @@ import { LanguageContext } from "../../../../context/LanguageContext"
 import { useNavigate } from "react-router-dom"
 import { getNewsByTypeArticles } from "../../../../services/newsApi/NewsApi"
 import SidebarCard from "./sidebarCard"
-function SideBar() {
+function SideBar({ dateFilter = null }) {
     //side for articles page
 const { language } = useContext(LanguageContext)
 const [articles, setArticles] = useState([])
@@ -21,7 +21,7 @@ const navigate = useNavigate()
 useEffect(() => {
   const fetchNews = async () => {
     setLoading(true)
-    const response = await getNewsByTypeArticles()
+    const response = await getNewsByTypeArticles(dateFilter)
     console.log(response)
     if (response?.success && Array.isArray(response.data)) {
       setRawData(response.data)
@@ -31,7 +31,7 @@ useEffect(() => {
     setLoading(false)
   }
   fetchNews()
-}, [language])
+}, [language, dateFilter])
 
   useEffect(() => {
     if (rawData.length > 0) {

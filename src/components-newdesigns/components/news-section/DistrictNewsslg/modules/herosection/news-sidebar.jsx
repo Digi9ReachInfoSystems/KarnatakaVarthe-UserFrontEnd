@@ -12,7 +12,7 @@ import { LanguageContext } from "../../../../../../context/LanguageContext"
 import { PhotosApi } from "../../../../../../services/gallery/GalleryApi"
 import { useNavigate } from "react-router-dom"
 
-export default function NewsSidebar({ districtSlug }) {
+export default function NewsSidebar({ districtSlug, dateFilter = null }) {
   const { language } = useContext(LanguageContext)
   const [districtNews, setDistrictNews] = useState([])
   const [loading, setLoading] = useState(true)
@@ -29,7 +29,7 @@ export default function NewsSidebar({ districtSlug }) {
       }
       
       try {
-        const response = await PhotosApi.getDistrictNews(districtSlug)
+        const response = await PhotosApi.getDistrictNews(districtSlug, dateFilter)
         const newsData = response?.news || []
         setRawData(newsData)
       } catch (error) {
@@ -40,7 +40,7 @@ export default function NewsSidebar({ districtSlug }) {
       }
     }
     fetchNews()
-  }, [language, districtSlug])
+  }, [language, districtSlug, dateFilter])
   
   useEffect(() => {
     if (rawData.length > 0) {

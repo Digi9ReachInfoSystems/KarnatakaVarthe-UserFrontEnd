@@ -34,7 +34,7 @@ const sectionTitleText = {
   Hindi: "पुरानी खबरें",
 }
 
-export default function OlderNewsSection({ districtSlug }) {
+export default function OlderNewsSection({ districtSlug, dateFilter = null }) {
   const [news, setNews] = useState([])
   const [rawNews, setRawNews] = useState([])
   const [loading, setLoading] = useState(true)
@@ -50,7 +50,7 @@ export default function OlderNewsSection({ districtSlug }) {
       }
       
       try {
-        const response = await PhotosApi.getDistrictNews(districtSlug)
+        const response = await PhotosApi.getDistrictNews(districtSlug, dateFilter)
         const newsData = response?.news || []
         
         // Sort by publishedAt date (newest first)
@@ -60,28 +60,35 @@ export default function OlderNewsSection({ districtSlug }) {
           return dateB - dateA
         })
         
-        // Exclude first 6 items (3 for hero + 3 for featured)
-        const newsAfterHeroAndFeatured = sortedNews.slice(6)
-        
-        // Get older news (older than 7 days, excluding hero and featured)
-        const sevenDaysAgo = new Date()
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
-        
-        const latestNews = newsAfterHeroAndFeatured.filter(item => {
-          const itemDate = new Date(item.publishedAt?.$date || item.publishedAt || 0)
-          return itemDate >= sevenDaysAgo
-        })
-        
-        // If less than 5 items in last 7 days (after hero/featured), take items after first 10
-        // Otherwise, take items older than 7 days (excluding hero and featured)
-        const olderNews = latestNews.length >= 5 
-          ? newsAfterHeroAndFeatured.filter(item => {
-              const itemDate = new Date(item.publishedAt?.$date || item.publishedAt || 0)
-              return itemDate < sevenDaysAgo
-            })
-          : newsAfterHeroAndFeatured.slice(10)
-        
-        setRawNews(olderNews)
+        // If date filter is active, hide older news section (all news shown in latest)
+        // Otherwise, apply the existing logic for older news
+        if (dateFilter) {
+          // When date filter is active, don't show older news section
+          setRawNews([])
+        } else {
+          // Exclude first 6 items (3 for hero + 3 for featured)
+          const newsAfterHeroAndFeatured = sortedNews.slice(6)
+          
+          // Get older news (older than 7 days, excluding hero and featured)
+          const sevenDaysAgo = new Date()
+          sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+          
+          const latestNews = newsAfterHeroAndFeatured.filter(item => {
+            const itemDate = new Date(item.publishedAt?.$date || item.publishedAt || 0)
+            return itemDate >= sevenDaysAgo
+          })
+          
+          // If less than 5 items in last 7 days (after hero/featured), take items after first 10
+          // Otherwise, take items older than 7 days (excluding hero and featured)
+          const olderNews = latestNews.length >= 5 
+            ? newsAfterHeroAndFeatured.filter(item => {
+                const itemDate = new Date(item.publishedAt?.$date || item.publishedAt || 0)
+                return itemDate < sevenDaysAgo
+              })
+            : newsAfterHeroAndFeatured.slice(10)
+          
+          setRawNews(olderNews)
+        }
       } catch (error) {
         console.error("Error fetching district news:", error)
         setRawNews([])
@@ -90,7 +97,7 @@ export default function OlderNewsSection({ districtSlug }) {
       }
     }
     fetchNews()
-  }, [language, districtSlug])
+  }, [language, districtSlug, dateFilter])
 
   // Transform raw news to localized news
   useEffect(() => {

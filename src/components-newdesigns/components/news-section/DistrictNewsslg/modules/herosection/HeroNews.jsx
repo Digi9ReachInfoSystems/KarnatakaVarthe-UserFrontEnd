@@ -27,7 +27,7 @@ import { LanguageContext } from "../../../../../../context/LanguageContext"
 import { PhotosApi } from "../../../../../../services/gallery/GalleryApi"
 import { useNavigate } from "react-router-dom"
 
-export default function NewsHero({ districtSlug }) {
+export default function NewsHero({ districtSlug, dateFilter = null }) {
   const [index, setIndex] = React.useState(0)
   const { language } = useContext(LanguageContext)
   const navigate = useNavigate()
@@ -45,7 +45,7 @@ export default function NewsHero({ districtSlug }) {
           return;
         }
         
-        const response = await PhotosApi.getDistrictNews(districtSlug);
+        const response = await PhotosApi.getDistrictNews(districtSlug, dateFilter);
         const newsData = response?.news || [];
         
         if (mounted) {
@@ -63,7 +63,7 @@ export default function NewsHero({ districtSlug }) {
     return () => {
       mounted = false;
     };
-  }, [language, districtSlug]);
+  }, [language, districtSlug, dateFilter]);
 
   useEffect(() => {
     if (rawData.length > 0) {
