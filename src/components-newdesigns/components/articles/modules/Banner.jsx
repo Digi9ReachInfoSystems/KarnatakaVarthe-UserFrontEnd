@@ -28,7 +28,7 @@ import { getNewsByTypeArticles } from "../../../../services/newsApi/NewsApi";
 import { LanguageContext } from "../../../../context/LanguageContext";
 import { useNavigate } from "react-router-dom";
 
-function Banner() {
+function Banner({ dateFilter = null }) {
     //Banner for Articles page
      const [index, setIndex] = React.useState(0);
       const { language } = useContext(LanguageContext);
@@ -43,7 +43,7 @@ function Banner() {
         const fetchArticlesNews = async () => {
           try {
             setLoading(true);
-            const response = await getNewsByTypeArticles();
+            const response = await getNewsByTypeArticles(dateFilter);
          
             if (response?.success && Array.isArray(response.data)) {
               if (mounted) {
@@ -64,7 +64,7 @@ function Banner() {
         return () => {
           mounted = false;
         };
-      }, [language]);
+      }, [language, dateFilter]);
     // convert api data based on language selection
       useEffect(() => {
         if (rawData.length > 0) {

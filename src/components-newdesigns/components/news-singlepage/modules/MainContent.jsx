@@ -22,6 +22,9 @@ import {
   AudioBookButton,
   AudioBookIcon,
   AudioBookText,
+  SourceContainer,
+  SourceLabel,
+  SourceLink,
 } from './MainContent.styles'
 import { LanguageContext } from '../../../../context/LanguageContext'
 import { getNewsByid } from '../../../../services/newsApi/NewsApi'
@@ -43,13 +46,15 @@ const MainContent = () => {
     content: '',
     paragraphs: ['', ''],
     date: '',
+    dateTime: '',
     image: '/placeholder.svg',
     category: '',
     author: '',
     authorImage: '/placeholder.svg',
     alt: '',
     tags: [],
-    quote: ''
+    quote: '',
+    source: ''
   });
   // get news by id
   useEffect(() => {
@@ -58,15 +63,57 @@ const MainContent = () => {
       setLoading(true);
       try {
         const response = await getNewsByid(id);
-        console.log('getNewsByid response', response);
+        console.log('getNewsByid full response:', response);
   
         if (!mounted) return;
-        // handle both single-object and array responses
-        const data = response?.data
-          ? Array.isArray(response.data)
-            ? response.data
-            : [response.data]
-          : [];
+        
+        // Handle different API response structures
+        let data = [];
+        if (response) {
+          // Check if response has nested data structure: { success: true, data: { news: [...] } }
+          if (response.data && response.data.news && Array.isArray(response.data.news)) {
+            data = response.data.news;
+          }
+          // Check if response has nested data structure: { success: true, data: [...] }
+          else if (response.data && Array.isArray(response.data)) {
+            data = response.data;
+          }
+          // Check if response.data is a single object
+          else if (response.data && typeof response.data === 'object' && !Array.isArray(response.data)) {
+            data = [response.data];
+          }
+          // Check if response itself is an array
+          else if (Array.isArray(response)) {
+            data = response;
+          }
+          // Check if response itself is a single object
+          else if (typeof response === 'object') {
+            data = [response];
+          }
+        }
+  
+        console.log('Extracted data array:', data);
+        
+        // Log source and date for debugging
+        if (data.length > 0) {
+          console.log('First article item:', data[0]);
+          if (data[0].source) {
+            console.log('Article source:', data[0].source);
+          }
+          if (data[0].publishedAt || data[0].createdAt || data[0].createdTime) {
+            console.log('Article date fields:', {
+              publishedAt: data[0].publishedAt,
+              createdAt: data[0].createdAt,
+              createdTime: data[0].createdTime,
+              publishedAtType: typeof data[0].publishedAt,
+              createdAtType: typeof data[0].createdAt
+            });
+          } else {
+            console.warn('No date fields found in article:', Object.keys(data[0]));
+          }
+        } else {
+          console.warn('No data extracted from API response');
+        }
   
         setRawNews(data);
       } catch (err) {
@@ -184,29 +231,105 @@ const MainContent = () => {
             }
           }
         }
+        // Handle date extraction - support MongoDB $date format and regular ISO strings
+        let dateValue = item.publishedAt || item.createdAt || item.createdTime;
+        let dateObj = null;
+        let formattedDate = "";
+        let isoDateString = "";
+        
+        console.log('Processing date for item:', {
+          publishedAt: item.publishedAt,
+          createdAt: item.createdAt,
+          createdTime: item.createdTime,
+          selectedDateValue: dateValue,
+          dateValueType: typeof dateValue
+        });
+        
+        if (dateValue) {
+          try {
+            // Handle MongoDB $date format: { "$date": "2026-01-15T08:33:21.991Z" }
+            if (typeof dateValue === 'object' && dateValue !== null && !Array.isArray(dateValue)) {
+              if (dateValue.$date) {
+                dateObj = new Date(dateValue.$date);
+                isoDateString = dateValue.$date;
+                console.log('Parsed MongoDB $date format:', dateValue.$date);
+              } else if (dateValue instanceof Date) {
+                dateObj = dateValue;
+                isoDateString = dateValue.toISOString();
+                console.log('Parsed Date object:', dateValue);
+              } else {
+                // Try to convert object to string if it has toString method
+                const dateStr = String(dateValue);
+                dateObj = new Date(dateStr);
+                isoDateString = dateStr;
+                console.log('Converted object to string and parsed:', dateStr);
+              }
+            } 
+            // Handle regular ISO string: "2026-01-15T08:33:21.991Z"
+            else if (typeof dateValue === 'string') {
+              dateObj = new Date(dateValue);
+              isoDateString = dateValue;
+              console.log('Parsed ISO string:', dateValue);
+            }
+            // Handle Date object directly
+            else if (dateValue instanceof Date) {
+              dateObj = dateValue;
+              isoDateString = dateValue.toISOString();
+              console.log('Using Date object directly:', dateValue);
+            }
+            
+            // Format the date if valid
+            if (dateObj && !isNaN(dateObj.getTime())) {
+              formattedDate = dateObj.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              });
+              console.log('✅ Successfully formatted date:', formattedDate);
+            } else {
+              console.warn('❌ Invalid date value after parsing:', {
+                dateValue,
+                dateObj,
+                isValid: dateObj ? !isNaN(dateObj.getTime()) : false
+              });
+            }
+          } catch (error) {
+            console.error('❌ Error parsing date:', error, 'dateValue:', dateValue);
+          }
+        } else {
+          console.warn('⚠️ No date value found in item:', {
+            publishedAt: item.publishedAt,
+            createdAt: item.createdAt,
+            createdTime: item.createdTime
+          });
+        }
+        
         return {
           id: item._id,
           title: title || "Untitled Article",
           excerpt: excerpt ? (excerpt.length > 200 ? excerpt.slice(0, 200) + "..." : excerpt) : "",
           content: excerpt,
           paragraphs: [paragraph1, paragraph2],
-          date: item.publishedAt || item.createdAt
-            ? new Date(item.publishedAt || item.createdAt).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })
-            : "",
+          date: formattedDate,
+          dateTime: isoDateString,
           image: item.newsImage || "/placeholder.svg",
           category: categoryName,
           author: item.author || "DIPR Karnataka",
           alt: item.title || "News Article Image",
           tags: item.tags || [],
           quote: item.quote || "",
+          source: item.source ? String(item.source).trim() : "",
         };
       });
   
       console.log('localized =>', localized);
+      // Log date information for debugging
+      if (localized.length > 0 && localized[0]) {
+        console.log('Formatted date:', localized[0].date, 'ISO date:', localized[0].dateTime);
+        if (!localized[0].date || localized[0].date.trim() === "") {
+          console.warn('Warning: Date is empty or not formatted correctly');
+        }
+      }
       // this is a single-article page: use the first item as the article object
       setNews(localized[0] || null);
     } catch (err) {
@@ -331,7 +454,12 @@ const MainContent = () => {
           {news.category}
         </LocationTag>
       )} */}
-      <DateTag as="time" dateTime={news.date}>{news.date}</DateTag>
+      {/* Published Date - Display if available */}
+      {news.date && news.date.trim() !== "" && (
+        <DateTag as="time" dateTime={news.dateTime || news.date} title={`Published on ${news.date}`}>
+          {news.date}
+        </DateTag>
+      )}
       
       {/* Main Article Title */}
       <ArticleTitle id="article-title" as="h2">
@@ -379,14 +507,8 @@ const MainContent = () => {
       <HeroImage as="figure" role="img" aria-labelledby="hero-image-caption">
         <img 
           src={news.image} 
-          alt="Raichur's green transformation showing lush greenery and transformed landscapes" 
+          alt={news.alt || news.title || "News article image"} 
           loading="eager"
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            objectPosition: "center"
-          }}
         />
         <ImageCaption id="hero-image-caption" as="figcaption">
           {news.title}
@@ -454,6 +576,21 @@ const MainContent = () => {
           <li><Tag as="a" href="#transformation" tabIndex="0">transformation</Tag></li>
         </ul>
       </ArticleTags> */}
+      
+      {/* Source - Only show if source exists and is not empty */}
+      {news.source && news.source.trim() !== "" && (
+        <SourceContainer>
+          <SourceLabel>Source:</SourceLabel>
+          <SourceLink 
+            href={news.source} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            aria-label={`Read original article at ${news.source}`}
+          >
+            {news.source}
+          </SourceLink>
+        </SourceContainer>
+      )}
       
       {/* Social Share */}
       <SocialShare />   

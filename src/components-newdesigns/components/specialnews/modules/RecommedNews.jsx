@@ -31,7 +31,7 @@ const items = Array.from({ length: 6 }).map((_, i) => ({
   image: "/specilanews/recommeded.jpg",
 }))
 
-export default function Recommrednews() {
+export default function Recommrednews({ dateFilter = null }) {
   const [news, setNews] = useState([])
   const [rawNews, setRawNews] = useState([])
   const [mostRead, setMostRead] = useState([])
@@ -55,7 +55,7 @@ export default function Recommrednews() {
     // get news by type state
 const fetchNews = async () => {
   setLoading(true)
-  const res = await getNews()
+  const res = await getNews(dateFilter)
 
   if (res?.success && Array.isArray(res.data)) {
     setRawNews(res.data)
@@ -63,7 +63,7 @@ const fetchNews = async () => {
   setLoading(false)
 }
 fetchNews()
-  }, [language])
+  }, [language, dateFilter])
 
 
   // get news by type state based on active category

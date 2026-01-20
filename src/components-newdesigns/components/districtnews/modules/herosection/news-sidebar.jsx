@@ -29,6 +29,7 @@ export default function NewsSidebar({
       imageSrc: "/state/sidebar2.jpg",
     },
   ],
+  dateFilter = null,
 }) {
   const { language } = useContext(LanguageContext)
   const [districtNews, setDistrictNews] = useState([])
@@ -38,7 +39,7 @@ export default function NewsSidebar({
   useEffect(() => {
     const fetchNews = async () => {
       setLoading(true)
-      const response = await getNewsByTypeDistrict()
+      const response = await getNewsByTypeDistrict(dateFilter)
       console.log(response)
       if (response?.success && Array.isArray(response.data)) {
         setRawData(response.data)
@@ -48,7 +49,7 @@ export default function NewsSidebar({
       setLoading(false)
     }
     fetchNews()
-  }, [language])
+  }, [language, dateFilter])
   
     useEffect(() => {
       if (rawData.length > 0) {

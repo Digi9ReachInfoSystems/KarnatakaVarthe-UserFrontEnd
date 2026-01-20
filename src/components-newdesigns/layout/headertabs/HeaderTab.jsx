@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { Menu, X, User, Settings, LogOut, LogIn } from "lucide-react";
+import { Menu, X, User, Settings, LogOut, LogIn, ChevronDown } from "lucide-react";
 import { LanguageContext } from "../../../context/LanguageContext";
 import {
   HeaderContainer,
@@ -27,12 +27,17 @@ import {
   UserInfo,
   UserName,
   UserEmail,
+  ExpandIcon,
 } from "./Header.styles";
+import DistrictDropdown from "./DistrictDropdown";
+import MobileDistrictMenu from "./MobileDistrictMenu";
 import Cookies from "js-cookie";
 
 const HeaderTab = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [isDistrictDropdownOpen, setIsDistrictDropdownOpen] = useState(false);
+  const [isMobileDistrictMenuOpen, setIsMobileDistrictMenuOpen] = useState(false);
   const location = useLocation();
   const { language } = useContext(LanguageContext);
   const userId = Cookies.get("userId");
@@ -40,6 +45,9 @@ const HeaderTab = () => {
   const email = Cookies.get("Email");
   const phone = Cookies.get("Phone");
   const dropdownRef = useRef(null);
+  const districtDropdownRef = useRef(null);
+  const districtNavItemRef = useRef(null);
+  const hoverTimeoutRef = useRef(null);
   const cleanPhone = phone ? phone.slice(-10) : null;
 
   // Navigation items with translations
@@ -206,6 +214,19 @@ const HeaderTab = () => {
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
+    setIsMobileDistrictMenuOpen(false);
+  };
+
+  // Toggle mobile district menu
+  const toggleMobileDistrictMenu = (e) => {
+    e.preventDefault();
+    setIsMobileDistrictMenuOpen(!isMobileDistrictMenuOpen);
+  };
+
+  // Handle district selection in mobile menu
+  const handleMobileDistrictSelect = () => {
+    setIsMobileDistrictMenuOpen(false);
+    closeMobileMenu();
   };
 
   // Prevent body scroll when mobile menu is open
@@ -248,6 +269,53 @@ const HeaderTab = () => {
     return location.pathname === itemPath;
   };
 
+  // Handle district dropdown hover
+  const handleDistrictMouseEnter = () => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    setIsDistrictDropdownOpen(true);
+  };
+
+  const handleDistrictMouseLeave = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      setIsDistrictDropdownOpen(false);
+    }, 200); // Small delay to prevent flickering
+  };
+
+  // Handle mobile click for district dropdown
+  const handleDistrictClick = (e) => {
+    if (window.innerWidth < 1026) {
+      e.preventDefault();
+      setIsDistrictDropdownOpen(!isDistrictDropdownOpen);
+    }
+  };
+
+  // Close district dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        districtDropdownRef.current && 
+        !districtDropdownRef.current.contains(event.target) &&
+        districtNavItemRef.current &&
+        !districtNavItemRef.current.contains(event.target)
+      ) {
+        setIsDistrictDropdownOpen(false);
+      }
+    };
+
+    if (isDistrictDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
+    };
+  }, [isDistrictDropdownOpen]);
+
   return (
     <HeaderContainer role="navigation" aria-label="Main navigation">
       <Container>
@@ -269,14 +337,40 @@ const HeaderTab = () => {
           <DesktopNav aria-label="Primary navigation">
             {navItems.map((item) => (
               <NavItem key={item.path}>
-                <NavLinkStyled
-                  to={item.path}
-                  className={`${isTabActive(item.path) ? "active" : ""} ${language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}`}
-                  aria-current={isTabActive(item.path) ? "page" : undefined}
-                >
-                  {getTranslatedName(item)}
-                  {isTabActive(item.path) && <ActiveIndicator aria-hidden="true" />}
-                </NavLinkStyled>
+                {item.path === "/district" ? (
+                  <div
+                    ref={districtNavItemRef}
+                    onMouseEnter={handleDistrictMouseEnter}
+                    onMouseLeave={handleDistrictMouseLeave}
+                    style={{ position: 'relative' }}
+                  >
+                    <NavLinkStyled
+                      to={item.path}
+                      onClick={handleDistrictClick}
+                      className={`${isTabActive(item.path) ? "active" : ""} ${language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}`}
+                      aria-current={isTabActive(item.path) ? "page" : undefined}
+                    >
+                      {getTranslatedName(item)}
+                      {isTabActive(item.path) && <ActiveIndicator aria-hidden="true" />}
+                    </NavLinkStyled>
+                    <DistrictDropdown
+                      ref={districtDropdownRef}
+                      isOpen={isDistrictDropdownOpen}
+                      onClose={() => setIsDistrictDropdownOpen(false)}
+                      onMouseEnter={handleDistrictMouseEnter}
+                      onMouseLeave={handleDistrictMouseLeave}
+                    />
+                  </div>
+                ) : (
+                  <NavLinkStyled
+                    to={item.path}
+                    className={`${isTabActive(item.path) ? "active" : ""} ${language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}`}
+                    aria-current={isTabActive(item.path) ? "page" : undefined}
+                  >
+                    {getTranslatedName(item)}
+                    {isTabActive(item.path) && <ActiveIndicator aria-hidden="true" />}
+                  </NavLinkStyled>
+                )}
               </NavItem>
             ))}
           </DesktopNav>
@@ -343,14 +437,35 @@ const HeaderTab = () => {
             <MobileNavContent>
               {navItems.map((item) => (
                 <MobileNavItem key={item.path}>
-                  <MobileNavLink
-                    to={item.path}
-                    onClick={closeMobileMenu}
-                    className={`${isTabActive(item.path) ? "active" : ""} ${language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}`}
-                    aria-current={isTabActive(item.path) ? "page" : undefined}
-                  >
-                    {getTranslatedName(item)}
-                  </MobileNavLink>
+                  {item.path === "/district" ? (
+                    <>
+                      <MobileNavLink
+                        to={item.path}
+                        onClick={toggleMobileDistrictMenu}
+                        className={`${isTabActive(item.path) ? "active" : ""} ${language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}`}
+                        aria-current={isTabActive(item.path) ? "page" : undefined}
+                        style={{ position: 'relative', justifyContent: 'center' }}
+                      >
+                        <span style={{ textAlign: 'center' }}>{getTranslatedName(item)}</span>
+                        <ExpandIcon isOpen={isMobileDistrictMenuOpen} style={{ position: 'absolute', right: '16px' }}>
+                          <ChevronDown size={18} />
+                        </ExpandIcon>
+                      </MobileNavLink>
+                      <MobileDistrictMenu
+                        isOpen={isMobileDistrictMenuOpen}
+                        onDistrictSelect={handleMobileDistrictSelect}
+                      />
+                    </>
+                  ) : (
+                    <MobileNavLink
+                      to={item.path}
+                      onClick={closeMobileMenu}
+                      className={`${isTabActive(item.path) ? "active" : ""} ${language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}`}
+                      aria-current={isTabActive(item.path) ? "page" : undefined}
+                    >
+                      {getTranslatedName(item)}
+                    </MobileNavLink>
+                  )}
                 </MobileNavItem>
               ))}
             </MobileNavContent>

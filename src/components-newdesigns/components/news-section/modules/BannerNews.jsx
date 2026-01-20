@@ -20,7 +20,7 @@ import {
   SkeletonTitle,
 } from "./BannerNews.styles"
 import { useNavigate } from "react-router-dom"
-export default function Banner() {
+export default function Banner({ dateFilter = null }) {
   const { language } = useContext(LanguageContext)
   const [item, setItem] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -31,7 +31,7 @@ export default function Banner() {
     ;(async () => {
       try {
         setLoading(true)
-        const res = await getNews()
+        const res = await getNews(dateFilter)
         if (!mounted || !res?.success || !Array.isArray(res.data)) {
           if (mounted) setLoading(false)
           return
@@ -85,7 +85,7 @@ export default function Banner() {
     return () => {
       mounted = false
     }
-  }, [language, langKey])
+  }, [language, langKey, dateFilter])
 
   const parseDateTimeAttr = (d) => {
     if (!d) return ""

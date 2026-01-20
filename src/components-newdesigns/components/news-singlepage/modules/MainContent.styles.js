@@ -181,32 +181,34 @@ export const HeroImage = styled.div`
   position: relative;
   width: 100%;
   max-width: 100%;
-  height: 400px;
+  height: 550px;
   overflow: hidden;
   margin-bottom: 16px;
   margin-left: auto;
   margin-right: auto;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border-radius: ${theme.borderRadius.medium};
   
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     display: block;
   }
   
   @media screen and (max-width: 1026px) {
     margin-left: 0;
     margin-right: 0;
+    height: 450px;
   }
   
   @media (max-width: ${theme.breakpoints.tablet}) {
-    height: 350px;
+    height: 380px;
     margin-bottom: 14px;
   }
   
   @media (max-width: ${theme.breakpoints.mobile}) {
-    height: 250px;
+    height: 300px;
     margin-bottom: 12px;
     border-radius: ${theme.borderRadius.small};
   }
@@ -415,7 +417,7 @@ export const SkeletonLine = styled.div`
 
 export const SkeletonImage = styled.div`
   width: 100%;
-  height: 400px;
+  height: 550px;
   background: linear-gradient(
     90deg,
     ${theme.colors.gray[200]} 25%,
@@ -425,15 +427,20 @@ export const SkeletonImage = styled.div`
   background-size: 1000px 100%;
   animation: shimmer 2s infinite;
   margin-bottom: 32px;
+  border-radius: ${theme.borderRadius.medium};
   ${shimmer}
 
+  @media screen and (max-width: 1026px) {
+    height: 450px;
+  }
+
   @media (max-width: ${theme.breakpoints.tablet}) {
-    height: 350px;
+    height: 380px;
     margin-bottom: 24px;
   }
   
   @media (max-width: ${theme.breakpoints.mobile}) {
-    height: 250px;
+    height: 300px;
     margin-bottom: 20px;
     border-radius: ${theme.borderRadius.small};
   }
@@ -555,5 +562,70 @@ export const AudioBookText = styled.span`
   
   @media (max-width: ${theme.breakpoints.mobile}) {
     font-size: 13px;
+  }
+`
+
+export const SourceContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 32px 0 24px;
+  padding: 16px 20px;
+  background: ${theme.colors.gray[50] || theme.colors.gray[100]};
+  border-left: 4px solid ${theme.colors.primary};
+  border-radius: ${theme.borderRadius.medium};
+  flex-wrap: wrap;
+  
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    margin: 28px 0 20px;
+    padding: 14px 18px;
+    gap: 10px;
+  }
+  
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    margin: 24px 0 16px;
+    padding: 12px 16px;
+    gap: 8px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+`
+
+export const SourceLabel = styled.span`
+  font-size: ${theme.fontSizes.medium};
+  font-weight: 600;
+  color: ${theme.colors.text};
+  white-space: nowrap;
+  font-family: ${theme.fonts.body};
+  
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    font-size: ${theme.fontSizes.small};
+  }
+`
+
+export const SourceLink = styled.a`
+  font-size: ${theme.fontSizes.medium};
+  color: ${theme.colors.primary};
+  text-decoration: none;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid transparent;
+  
+  &:hover {
+    color: ${theme.colors.Footerbg || '#1565c0'};
+    border-bottom-color: ${theme.colors.primary};
+  }
+  
+  &:focus {
+    outline: 2px solid ${theme.colors.primary};
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    font-size: ${theme.fontSizes.small};
+    width: 100%;
   }
 `

@@ -51,7 +51,7 @@ import { useNavigate } from "react-router-dom";
 //   },
 // ];
 
-export default function NewsHero() {
+export default function NewsHero({ dateFilter = null }) {
   const [index, setIndex] = React.useState(0);
   const { language } = useContext(LanguageContext);
   const navigate = useNavigate()
@@ -65,7 +65,7 @@ export default function NewsHero() {
     const fetchStateNews = async () => {
       try {
         setLoading(true);
-        const response = await getNewsByTypeState();
+        const response = await getNewsByTypeState(dateFilter);
         console.log("State news:", response.data);
         if (response?.success && Array.isArray(response.data)) {
           if (mounted) {
@@ -86,7 +86,7 @@ export default function NewsHero() {
     return () => {
       mounted = false;
     };
-  }, [language]);
+  }, [language, dateFilter]);
 
   useEffect(() => {
     if (rawData.length > 0) {

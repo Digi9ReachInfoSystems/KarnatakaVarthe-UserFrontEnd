@@ -48,7 +48,7 @@ const initialSideItems = [
   },
 ]
 
-export default function FeaturedNewsSection() {
+export default function FeaturedNewsSection({ dateFilter = null }) {
   const [rawData, setRawData] = useState([])
   const [loading, setLoading] = useState(true)
   const [featuredNews, setFeaturedNews] = useState(initialFeatured)
@@ -71,7 +71,7 @@ export default function FeaturedNewsSection() {
   useEffect(() => {
     const fetchFeaturedNews = async () => {
       try {
-        const response = await getNewsByTypeState()
+        const response = await getNewsByTypeState(dateFilter)
         if (response?.success && Array.isArray(response.data)) {
           setRawData(response.data)
    
@@ -85,7 +85,7 @@ export default function FeaturedNewsSection() {
       }
     }
     fetchFeaturedNews()
-  }, [language])
+  }, [language, dateFilter])
 
   useEffect(() => {
     if (rawData.length > 0) {

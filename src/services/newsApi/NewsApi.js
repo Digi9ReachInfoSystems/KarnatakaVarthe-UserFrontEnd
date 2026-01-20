@@ -1,8 +1,16 @@
 import apiClient from "../apiClient";
 
-export const getNews = async () => {
+export const getNews = async (dateFilter = null) => {
   try {
-    const response = await apiClient.get("/api/news");
+    let url = "/api/news";
+    if (dateFilter) {
+      const params = new URLSearchParams();
+      if (dateFilter.date) params.append('date', dateFilter.date);
+      if (dateFilter.start_date) params.append('start_date', dateFilter.start_date);
+      if (dateFilter.end_date) params.append('end_date', dateFilter.end_date);
+      if (params.toString()) url += `?${params.toString()}`;
+    }
+    const response = await apiClient.get(url);
     return response.data;
   } catch (error) {
     throw error;
@@ -57,34 +65,66 @@ export const getRecommendedNews = async (userId) => {
 };
 
 
-export const getLatestNews = async () => {
+export const getLatestNews = async (dateFilter = null) => {
   try {
-    const response = await apiClient.get("/api/news/latest");
+    let url = "/api/news/latest";
+    if (dateFilter) {
+      const params = new URLSearchParams();
+      if (dateFilter.date) params.append('date', dateFilter.date);
+      if (dateFilter.start_date) params.append('start_date', dateFilter.start_date);
+      if (dateFilter.end_date) params.append('end_date', dateFilter.end_date);
+      if (params.toString()) url += `?${params.toString()}`;
+    }
+    const response = await apiClient.get(url);
     return response.data;
   } catch (error) {
     throw error;
   }
 }
 
-export const getNewsByTypeState = async () => {
+export const getNewsByTypeState = async (dateFilter = null) => {
   try{
-    const response = await apiClient.get("api/news/getNewsByNewsType/statenews");
+    let url = "api/news/getNewsByNewsType/statenews";
+    if (dateFilter) {
+      const params = new URLSearchParams();
+      if (dateFilter.date) params.append('date', dateFilter.date);
+      if (dateFilter.start_date) params.append('start_date', dateFilter.start_date);
+      if (dateFilter.end_date) params.append('end_date', dateFilter.end_date);
+      if (params.toString()) url += `?${params.toString()}`;
+    }
+    const response = await apiClient.get(url);
     return response.data;
   } catch (error) {
     throw error;
   }
 }
-export const getNewsByTypeDistrict = async () => {
+export const getNewsByTypeDistrict = async (dateFilter = null) => {
   try{
-    const response = await apiClient.get("api/news/getNewsByNewsType/districtnews");
+    let url = "api/news/getNewsByNewsType/districtnews";
+    if (dateFilter) {
+      const params = new URLSearchParams();
+      if (dateFilter.date) params.append('date', dateFilter.date);
+      if (dateFilter.start_date) params.append('start_date', dateFilter.start_date);
+      if (dateFilter.end_date) params.append('end_date', dateFilter.end_date);
+      if (params.toString()) url += `?${params.toString()}`;
+    }
+    const response = await apiClient.get(url);
     return response.data;
   } catch (error) {
     throw error;
   }
 }
-export const getNewsByTypeSpecialnews = async () => {
+export const getNewsByTypeSpecialnews = async (dateFilter = null) => {
   try{
-    const response = await apiClient.get("api/news/getNewsByNewsType/specialnews");
+    let url = "api/news/getNewsByNewsType/specialnews";
+    if (dateFilter) {
+      const params = new URLSearchParams();
+      if (dateFilter.date) params.append('date', dateFilter.date);
+      if (dateFilter.start_date) params.append('start_date', dateFilter.start_date);
+      if (dateFilter.end_date) params.append('end_date', dateFilter.end_date);
+      if (params.toString()) url += `?${params.toString()}`;
+    }
+    const response = await apiClient.get(url);
     return response.data;
   } catch (error) {
     throw error;
@@ -92,9 +132,17 @@ export const getNewsByTypeSpecialnews = async () => {
 }
 
 //get articles by type news
-export const getNewsByTypeArticles = async () => {
+export const getNewsByTypeArticles = async (dateFilter = null) => {
   try {
-    const response = await apiClient.get("api/news/getNewsByNewsType/articles");
+    let url = "api/news/getNewsByNewsType/articles";
+    if (dateFilter) {
+      const params = new URLSearchParams();
+      if (dateFilter.date) params.append('date', dateFilter.date);
+      if (dateFilter.start_date) params.append('start_date', dateFilter.start_date);
+      if (dateFilter.end_date) params.append('end_date', dateFilter.end_date);
+      if (params.toString()) url += `?${params.toString()}`;
+    }
+    const response = await apiClient.get(url);
     return response.data;
   } catch (error) {
     throw error;

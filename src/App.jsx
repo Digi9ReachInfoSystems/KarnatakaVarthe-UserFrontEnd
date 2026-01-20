@@ -36,6 +36,7 @@ import SpecialNews from "./components-newdesigns/pages/specialnewspage/SpecialNe
 import News from "./components-newdesigns/pages/newspage/News";
 import Marchofkarnataka from "./components-newdesigns/pages/marchofkarnataka/Marchofkarnataka";
 import NewsId from "./components-newdesigns/pages/newsid/NewsId";
+import DistrictNewsId from "./components-newdesigns/pages/districtnewsid/DistrictNewsId";
 import VarthaJanapadasection from "./components-newdesigns/components/varthaJanapada/VarthaJanapadasection";
 import MagazinesVartha from "./components-newdesigns/pages/varthamagazines/MagazinesVartha";
 // import MarchofKarnataka from "./components-newdesigns/pages/marchofkarnataka/Marchofkarnataka";
@@ -111,6 +112,7 @@ const App = () => {
                   <Route path="/magazine/:id" element={<Magazineview />} />
                   <Route path="/state" element={<StateNews />} />
                   <Route path="/district" element={<DistrictNewspage />} />
+                  <Route path="/districtnewsdetails/:id" element={<DistrictNewsId />} />
                   <Route path="/specialnews" element={<SpecialNews />} />
                   <Route path="/news" element={<News />} />
                   <Route path="/marchofkarnataka" element={<MarchofKarnatakaV1 />} />

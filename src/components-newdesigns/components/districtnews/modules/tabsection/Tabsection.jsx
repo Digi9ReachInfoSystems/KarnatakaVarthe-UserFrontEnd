@@ -35,7 +35,7 @@ import { useNavigate } from "react-router-dom"
 // Fallback posts for other tabs reuse local news data as placeholder
 
 
-  export default function TabSection() {
+  export default function TabSection({ dateFilter = null }) {
   const [news, setNews] = useState([])
   const [rawNews, setRawNews] = useState([])
   const [loading, setLoading] = useState(true)
@@ -46,14 +46,14 @@ import { useNavigate } from "react-router-dom"
   useEffect(() => {
     // get news by type district
     const fetchNews = async () => {
-      const res = await getNewsByTypeDistrict()
+      const res = await getNewsByTypeDistrict(dateFilter)
 
       if (res?.success && Array.isArray(res.data)) {
         setRawNews(res.data)
       }
     }
     fetchNews()
-  }, [language])
+  }, [language, dateFilter])
 
   // Transform raw news to localized news
   useEffect(() => {
