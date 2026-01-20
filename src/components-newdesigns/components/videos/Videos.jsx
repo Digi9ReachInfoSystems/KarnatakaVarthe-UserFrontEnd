@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { LanguageContext } from '../../../context/LanguageContext';
-import { getLongVideos, getVideoCategories } from '../../../services/videoApi/videoApi';
+import { getLongVideosList, getVideoCategories } from '../../../services/videoApi/videoApi';
 import {
   ArticlesSection,
   Container,
@@ -86,10 +86,12 @@ function Videos() {
         const fetchVideos = async () => {
           setLoading(true);
           try {
-            const response = await getLongVideos();
-            if (response && Array.isArray(response.data)) {
-              setAllVideos(response.data);
-              setArticles(response.data);
+            const response = await getLongVideosList();
+            // API returns: { success: true, data: { longvideos: [...] } }
+            const videos = response?.data?.longvideos || [];
+            if (Array.isArray(videos) && videos.length > 0) {
+              setAllVideos(videos);
+              setArticles(videos);
             } else {
               setAllVideos([]);
               setArticles([]);
@@ -111,20 +113,31 @@ function Videos() {
       // Filter videos by category
       useEffect(() => {
         if (!activeCategory) {
+          // Show all videos when no category is selected
           setArticles(allVideos);
           return;
         }
 
         const filtered = allVideos.filter((video) => {
-          let categoryId = null;
-          if (video.category) {
-            if (typeof video.category === "object") {
-              categoryId = video.category.$oid || video.category._id;
-            } else {
-              categoryId = video.category;
-            }
+          // If video has no category, exclude it when filtering by specific category
+          if (!video.category) {
+            return false;
           }
-          return categoryId === activeCategory;
+          
+          // Extract category ID and normalize to string
+          let categoryId = null;
+          if (typeof video.category === "object") {
+            // Handle MongoDB $oid format: { "$oid": "..." }
+            categoryId = video.category.$oid || video.category._id?.$oid || video.category._id;
+          } else {
+            categoryId = video.category;
+          }
+          
+          // Convert both to strings for comparison
+          const normalizedCategoryId = String(categoryId || "");
+          const normalizedActiveCategory = String(activeCategory || "");
+          
+          return normalizedCategoryId === normalizedActiveCategory;
         });
 
         setArticles(filtered);

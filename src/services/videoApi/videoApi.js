@@ -21,6 +21,24 @@ export const getLongVideos = async () => {
   }
 };
 
+// Fetch all long videos from list endpoint (for videos page with filter)
+export const getLongVideosList = async () => {
+  try {
+    // Use axios directly with full URL - same pattern as photo categories
+    const response = await axios.get('https://diprkarnataka.duckdns.org/api/longvideos/list');
+    
+    if (!response || !response.data) {
+      throw new Error("No data received from long videos list API");
+    }
+    
+    // API response structure: { success: true, data: { longvideos: [...] } }
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching long videos list:", error);
+    throw error;
+  }
+};
+
 // Like a long video
 export const likeLongVideo = async (commentData) => {
   try {

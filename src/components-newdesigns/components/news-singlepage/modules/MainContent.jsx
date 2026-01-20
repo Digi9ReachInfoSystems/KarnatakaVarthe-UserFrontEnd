@@ -379,14 +379,8 @@ const MainContent = () => {
       <HeroImage as="figure" role="img" aria-labelledby="hero-image-caption">
         <img 
           src={news.image} 
-          alt="Raichur's green transformation showing lush greenery and transformed landscapes" 
+          alt={news.alt || news.title || "News article image"} 
           loading="eager"
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            objectPosition: "center"
-          }}
         />
         <ImageCaption id="hero-image-caption" as="figcaption">
           {news.title}

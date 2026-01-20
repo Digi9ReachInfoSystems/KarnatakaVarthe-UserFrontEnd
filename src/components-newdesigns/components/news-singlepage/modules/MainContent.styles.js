@@ -181,32 +181,34 @@ export const HeroImage = styled.div`
   position: relative;
   width: 100%;
   max-width: 100%;
-  height: 400px;
+  height: 550px;
   overflow: hidden;
   margin-bottom: 16px;
   margin-left: auto;
   margin-right: auto;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border-radius: ${theme.borderRadius.medium};
   
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     display: block;
   }
   
   @media screen and (max-width: 1026px) {
     margin-left: 0;
     margin-right: 0;
+    height: 450px;
   }
   
   @media (max-width: ${theme.breakpoints.tablet}) {
-    height: 350px;
+    height: 380px;
     margin-bottom: 14px;
   }
   
   @media (max-width: ${theme.breakpoints.mobile}) {
-    height: 250px;
+    height: 300px;
     margin-bottom: 12px;
     border-radius: ${theme.borderRadius.small};
   }
@@ -415,7 +417,7 @@ export const SkeletonLine = styled.div`
 
 export const SkeletonImage = styled.div`
   width: 100%;
-  height: 400px;
+  height: 550px;
   background: linear-gradient(
     90deg,
     ${theme.colors.gray[200]} 25%,
@@ -425,15 +427,20 @@ export const SkeletonImage = styled.div`
   background-size: 1000px 100%;
   animation: shimmer 2s infinite;
   margin-bottom: 32px;
+  border-radius: ${theme.borderRadius.medium};
   ${shimmer}
 
+  @media screen and (max-width: 1026px) {
+    height: 450px;
+  }
+
   @media (max-width: ${theme.breakpoints.tablet}) {
-    height: 350px;
+    height: 380px;
     margin-bottom: 24px;
   }
   
   @media (max-width: ${theme.breakpoints.mobile}) {
-    height: 250px;
+    height: 300px;
     margin-bottom: 20px;
     border-radius: ${theme.borderRadius.small};
   }
