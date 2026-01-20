@@ -20,12 +20,11 @@ export const DateFilterContainer = styled.div`
     margin-top: 0;
     width: 100%;
     margin-left: 0;
-    background: ${theme.colors.gray[50] || theme.colors.gray[100]};
-    padding: ${theme.spacing1(2)};
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    flex-direction: column;
-    align-items: stretch;
+    margin-bottom: ${theme.spacing1(1.5)};
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: ${theme.spacing1(0.5)};
   }
 `
 
@@ -51,10 +50,14 @@ export const FilterLabel = styled.span`
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     display: flex;
-    font-size: 14px;
-    margin-bottom: ${theme.spacing1(1)};
+    font-size: 11px;
     color: ${theme.colors.text || theme.colors.gray[800]};
-    width: 100%;
+    flex-shrink: 0;
+    
+    svg {
+      width: 12px;
+      height: 12px;
+    }
   }
 `
 
@@ -65,9 +68,11 @@ export const DateFilterWrapper = styled.div`
   align-items: center;
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    flex-direction: column;
-    width: 100%;
-    gap: ${theme.spacing1(1.5)};
+    flex-direction: row;
+    width: auto;
+    gap: ${theme.spacing1(0.5)};
+    align-items: center;
+    justify-content: flex-end;
   }
 `
 
@@ -111,9 +116,14 @@ export const DatePickerInput = styled.input`
   }
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    width: 100%;
-    min-width: 100%;
-    font-size: 14px;
+    min-width: 0;
+    width: auto;
+    max-width: 150px;
+    font-size: 11px;
+    padding: ${theme.spacing1(1)} ${theme.spacing1(2)} ${theme.spacing1(1)} ${theme.spacing1(1.5)};
+    padding-right: ${theme.spacing1(7)};
+    background-size: 14px;
+    background-position: right ${theme.spacing1(1.5)} center;
   }
 `
 
@@ -131,10 +141,12 @@ export const CalendarDropdown = styled.div`
   max-width: 350px;
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    left: 0;
-    width: 100%;
-    max-width: 100%;
-    min-width: 100%;
+    left: auto;
+    right: 0;
+    transform: none;
+    width: 90vw;
+    max-width: 320px;
+    min-width: 280px;
   }
 `
 
@@ -245,7 +257,8 @@ export const ClearButton = styled.button`
   }
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    width: 100%;
-    padding: ${theme.spacing1(1.5)} ${theme.spacing1(2)};
+    padding: ${theme.spacing1(1)} ${theme.spacing1(1.5)};
+    font-size: 11px;
+    flex-shrink: 0;
   }
 `
