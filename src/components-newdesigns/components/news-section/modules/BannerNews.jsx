@@ -20,6 +20,7 @@ import {
   SkeletonTitle,
 } from "./BannerNews.styles"
 import { useNavigate } from "react-router-dom"
+import EmptyState from "../../districtnews/modules/DateFilter/EmptyState"
 export default function Banner({ dateFilter = null }) {
   const { language } = useContext(LanguageContext)
   const [item, setItem] = useState(null)
@@ -108,7 +109,10 @@ export default function Banner({ dateFilter = null }) {
     )
   }
 
-  if (!item) return null
+  // Show empty state when no data available (after loading)
+  if (!loading && !item) {
+    return <EmptyState />
+  }
 
   return (
     <BannerWrap 

@@ -21,6 +21,7 @@ import { LanguageContext } from "../../../../../context/LanguageContext"
 import { getNewsByTypeDistrict } from "../../../../../services/newsApi/NewsApi"
 import { CategoryApi } from "../../../../../services/categoryapi/CategoryApi"
 import { useNavigate } from "react-router-dom"
+import EmptyState from "../DateFilter/EmptyState"
 
 const initialFeatured = {
   image: "/placeholder.svg",
@@ -127,7 +128,7 @@ export default function FeaturedNewsSection({ dateFilter = null }) {
   }, [language, rawData, categories])
 
   // Shimmer loading component
-  if (loading || rawData.length === 0) {
+  if (loading) {
     return (
       <Section as="section" aria-labelledby="featured-news-heading" role="region">
         <h2 
@@ -171,6 +172,23 @@ export default function FeaturedNewsSection({ dateFilter = null }) {
               </SkeletonSideCard>
             ))}
           </Sidebar>
+        </Container>
+      </Section>
+    )
+  }
+
+  // Show empty state when no data available (after loading)
+  if (!loading && rawData.length === 0) {
+    return (
+      <Section as="section" aria-labelledby="featured-news-heading" role="region">
+        <h2 
+          id="featured-news-heading" 
+          style={{ position: 'absolute', left: '-9999px', top: 'auto', width: '1px', height: '1px', overflow: 'hidden' }}
+        >
+          Featured District News
+        </h2>
+        <Container>
+          <EmptyState />
         </Container>
       </Section>
     )

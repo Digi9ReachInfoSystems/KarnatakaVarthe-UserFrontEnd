@@ -37,6 +37,7 @@ import { getLatestNews } from "../../../../services/newsApi/NewsApi";
 import { LanguageContext } from "../../../../context/LanguageContext";
 import { formatDate } from "../../../../utils/formatters";
 import { useNavigate } from "react-router-dom";
+import EmptyState from "../../districtnews/modules/DateFilter/EmptyState";
 
 const NewsArticles = ({ dateFilter = null }) => {
   const [newsData, setNewsData] = useState([])
@@ -176,6 +177,23 @@ const NewsArticles = ({ dateFilter = null }) => {
               ))}
             </NewsList>
           </CombinedColumn>
+        </GridLayout>
+      </Container>
+    )
+  }
+
+  // Show empty state when no data available (after loading)
+  if (!loading && rawData.length === 0) {
+    return (
+      <Container as="section" aria-labelledby="news-articles-heading" role="region">
+        <h2 
+          id="news-articles-heading" 
+          style={{ position: 'absolute', left: '-9999px', top: 'auto', width: '1px', height: '1px', overflow: 'hidden' }}
+        >
+          Featured, Latest and Popular News
+        </h2>
+        <GridLayout>
+          <EmptyState />
         </GridLayout>
       </Container>
     )

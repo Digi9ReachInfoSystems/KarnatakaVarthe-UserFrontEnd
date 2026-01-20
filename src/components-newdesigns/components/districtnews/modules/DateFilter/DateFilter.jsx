@@ -64,9 +64,15 @@ export default function DateFilter({ onDateChange }) {
   }, [showCalendar])
 
   const handleDateSelect = (date) => {
-    const dateStr = date.toISOString().split('T')[0]
+    // Format date as YYYY-MM-DD in local timezone (not UTC)
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    const dateStr = `${year}-${month}-${day}`
+    console.log('📅 DateFilter - Date selected:', dateStr)
     setSelectedDate(dateStr)
     setShowCalendar(false)
+    console.log('🚀 DateFilter - Calling onDateChange with:', { date: dateStr })
     onDateChange({ date: dateStr })
   }
 
@@ -117,7 +123,12 @@ export default function DateFilter({ onDateChange }) {
     const daysInMonth = getDaysInMonth(currentMonth, currentYear)
     const firstDay = getFirstDayOfMonth(currentMonth, currentYear)
     const today = new Date()
-    const todayStr = today.toISOString().split('T')[0]
+    today.setHours(0, 0, 0, 0)
+    // Format today in local timezone (not UTC)
+    const todayYear = today.getFullYear()
+    const todayMonth = String(today.getMonth() + 1).padStart(2, '0')
+    const todayDay = String(today.getDate()).padStart(2, '0')
+    const todayStr = `${todayYear}-${todayMonth}-${todayDay}`
     
     const monthNames = language === 'Kannada' 
       ? ['ಜನವರಿ', 'ಫೆಬ್ರವರಿ', 'ಮಾರ್ಚ್', 'ಏಪ್ರಿಲ್', 'ಮೇ', 'ಜೂನ್', 'ಜುಲೈ', 'ಆಗಸ್ಟ್', 'ಸೆಪ್ಟೆಂಬರ್', 'ಅಕ್ಟೋಬರ್', 'ನವೆಂಬರ್', 'ಡಿಸೆಂಬರ್']
@@ -142,7 +153,11 @@ export default function DateFilter({ onDateChange }) {
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(currentYear, currentMonth, day)
       date.setHours(0, 0, 0, 0)
-      const dateStr = date.toISOString().split('T')[0]
+      // Format date in local timezone (not UTC) to match handleDateSelect
+      const year = date.getFullYear()
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const dayStr = String(date.getDate()).padStart(2, '0')
+      const dateStr = `${year}-${month}-${dayStr}`
       const isToday = dateStr === todayStr
       const isSelected = selectedDate === dateStr
       // Check if date is in the future

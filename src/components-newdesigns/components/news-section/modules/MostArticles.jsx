@@ -27,6 +27,7 @@ import { LanguageContext } from "../../../../context/LanguageContext"
 import { getNews } from "../../../../services/newsApi/NewsApi"
 import { useNavigate } from "react-router-dom"
 import { useEffect, useContext, useState } from "react"
+import EmptyState from "../../districtnews/modules/DateFilter/EmptyState"
 
 export default function TabSection({ dateFilter = null }) {
   const [news, setNews] = useState([])
@@ -148,6 +149,23 @@ export default function TabSection({ dateFilter = null }) {
               </SideList>
             </Sidebar>
           </Layout>
+        </Container>
+      </Section>
+    )
+  }
+
+  // Show empty state when no data available (after loading)
+  if (!loading && rawNews.length === 0) {
+    return (
+      <Section as="section" aria-labelledby="most-articles-heading" role="region">
+        <Container>
+          <h2
+            id="most-articles-heading"
+            style={{ position: 'absolute', left: '-9999px', top: 'auto', width: '1px', height: '1px', overflow: 'hidden' }}
+          >
+            Karnataka News
+          </h2>
+          <EmptyState />
         </Container>
       </Section>
     )

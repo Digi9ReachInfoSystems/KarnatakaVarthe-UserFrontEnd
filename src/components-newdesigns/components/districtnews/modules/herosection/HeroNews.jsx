@@ -26,6 +26,7 @@ import {
 import { LanguageContext } from "../../../../../context/LanguageContext"
 import { getNewsByTypeDistrict } from "../../../../../services/newsApi/NewsApi"
 import { useNavigate } from "react-router-dom"
+import EmptyState from "../DateFilter/EmptyState"
 
 const FALLBACK_ITEMS = [
   {
@@ -137,7 +138,7 @@ useEffect(() => {
   }
 
   // Shimmer loading component
-  if (loading || districtNews.length === 0) {
+  if (loading) {
     return (
       <SkeletonHeroWrap>
         <SkeletonImage />
@@ -162,6 +163,11 @@ useEffect(() => {
         <RightDivider aria-hidden="true" />
       </SkeletonHeroWrap>
     )
+  }
+
+  // Show empty state when no data available (after loading)
+  if (!loading && districtNews.length === 0) {
+    return <EmptyState />
   }
 
   return (

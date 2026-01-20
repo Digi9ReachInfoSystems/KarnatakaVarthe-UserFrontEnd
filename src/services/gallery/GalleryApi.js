@@ -91,14 +91,10 @@ export const PhotosApi = {
   },
   getDistrictNews: async (districtSlug, dateFilter = null) => {
     try {
-      // Build query string with date parameters
+      // Build query string with date parameter only
       let url = `https://diprkarnataka.duckdns.org/api/districts/news/${districtSlug}`;
-      if (dateFilter) {
-        const params = new URLSearchParams();
-        if (dateFilter.date) params.append('date', dateFilter.date);
-        if (dateFilter.start_date) params.append('start_date', dateFilter.start_date);
-        if (dateFilter.end_date) params.append('end_date', dateFilter.end_date);
-        if (params.toString()) url += `?${params.toString()}`;
+      if (dateFilter && dateFilter.date) {
+        url += `?date=${dateFilter.date}`;
       }
       
       // Use axios directly with full URL - same pattern as LatestNotification.js
@@ -110,7 +106,56 @@ export const PhotosApi = {
       
       // API response structure: { success: true, district: {...}, data: { news: [...], total, page, page_size } }
       const district = response.data?.district || {};
-      const news = response.data?.data?.news || [];
+      let news = response.data?.data?.news || [];
+      
+      console.log('🔍 GalleryApi - Raw API response:', { 
+        districtSlug, 
+        dateFilter, 
+        originalNewsCount: news.length,
+        apiTotal: response.data?.data?.total 
+      });
+      
+      // 🔥 CLIENT-SIDE DATE FILTER - Filter by publishedAt date
+      if (dateFilter && dateFilter.date) {
+        const filterDate = dateFilter.date; // e.g., "2025-11-10"
+        
+        if (news.length === 0) {
+          console.warn(`⚠️  No news returned from API for date: ${filterDate}`);
+        } else {
+          console.log(`🔍 Starting date filter for: ${filterDate}`);
+          console.log(`📊 Original news count: ${news.length}`);
+          
+          // Filter news to keep ONLY items where publishedAt date matches filterDate
+          const filteredNews = news.filter((item, idx) => {
+            // Extract publishedAt from MongoDB date format or ISO string
+            const publishedDate = item.publishedAt?.$date || item.publishedAt;
+            if (!publishedDate) {
+              console.log(`⚠️  Item ${idx}: No publishedAt found`);
+              return false;
+            }
+            
+            // Convert to date string (YYYY-MM-DD) in UTC timezone
+            const publishedDateStr = new Date(publishedDate).toISOString().split('T')[0];
+            
+            if (idx < 3) { // Log first 3 items for debugging
+              console.log(`📰 Item ${idx}: publishedAt = ${publishedDateStr} | Match = ${publishedDateStr === filterDate}`);
+            }
+            
+            // Compare: only keep if dates match exactly
+            return publishedDateStr === filterDate;
+          });
+          
+          // Log for debugging
+          console.log(`✅ Date filter complete: ${filterDate} | Original: ${news.length} items → Filtered: ${filteredNews.length} items`);
+          
+          if (filteredNews.length === 0) {
+            console.warn(`⚠️  No news found matching date: ${filterDate}`);
+          }
+          
+          // Replace news array with filtered results
+          news = filteredNews;
+        }
+      }
       
       // Normalize district data
       const normalizedDistrict = {
@@ -123,11 +168,11 @@ export const PhotosApi = {
         kannada: district.kannada || district.district_name,
       };
       
-      // Return both district info and news array
+      // Return both district info and filtered news array
       return {
         district: normalizedDistrict,
         news: news,
-        total: response.data?.data?.total || 0,
+        total: news.length, // ✅ Use filtered news count
         page: response.data?.data?.page || 1,
         page_size: response.data?.data?.page_size || 20
       };

@@ -43,7 +43,7 @@ function TabSection({ dateFilter = null }) {
       useEffect(() => {
         // get news by type articles
         const fetchNews = async () => {
-          const res = await getNewsByTypeArticles(dateFilter)
+          const res = await getArticlesWithFilter(dateFilter)
           if (res?.success && Array.isArray(res.data)) {
             setRawNews(res.data)
           }

@@ -11,6 +11,7 @@ import { useContext, useState, useEffect } from "react"
 import { LanguageContext } from "../../../../../context/LanguageContext"
 import { getNewsByTypeDistrict } from "../../../../../services/newsApi/NewsApi"
 import { useNavigate } from "react-router-dom"
+import EmptyState from "../DateFilter/EmptyState"
 
 export default function NewsSidebar({
   items = [

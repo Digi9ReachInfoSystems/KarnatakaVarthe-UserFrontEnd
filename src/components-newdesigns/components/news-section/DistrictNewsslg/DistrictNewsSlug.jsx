@@ -11,8 +11,11 @@ export default function DistrictNewsSlug({ districtSlug }) {
   const [dateFilter, setDateFilter] = useState(null)
 
   const handleDateChange = (filter) => {
+    console.log('🎯 DistrictNewsSlug - Date changed:', filter)
     setDateFilter(filter)
   }
+
+  console.log('🔄 DistrictNewsSlug - Current dateFilter:', dateFilter)
 
   return (
     <>
