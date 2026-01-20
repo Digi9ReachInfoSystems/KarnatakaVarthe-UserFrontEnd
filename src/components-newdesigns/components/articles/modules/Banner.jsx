@@ -23,7 +23,7 @@ import {
   SkeletonArrows,
   SkeletonArrow,
 } from "./styles/Banner.style";
-import { getNewsByTypeArticles } from "../../../../services/newsApi/NewsApi";
+import { getArticles } from "../../../../services/newsApi/newsducks";
 
 import { LanguageContext } from "../../../../context/LanguageContext";
 import { useNavigate } from "react-router-dom";
@@ -41,20 +41,27 @@ function Banner({ dateFilter = null }) {
       useEffect(() => {
         let mounted = true;
         const fetchArticlesNews = async () => {
+          console.log('🔍 Banner - Fetching with dateFilter:', dateFilter, 'Type:', typeof dateFilter)
           try {
             setLoading(true);
-            const response = await getNewsByTypeArticles(dateFilter);
+            // Ensure dateFilter is string or null, never an object
+            const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
+            console.log('🔍 Banner - Clean dateFilter:', cleanDateFilter)
+            const response = await getArticles(cleanDateFilter);
+            console.log('✅ Banner - API response:', response)
          
-            if (response?.success && Array.isArray(response.data)) {
+            if (response?.success && Array.isArray(response.data.news)) {
+              console.log('📰 Banner - News count:', response.data.news.length)
               if (mounted) {
-                setRawData(response.data);
+                setRawData(response.data.news);
                 setIndex(0);
               }
             } else {
+              console.warn('⚠️ Banner - No data or invalid format')
               if (mounted) setRawData([]);
             }
           } catch (err) {
-            console.error("Error fetching state news:", err);
+            console.error("❌ Banner - Error fetching articles:", err);
             if (mounted) setRawData([]);
           } finally {
             if (mounted) setLoading(false);
@@ -68,18 +75,24 @@ function Banner({ dateFilter = null }) {
     // convert api data based on language selection
       useEffect(() => {
         if (rawData.length > 0) {
+          console.log('🔄 Banner - Processing rawData, count:', rawData.length)
           const langKey =
             language === "English"
               ? "English"
               : language === "Hindi"
               ? "hindi"
               : "kannada";
-          const normalized = rawData.map((it, i) => ({
-            id: it._id ?? it.id ?? `api-${i}`,
+          const normalized = rawData.map((it, i) => {
+            // Extract proper ID from MongoDB format
+            const newsId = it._id?.$oid || it._id
+            
+            return {
+            id: newsId ?? `api-${i}`,
             title: (it[langKey]?.title.slice(0, 50)??'') + "..." ,
             excerpt: (it[langKey]?.description.slice(0, 150)??'') + "..." ,
             image: it.newsImage ?? "/placeholder.svg",
-          }));
+          }});
+          console.log('✅ Banner - Normalized articles, count:', normalized.length)
           setArticles(normalized);
         }
       }, [language, rawData]);

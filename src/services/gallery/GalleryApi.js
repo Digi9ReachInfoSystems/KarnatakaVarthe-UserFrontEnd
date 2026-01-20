@@ -97,8 +97,17 @@ export const PhotosApi = {
         url += `?date=${dateFilter.date}`;
       }
       
+      console.log('🌐 GalleryApi - getDistrictNews URL:', url);
+      
       // Use axios directly with full URL - same pattern as LatestNotification.js
       const response = await axios.get(url);
+      
+      console.log('✅ GalleryApi - API response received:', {
+        success: response.data?.success,
+        districtName: response.data?.district?.district_name,
+        totalNews: response.data?.data?.total,
+        newsCount: response.data?.data?.news?.length
+      });
       
       if (!response || !response.data) {
         throw new Error("No data received from district news API");
@@ -134,15 +143,28 @@ export const PhotosApi = {
               return false;
             }
             
-            // Convert to date string (YYYY-MM-DD) in UTC timezone
-            const publishedDateStr = new Date(publishedDate).toISOString().split('T')[0];
+            // Convert to date string (YYYY-MM-DD) - handle both UTC and local timezone
+            const date = new Date(publishedDate);
+            // Use local date to avoid timezone issues
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const publishedDateStr = `${year}-${month}-${day}`;
             
-            if (idx < 3) { // Log first 3 items for debugging
-              console.log(`📰 Item ${idx}: publishedAt = ${publishedDateStr} | Match = ${publishedDateStr === filterDate}`);
+            const matches = publishedDateStr === filterDate;
+            
+            if (idx < 5) { // Log first 5 items for debugging
+              console.log(`📰 Item ${idx}:`, {
+                title: item.title?.substring(0, 50) + '...',
+                publishedAt: publishedDate,
+                publishedDateStr,
+                filterDate,
+                matches
+              });
             }
             
             // Compare: only keep if dates match exactly
-            return publishedDateStr === filterDate;
+            return matches;
           });
           
           // Log for debugging
@@ -150,6 +172,18 @@ export const PhotosApi = {
           
           if (filteredNews.length === 0) {
             console.warn(`⚠️  No news found matching date: ${filterDate}`);
+            console.log('📋 Sample of available dates in API response:');
+            news.slice(0, 5).forEach((item, idx) => {
+              const publishedDate = item.publishedAt?.$date || item.publishedAt;
+              if (publishedDate) {
+                const date = new Date(publishedDate);
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const publishedDateStr = `${year}-${month}-${day}`;
+                console.log(`  ${idx + 1}. ${publishedDateStr} - ${item.title?.substring(0, 40)}...`);
+              }
+            });
           }
           
           // Replace news array with filtered results

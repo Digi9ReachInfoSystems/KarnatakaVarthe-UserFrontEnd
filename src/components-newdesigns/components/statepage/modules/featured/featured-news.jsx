@@ -17,7 +17,7 @@ import {
   SkeletonThumb,
 } from "./featured-news.styles"
 import { LanguageContext } from "../../../../../context/LanguageContext"
-import { getNewsByTypeState } from "../../../../../services/newsApi/NewsApi"
+import { getStateNews } from "../../../../../services/newsApi/newsducks"
 import { useState, useEffect, useContext } from "react"
 import { CategoryApi } from "../../../../../services/categoryapi/CategoryApi"
 import { useNavigate } from "react-router-dom"
@@ -70,16 +70,22 @@ export default function FeaturedNewsSection({ dateFilter = null }) {
   }, [])
   useEffect(() => {
     const fetchFeaturedNews = async () => {
+      console.log('🔍 FeaturedNewsSection - Fetching with dateFilter:', dateFilter, 'Type:', typeof dateFilter)
       try {
-        const response = await getNewsByTypeState(dateFilter)
-        if (response?.success && Array.isArray(response.data)) {
-          setRawData(response.data)
+        // Ensure dateFilter is string or null, never an object
+        const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
+        console.log('🔍 FeaturedNewsSection - Clean dateFilter:', cleanDateFilter)
+        const response = await getStateNews(cleanDateFilter)
+        console.log('✅ FeaturedNewsSection - API response:', response)
+        if (response?.success && Array.isArray(response.data.news)) {
+          console.log('📰 FeaturedNewsSection - News count:', response.data.news.length)
+          setRawData(response.data.news)
    
         } else {
-         
+          console.warn('⚠️ FeaturedNewsSection - No data or invalid format')
         }
       } catch (error) {
-        console.error("Error fetching news data:", error)
+        console.error("❌ FeaturedNewsSection - Error:", error)
       } finally {
         setLoading(false)
       }
@@ -89,6 +95,7 @@ export default function FeaturedNewsSection({ dateFilter = null }) {
 
   useEffect(() => {
     if (rawData.length > 0) {
+      console.log('🔄 FeaturedNewsSection - Processing rawData, count:', rawData.length)
       const normalized = rawData.map((item) => {
         const langKey = language === "English" ? "English" : language === "Hindi" ? "hindi" : "kannada"
       
@@ -102,9 +109,11 @@ export default function FeaturedNewsSection({ dateFilter = null }) {
         const category = categoryId ? categories.find((cat) => cat._id === categoryId) : null
         const categoryName = category ? (language === "English" ? category.name : language === "Hindi" ? category.hindi : category.kannada) : "Uncategorized"
 
+        // Extract proper ID from MongoDB format
+        const newsId = item._id?.$oid || item._id
 
         return {
-          _id: item._id,
+          _id: newsId,
           image: item.newsImage || "/placeholder.svg",
           category: categoryName || "",
           date: item[langKey]?.date || "",
@@ -116,6 +125,7 @@ export default function FeaturedNewsSection({ dateFilter = null }) {
       const shuffled = [...normalized].sort(() => Math.random() - 0.5)
       const randomOne = shuffled[0] || initialFeatured
       const randomTwo = shuffled.slice(1, 3) || initialSideItems
+      console.log('✅ FeaturedNewsSection - Featured and side items selected')
       setFeaturedNews(randomOne)
       setSideItems(randomTwo)
     }

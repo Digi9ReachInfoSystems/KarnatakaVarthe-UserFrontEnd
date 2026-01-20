@@ -18,7 +18,7 @@ import {
   SkeletonThumb,
 } from "./styles/FeaturedNews.atyle"
 import { LanguageContext } from '../../../../context/LanguageContext'
-import { getNewsByTypeArticles } from '../../../../services/newsApi/NewsApi'
+import { getArticles } from '../../../../services/newsApi/newsducks'
 import { useState, useEffect, useContext } from "react"
 import { useNavigate } from "react-router-dom"
 
@@ -61,16 +61,22 @@ function Featurednews({ dateFilter = null }) {
 
       useEffect(() => {
         const fetchFeaturedNews = async () => {
+          console.log('🔍 Featurednews - Fetching with dateFilter:', dateFilter, 'Type:', typeof dateFilter)
           try {
-            const response = await getNewsByTypeArticles(dateFilter)
-            if (response?.success && Array.isArray(response.data)) {
-              setRawData(response.data)
+            // Ensure dateFilter is string or null, never an object
+            const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
+            console.log('🔍 Featurednews - Clean dateFilter:', cleanDateFilter)
+            const response = await getArticles(cleanDateFilter)
+            console.log('✅ Featurednews - API response:', response)
+            if (response?.success && Array.isArray(response.data.news)) {
+              console.log('📰 Featurednews - News count:', response.data.news.length)
+              setRawData(response.data.news)
        
             } else {
-             
+              console.warn('⚠️ Featurednews - No data or invalid format')
             }
           } catch (error) {
-            console.error("Error fetching news data:", error)
+            console.error("❌ Featurednews - Error:", error)
           } finally {
             setLoading(false)
           }
@@ -80,14 +86,17 @@ function Featurednews({ dateFilter = null }) {
     
       useEffect(() => {
         if (rawData.length > 0) {
+          console.log('🔄 Featurednews - Processing rawData, count:', rawData.length)
           const normalized = rawData.map((item) => {
             const langKey = language === "English" ? "English" : language === "Hindi" ? "hindi" : "kannada"
           
+            // Extract proper ID from MongoDB format
+            const newsId = item._id?.$oid || item._id
      
        
 
             return {
-              _id: item._id,
+              _id: newsId,
               image: item.newsImage || "/placeholder.svg",
               date: item[langKey]?.date || "",
               title: item[langKey]?.title || "",
@@ -98,6 +107,7 @@ function Featurednews({ dateFilter = null }) {
           const shuffled = [...normalized].sort(() => Math.random() - 0.5)
           const randomOne = shuffled[0] || initialFeatured
           const randomTwo = shuffled.slice(1, 3) || initialSideItems
+          console.log('✅ Featurednews - Featured and side items selected')
           setFeaturedNews(randomOne)
           setSideItems(randomTwo)
         }

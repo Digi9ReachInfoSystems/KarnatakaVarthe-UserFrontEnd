@@ -23,33 +23,9 @@ import {
   SkeletonArrows,
   SkeletonArrow,
 } from "./Heronews.styles";
-import { getNewsByTypeState } from "../../../../../services/newsApi/NewsApi";
+import { getStateNews } from "../../../../../services/newsApi/newsducks";
 import { LanguageContext } from "../../../../../context/LanguageContext";
 import { useNavigate } from "react-router-dom";
-
-
-
-// const FALLBACK_ITEMS = [
-//   {
-//     title:
-//       "The first-ever double-decker flyover built in South India has been opened for traffic on an experimental basis.",
-//     excerpt:
-//       "Norem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus.",
-//     image: "/state/state.jpg",
-//   },
-//   {
-//     title: "City unveils new riverfront walkway for weekend crowds.",
-//     excerpt:
-//       "Quisque aliquet velit sit amet sem interdum, ac facilisis massa aliquet.",
-//     image: "/state/sidebar.jpg",
-//   },
-//   {
-//     title: "University announces scholarship program for rural students.",
-//     excerpt:
-//       "Mauris non tempor quam, et lacinia sapien. Maecenas ac est sit amet augue pharetra.",
-//     image: "/state/sidebar2.jpg",
-//   },
-// ];
 
 export default function NewsHero({ dateFilter = null }) {
   const [index, setIndex] = React.useState(0);
@@ -63,20 +39,26 @@ export default function NewsHero({ dateFilter = null }) {
   useEffect(() => {
     let mounted = true;
     const fetchStateNews = async () => {
+      console.log('🔍 HeroNews - Fetching with dateFilter:', dateFilter, 'Type:', typeof dateFilter)
       try {
         setLoading(true);
-        const response = await getNewsByTypeState(dateFilter);
-        console.log("State news:", response.data);
-        if (response?.success && Array.isArray(response.data)) {
+        // Ensure dateFilter is string or null, never an object
+        const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
+        console.log('🔍 HeroNews - Clean dateFilter:', cleanDateFilter)
+        const response = await getStateNews(cleanDateFilter);
+        console.log('✅ HeroNews - API response:', response)
+        if (response?.success && Array.isArray(response.data.news)) {
+          console.log('📰 HeroNews - News count:', response.data.news.length)
           if (mounted) {
-            setRawData(response.data);
-            setIndex(0); // reset carousel to start of API data
+            setRawData(response.data.news);
+            setIndex(0);
           }
         } else {
+          console.warn('⚠️ HeroNews - No data or invalid format')
           if (mounted) setRawData([]);
         }
       } catch (err) {
-        console.error("Error fetching state news:", err);
+        console.error("❌ HeroNews - Error fetching state news:", err);
         if (mounted) setRawData([]);
       } finally {
         if (mounted) setLoading(false);
@@ -90,18 +72,24 @@ export default function NewsHero({ dateFilter = null }) {
 
   useEffect(() => {
     if (rawData.length > 0) {
+      console.log('🔄 HeroNews - Processing rawData, count:', rawData.length)
       const langKey =
         language === "English"
           ? "English"
           : language === "Hindi"
           ? "hindi"
           : "kannada";
-      const normalized = rawData.map((it, i) => ({
-        id: it._id ?? it.id ?? `api-${i}`,
+      const normalized = rawData.map((it, i) => {
+        // Extract proper ID from MongoDB format
+        const newsId = it._id?.$oid || it._id
+        
+        return {
+        id: newsId ?? `api-${i}`,
         title: (it[langKey]?.title.slice(0, 50)??'') + "..." ,
         excerpt: (it[langKey]?.description.slice(0, 150)??'') + "..." ,
         image: it.newsImage ?? "/placeholder.svg",
-      }));
+      }});
+      console.log('✅ HeroNews - Normalized news, count:', normalized.length)
       setStateNews(normalized);
     }
   }, [language, rawData]);

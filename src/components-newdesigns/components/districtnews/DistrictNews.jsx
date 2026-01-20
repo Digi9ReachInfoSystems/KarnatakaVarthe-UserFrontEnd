@@ -3,14 +3,18 @@ import HeroNews from './modules/herosection/HeroNews'
 import NewsSidebar from './modules/herosection/news-sidebar'
 import FeaturedNewsSection from './modules/featured/featured-news'
 import TabSection from './modules/tabsection/Tabsection'
-import DateFilter from './modules/DateFilter/DateFilter'
+import DateFilter from '../common/DateFilter/DateFilter'
 import { PageLayout, FilterContainer } from './DistrictNews.styles'
 
 export default function DistrictNews() {
   const [dateFilter, setDateFilter] = useState(null)
 
   const handleDateChange = (filter) => {
-    setDateFilter(filter)
+    console.log('🗓️ DistrictNews - Date changed (raw):', filter, 'Type:', typeof filter)
+    // Ensure we only pass string or null, never an object
+    const cleanFilter = (filter && typeof filter === 'string') ? filter : null
+    console.log('🗓️ DistrictNews - Date changed (clean):', cleanFilter)
+    setDateFilter(cleanFilter)
   }
 
   return (

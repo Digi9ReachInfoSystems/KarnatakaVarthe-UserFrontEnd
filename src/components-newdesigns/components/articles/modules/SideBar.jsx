@@ -9,7 +9,7 @@ import {
 import { useContext, useEffect, useState } from "react"
 import { LanguageContext } from "../../../../context/LanguageContext"
 import { useNavigate } from "react-router-dom"
-import { getNewsByTypeArticles } from "../../../../services/newsApi/NewsApi"
+import { getArticles } from "../../../../services/newsApi/newsducks"
 import SidebarCard from "./sidebarCard"
 function SideBar({ dateFilter = null }) {
     //side for articles page
@@ -20,12 +20,23 @@ const [rawData, setRawData] = useState([])
 const navigate = useNavigate()
 useEffect(() => {
   const fetchNews = async () => {
+    console.log('🔍 SideBar - Fetching with dateFilter:', dateFilter, 'Type:', typeof dateFilter)
     setLoading(true)
-    const response = await getNewsByTypeArticles(dateFilter)
-    console.log(response)
-    if (response?.success && Array.isArray(response.data)) {
-      setRawData(response.data)
-    } else {
+    try {
+      // Ensure dateFilter is string or null, never an object
+      const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
+      console.log('🔍 SideBar - Clean dateFilter:', cleanDateFilter)
+      const response = await getArticles(cleanDateFilter)
+      console.log('✅ SideBar - API response:', response)
+      if (response?.success && Array.isArray(response.data.news)) {
+        console.log('📰 SideBar - News count:', response.data.news.length)
+        setRawData(response.data.news)
+      } else {
+        console.warn('⚠️ SideBar - No data or invalid format')
+        setRawData([])
+      }
+    } catch (error) {
+      console.error('❌ SideBar - Error:', error)
       setRawData([])
     }
     setLoading(false)
@@ -35,20 +46,26 @@ useEffect(() => {
 
   useEffect(() => {
     if (rawData.length > 0) {
+      console.log('🔄 SideBar - Processing rawData, count:', rawData.length)
       const normalized = rawData.map((item) => {
         const langKey = language === "English" ? "English" : language === "Hindi" ? "hindi" : "kannada"
+        
+        // Extract proper ID from MongoDB format
+        const newsId = item._id?.$oid || item._id
+        
         return {
-          _id: item._id,
+          _id: newsId,
           title: (item[langKey]?.title.slice(0, 50) ??" " ) + "..." ,
           excerpt: (item[langKey]?.description.slice(0, 150) ?? " ") + "..." ,
           date: item.date,
           author: item.author,
-          imageSrc: item.newsImage ?? "/placeholder.svg", // Fixed the double ?? operator issue
+          imageSrc: item.newsImage ?? "/placeholder.svg",
         }
       })
 
       const shuffled = [...normalized].sort(() => Math.random() - 0.5)
       const randomTwo = shuffled.slice(0, 2)
+      console.log('✅ SideBar - Random articles selected, count:', randomTwo.length)
       setArticles(randomTwo)
     }
   }, [language, rawData])

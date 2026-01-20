@@ -38,7 +38,7 @@ import {
 } from "./TabSpecialNews.styles"
 import { LanguageContext } from '../../../../context/LanguageContext'
 import { useState, useContext, useEffect } from 'react'
-import { getNewsByTypeSpecialnews } from '../../../../services/newsApi/NewsApi'
+import { getSpecialNews } from '../../../../services/newsApi/newsducks'
 import { useNavigate } from "react-router-dom"
 
 export default function TabSpecialNews({ dateFilter = null }) {
@@ -75,12 +75,24 @@ export default function TabSpecialNews({ dateFilter = null }) {
   }, []);
 
   useEffect(() => {
-    // get news by type special news
+    // get special news using new API
     const fetchNews = async () => {
+      console.log('🔍 TabSpecialNews - Fetching news with dateFilter:', dateFilter, 'Type:', typeof dateFilter)
       setLoading(true)
-      const res = await getNewsByTypeSpecialnews(dateFilter)
-      if (res?.success && Array.isArray(res.data)) {
-        setRawNews(res.data)
+      try {
+        // Ensure dateFilter is string or null, never an object
+        const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
+        console.log('🔍 TabSpecialNews - Clean dateFilter:', cleanDateFilter)
+        const res = await getSpecialNews(cleanDateFilter)
+        console.log('✅ TabSpecialNews - API response:', res)
+        if (res?.success && Array.isArray(res.data.news)) {
+          console.log('📰 TabSpecialNews - News count:', res.data.news.length)
+          setRawNews(res.data.news)
+        } else {
+          console.warn('⚠️ TabSpecialNews - Invalid response format:', res)
+        }
+      } catch (error) {
+        console.error('❌ TabSpecialNews - Error fetching special news:', error)
       }
       setLoading(false)
     }
@@ -90,6 +102,7 @@ export default function TabSpecialNews({ dateFilter = null }) {
   // Transform raw news to localized news
   useEffect(() => {
     if (rawNews.length > 0) {
+      console.log('🔄 TabSpecialNews - Processing rawNews, count:', rawNews.length)
       const langKey =
         language === "Hindi" ? "hindi" : language === "Kannada" ? "kannada" : "English"
 
@@ -110,12 +123,18 @@ export default function TabSpecialNews({ dateFilter = null }) {
           categoryName = "News"
         }
 
+        // Extract proper ID from MongoDB format
+        const newsId = item._id?.$oid || item._id
+        
+        // Extract proper date from MongoDB format
+        const publishedDate = item.publishedAt?.$date || item.publishedAt
+
         return {
-          id: item._id,
+          id: newsId,
           title: item[langKey]?.title?.slice(0, 50) + "..." || item.title?.slice(0, 50) + "..." || "",
           excerpt: item[langKey]?.description?.slice(0, 100) + "..." || item.description?.slice(0, 100) + "..." || "",
-          date: item.publishedAt
-            ? new Date(item.publishedAt).toLocaleDateString("en-US", {
+          date: publishedDate
+            ? new Date(publishedDate).toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
@@ -128,7 +147,11 @@ export default function TabSpecialNews({ dateFilter = null }) {
           alt: item.title || "",
         }
       })
+      console.log('✅ TabSpecialNews - Localized news, count:', localized.length)
       setNews(localized)
+    } else {
+      console.log('⚠️ TabSpecialNews - No raw news data to process')
+      setNews([])
     }
   }, [language, rawNews])
 

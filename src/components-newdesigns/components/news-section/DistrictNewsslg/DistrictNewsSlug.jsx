@@ -4,15 +4,19 @@ import NewsSidebar from './modules/herosection/news-sidebar'
 import FeaturedNewsSection from './modules/featured/featured-news'
 import LatestNewsSection from './modules/latest/LatestNewsSection'
 import OlderNewsSection from './modules/older/OlderNewsSection'
-import DateFilter from '../../districtnews/modules/DateFilter/DateFilter'
+import DateFilter from '../../common/DateFilter/DateFilter'
 import { PageLayout, FilterContainer } from './DistrictNewsSlug.styles'
 
 export default function DistrictNewsSlug({ districtSlug }) {
   const [dateFilter, setDateFilter] = useState(null)
 
   const handleDateChange = (filter) => {
-    console.log('🎯 DistrictNewsSlug - Date changed:', filter)
-    setDateFilter(filter)
+    console.log('🎯 DistrictNewsSlug - Date changed (raw):', filter, 'Type:', typeof filter)
+    // GalleryApi.getDistrictNews expects { date: 'YYYY-MM-DD' } format
+    // DateFilter now passes a string directly, so convert it to object format
+    const cleanFilter = (filter && typeof filter === 'string') ? { date: filter } : null
+    console.log('🎯 DistrictNewsSlug - Date changed (clean):', cleanFilter)
+    setDateFilter(cleanFilter)
   }
 
   console.log('🔄 DistrictNewsSlug - Current dateFilter:', dateFilter)
