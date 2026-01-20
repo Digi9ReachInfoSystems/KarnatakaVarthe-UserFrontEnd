@@ -52,6 +52,7 @@ export default function StateNews({ onSeeMore }) {
   const [list, setList] = useState(emptyList)
   const [loading, setLoading] = useState(true)
   const [categories, setCategories] = useState([])
+  const [imageErrors, setImageErrors] = useState({}) // Track failed images
 
   // Header text translations
   const headerText = {
@@ -133,11 +134,25 @@ export default function StateNews({ onSeeMore }) {
           ? (language === "English" ? category.name : language === "Hindi" ? category.hindi : category.kannada) 
           : ""
         
+        // Validate and clean image URL
+        let imageUrl = item.newsImage || "/placeholder.svg";
+        // Ensure image URL is valid and not empty
+        if (!imageUrl || imageUrl.trim() === "" || imageUrl === "null" || imageUrl === "undefined") {
+          imageUrl = "/placeholder.svg";
+        }
+        // Ensure URL is absolute if it's a full URL, or relative if it's a path
+        if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+          // Keep full URL as is
+        } else if (!imageUrl.startsWith("/")) {
+          // If relative path doesn't start with /, add it
+          imageUrl = "/" + imageUrl;
+        }
+        
         return {
           id: item._id,
           title: limitedTitle,
           excerpt: limitedExcerpt,
-          image: item.newsImage || "/placeholder.svg",
+          image: imageUrl,
           category: categoryName,
           date: item.publishedAt ? new Date(item.publishedAt).toLocaleDateString() : "",
           author: item.author || "Admin",
@@ -232,7 +247,29 @@ export default function StateNews({ onSeeMore }) {
               style={{ textDecoration: 'none', color: 'inherit' }}
             >
               <FeaturedCard>
-                <FeaturedImage $src={featured.image}>
+                <FeaturedImage $src={imageErrors[featured.id] ? "/placeholder.svg" : featured.image}>
+                  {/* Hidden img tag to detect image load errors */}
+                  <img
+                    src={featured.image}
+                    alt=""
+                    style={{ display: 'none' }}
+                    onError={() => {
+                      if (!imageErrors[featured.id]) {
+                        console.error("Featured image failed to load:", featured.image);
+                        setImageErrors(prev => ({ ...prev, [featured.id]: true }));
+                      }
+                    }}
+                    onLoad={() => {
+                      // Image loaded successfully, remove error if exists
+                      if (imageErrors[featured.id]) {
+                        setImageErrors(prev => {
+                          const newErrors = { ...prev };
+                          delete newErrors[featured.id];
+                          return newErrors;
+                        });
+                      }
+                    }}
+                  />
                   <Overlay />
                   <FeaturedContent>
                     {/* <Badge>{featured.category}</Badge> */}
@@ -265,7 +302,34 @@ export default function StateNews({ onSeeMore }) {
                   style={{ textDecoration: 'none', color: 'inherit' }}
                 >
                   <SmallCard>
-                    <Thumb $src={item.image} role="img" aria-label={item.title} />
+                    <Thumb 
+                      $src={imageErrors[item.id] ? "/placeholder.svg" : item.image} 
+                      role="img" 
+                      aria-label={item.title}
+                    >
+                      {/* Hidden img tag to detect image load errors */}
+                      <img
+                        src={item.image}
+                        alt=""
+                        style={{ display: 'none' }}
+                        onError={() => {
+                          if (!imageErrors[item.id]) {
+                            console.error("Thumbnail image failed to load:", item.image);
+                            setImageErrors(prev => ({ ...prev, [item.id]: true }));
+                          }
+                        }}
+                        onLoad={() => {
+                          // Image loaded successfully, remove error if exists
+                          if (imageErrors[item.id]) {
+                            setImageErrors(prev => {
+                              const newErrors = { ...prev };
+                              delete newErrors[item.id];
+                              return newErrors;
+                            });
+                          }
+                        }}
+                      />
+                    </Thumb>
                     <SmallContent>
                       {/* <SmallBadge>{item.category}</SmallBadge> */}
                       <SmallTitle>{item.title}</SmallTitle>

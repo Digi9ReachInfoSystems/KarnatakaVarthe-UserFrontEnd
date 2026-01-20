@@ -41,7 +41,11 @@ export default function NewsHero({ districtSlug, dateFilter = null }) {
       try {
         setLoading(true);
         if (!districtSlug) {
-          if (mounted) setRawData([]);
+          // Keep loading true to show shimmer loader
+          if (mounted) {
+            setRawData([]);
+            setLoading(true);
+          }
           return;
         }
         
@@ -51,12 +55,14 @@ export default function NewsHero({ districtSlug, dateFilter = null }) {
         if (mounted) {
           setRawData(newsData);
           setIndex(0);
+          setLoading(false);
         }
       } catch (err) {
         console.error("Error fetching district news:", err);
-        if (mounted) setRawData([]);
-      } finally {
-        if (mounted) setLoading(false);
+        if (mounted) {
+          setRawData([]);
+          setLoading(false);
+        }
       }
     };
     fetchDistrictNews();

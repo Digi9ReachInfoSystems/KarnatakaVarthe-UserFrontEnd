@@ -290,7 +290,7 @@ function ShowPhotos() {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.95)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
             zIndex: 9999,
             display: "flex",
             alignItems: "center",

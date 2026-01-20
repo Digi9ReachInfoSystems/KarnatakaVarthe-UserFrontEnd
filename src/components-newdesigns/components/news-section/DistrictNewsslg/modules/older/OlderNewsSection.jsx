@@ -45,7 +45,7 @@ export default function OlderNewsSection({ districtSlug, dateFilter = null }) {
     const fetchNews = async () => {
       if (!districtSlug) {
         setRawNews([])
-        setLoading(false)
+        setLoading(true) // Keep loading true to show shimmer loader
         return
       }
       

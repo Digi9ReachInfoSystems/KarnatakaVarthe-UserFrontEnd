@@ -130,7 +130,7 @@ export const DatePickerInput = styled.input`
 export const CalendarDropdown = styled.div`
   position: absolute;
   top: calc(100% + ${theme.spacing1(1)});
-  left: 0;
+  right: 0;
   background: ${theme.colors.white};
   border: 1px solid ${theme.colors.gray[300]};
   border-radius: 12px;
@@ -141,8 +141,6 @@ export const CalendarDropdown = styled.div`
   max-width: 350px;
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    left: auto;
-    right: 0;
     transform: none;
     width: 90vw;
     max-width: 320px;
@@ -210,12 +208,13 @@ export const CalendarDateCell = styled.button`
     return 'transparent';
   }};
   color: ${props => {
+    if (props.disabled || props.future) return theme.colors.gray[300];
     if (props.selected) return theme.colors.white;
     if (props.today) return theme.colors.primary;
     return theme.colors.text || theme.colors.gray[800];
   }};
   border-radius: 6px;
-  cursor: pointer;
+  cursor: ${props => props.disabled || props.future ? 'not-allowed' : 'pointer'};
   font-size: 14px;
   font-weight: ${props => props.today || props.selected ? '600' : '400'};
   transition: all 0.2s ease;
@@ -223,13 +222,17 @@ export const CalendarDateCell = styled.button`
   align-items: center;
   justify-content: center;
   position: relative;
+  opacity: ${props => props.disabled || props.future ? '0.4' : '1'};
 
   &:hover {
-    background: ${props => props.selected ? theme.colors.primary : theme.colors.gray[100]};
-    transform: scale(1.05);
+    background: ${props => {
+      if (props.disabled || props.future) return 'transparent';
+      return props.selected ? theme.colors.primary : theme.colors.gray[100];
+    }};
+    transform: ${props => props.disabled || props.future ? 'none' : 'scale(1.05)'};
   }
 
-  ${props => props.today && !props.selected && `
+  ${props => props.today && !props.selected && !props.disabled && !props.future && `
     border: 2px solid ${theme.colors.primary};
   `}
 `

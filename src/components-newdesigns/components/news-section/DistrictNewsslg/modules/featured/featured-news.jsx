@@ -82,15 +82,16 @@ export default function FeaturedNewsSection({ districtSlug, dateFilter = null })
         setLoading(true)
         if (!districtSlug) {
           setRawData([])
+          // Keep loading true to show shimmer loader - don't set to false
           return
         }
         
         const response = await PhotosApi.getDistrictNews(districtSlug, dateFilter)
         const newsData = response?.news || []
         setRawData(newsData)
+        setLoading(false)
       } catch (error) {
         console.error("Error fetching news data:", error)
-      } finally {
         setLoading(false)
       }
     }

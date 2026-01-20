@@ -24,7 +24,7 @@ export default function NewsSidebar({ districtSlug, dateFilter = null }) {
       setLoading(true)
       if (!districtSlug) {
         setRawData([])
-        setLoading(false)
+        setLoading(true) // Keep loading true to show shimmer loader
         return
       }
       

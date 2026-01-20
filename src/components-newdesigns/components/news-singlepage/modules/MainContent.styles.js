@@ -564,3 +564,68 @@ export const AudioBookText = styled.span`
     font-size: 13px;
   }
 `
+
+export const SourceContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 32px 0 24px;
+  padding: 16px 20px;
+  background: ${theme.colors.gray[50] || theme.colors.gray[100]};
+  border-left: 4px solid ${theme.colors.primary};
+  border-radius: ${theme.borderRadius.medium};
+  flex-wrap: wrap;
+  
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    margin: 28px 0 20px;
+    padding: 14px 18px;
+    gap: 10px;
+  }
+  
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    margin: 24px 0 16px;
+    padding: 12px 16px;
+    gap: 8px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+`
+
+export const SourceLabel = styled.span`
+  font-size: ${theme.fontSizes.medium};
+  font-weight: 600;
+  color: ${theme.colors.text};
+  white-space: nowrap;
+  font-family: ${theme.fonts.body};
+  
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    font-size: ${theme.fontSizes.small};
+  }
+`
+
+export const SourceLink = styled.a`
+  font-size: ${theme.fontSizes.medium};
+  color: ${theme.colors.primary};
+  text-decoration: none;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid transparent;
+  
+  &:hover {
+    color: ${theme.colors.Footerbg || '#1565c0'};
+    border-bottom-color: ${theme.colors.primary};
+  }
+  
+  &:focus {
+    outline: 2px solid ${theme.colors.primary};
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    font-size: ${theme.fontSizes.small};
+    width: 100%;
+  }
+`

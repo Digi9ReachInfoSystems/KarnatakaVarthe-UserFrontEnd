@@ -44,9 +44,10 @@ export default function IndividualDistrictNewspage() {
   if (loading) {
     return (
       <main id="main-content" role="main" aria-label="District News Page">
-        <div style={{ padding: "40px", textAlign: "center", color: "#666" }}>
-          Loading district news...
-        </div>
+        <h1 style={{ position: 'absolute', left: '-9999px', top: 'auto', width: '1px', height: '1px', overflow: 'hidden' }}>
+          District News - Loading
+        </h1>
+        <DistrictNewsSlug districtSlug={null} />
       </main>
     )
   }

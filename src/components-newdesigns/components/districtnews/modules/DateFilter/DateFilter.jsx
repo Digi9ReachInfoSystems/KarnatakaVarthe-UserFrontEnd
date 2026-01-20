@@ -145,8 +145,8 @@ export default function DateFilter({ onDateChange }) {
       const dateStr = date.toISOString().split('T')[0]
       const isToday = dateStr === todayStr
       const isSelected = selectedDate === dateStr
-      // Allow all dates to be selectable (including past dates)
-      const isPast = false
+      // Check if date is in the future
+      const isFuture = date > today
       
       days.push({
         day,
@@ -154,7 +154,7 @@ export default function DateFilter({ onDateChange }) {
         dateStr,
         isToday,
         isSelected,
-        isPast
+        isFuture
       })
     }
 
@@ -182,9 +182,9 @@ export default function DateFilter({ onDateChange }) {
                 key={dayData.dateStr}
                 today={dayData.isToday}
                 selected={dayData.isSelected}
-                past={dayData.isPast}
-                onClick={() => handleDateSelect(dayData.date)}
-                disabled={false}
+                future={dayData.isFuture}
+                onClick={() => !dayData.isFuture && handleDateSelect(dayData.date)}
+                disabled={dayData.isFuture}
               >
                 {dayData.day}
               </CalendarDateCell>
