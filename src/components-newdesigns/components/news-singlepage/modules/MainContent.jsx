@@ -207,6 +207,14 @@ const MainContent = () => {
         let paragraph1 = "";
         let paragraph2 = "";
         
+        console.log(`📝 Mapping article - langKey: ${langKey}`, {
+          itemKeys: Object.keys(item),
+          hasLangKey: !!item[langKey],
+          langKeyData: item[langKey],
+          title,
+          excerptLength: excerpt.length
+        });
+        
         if (excerpt.length > 0) {
           // Split content into paragraphs based on sentence boundaries
           // Look for natural paragraph breaks (double line breaks, sentence endings)

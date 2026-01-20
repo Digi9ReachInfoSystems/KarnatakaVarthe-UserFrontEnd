@@ -202,13 +202,26 @@ const fetchNewsByTypeArticles = async () => {
           item.description ||
           "";
 
+        // Extract date - handle MongoDB $date format
+        const publishedDate = item.publishedAt?.$date || item.publishedAt;
+        const createdDate = item.createdAt?.$date || item.createdAt;
+
+        console.log(`📝 Sidebar mapping - langKey: ${langKey}`, {
+          id: item._id,
+          hasLangKey: !!item[langKey],
+          title,
+          descLength: description.length,
+          publishedDate,
+          createdDate
+        });
+
         return {
           _id: item._id,
           title: title,
           description: description,
           newsImage: item.newsImage || "/placeholder.svg",
-          publishedAt: item.publishedAt,
-          createdAt: item.createdAt,
+          publishedAt: publishedDate,
+          createdAt: createdDate,
         };
       });
 
@@ -236,13 +249,17 @@ const fetchNewsByTypeArticles = async () => {
           item.description ||
           "";
 
+        // Extract date - handle MongoDB $date format
+        const publishedDate = item.publishedAt?.$date || item.publishedAt;
+        const createdDate = item.createdAt?.$date || item.createdAt;
+
         return {
           _id: item._id,
           title: title,
           description: description,
           newsImage: item.newsImage || "/placeholder.svg",
-          publishedAt: item.publishedAt,
-          createdAt: item.createdAt,
+          publishedAt: publishedDate,
+          createdAt: createdDate,
         };
       });
 
