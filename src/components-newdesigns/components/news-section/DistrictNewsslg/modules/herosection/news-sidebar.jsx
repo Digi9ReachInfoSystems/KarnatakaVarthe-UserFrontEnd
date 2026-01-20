@@ -68,7 +68,7 @@ export default function NewsSidebar({ districtSlug, dateFilter = null }) {
   }, [language, rawData])
 
   // Shimmer loading component
-  if (loading || districtNews.length === 0) {
+  if (loading) {
     return (
       <Aside role="complementary" aria-labelledby="sidebar-heading">
         <h3 
@@ -89,6 +89,11 @@ export default function NewsSidebar({ districtSlug, dateFilter = null }) {
         ))}
       </Aside>
     )
+  }
+
+  // Hide section when no data (after loading completes)
+  if (!loading && districtNews.length === 0) {
+    return null
   }
 
   return (

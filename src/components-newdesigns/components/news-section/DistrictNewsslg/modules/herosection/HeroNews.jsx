@@ -141,7 +141,7 @@ export default function NewsHero({ districtSlug, dateFilter = null }) {
   }
 
   // Shimmer loading component
-  if (loading || districtNews.length === 0) {
+  if (loading) {
     return (
       <SkeletonHeroWrap>
         <SkeletonImage />
@@ -166,6 +166,11 @@ export default function NewsHero({ districtSlug, dateFilter = null }) {
         <RightDivider aria-hidden="true" />
       </SkeletonHeroWrap>
     )
+  }
+
+  // Hide section when no data (after loading completes)
+  if (!loading && districtNews.length === 0) {
+    return null
   }
 
   return (

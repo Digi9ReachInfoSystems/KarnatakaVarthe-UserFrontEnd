@@ -53,12 +53,30 @@ useEffect(() => {
         // Extract proper ID from MongoDB format
         const newsId = item._id?.$oid || item._id
         
+        // Extract and format date from MongoDB format
+        const publishedDate = item.publishedAt?.$date || item.publishedAt || item.date
+        let formattedDate = 'N/A'
+        if (publishedDate) {
+          try {
+            const dateObj = new Date(publishedDate)
+            // Format as: Jan 13, 2026
+            formattedDate = dateObj.toLocaleDateString('en-US', { 
+              month: 'short', 
+              day: 'numeric', 
+              year: 'numeric' 
+            })
+          } catch (error) {
+            console.error('Error formatting date:', error)
+            formattedDate = 'N/A'
+          }
+        }
+        
         return {
           _id: newsId,
           title: (item[langKey]?.title.slice(0, 50) ??" " ) + "..." ,
           excerpt: (item[langKey]?.description.slice(0, 150) ?? " ") + "..." ,
-          date: item.date,
-          author: item.author,
+          date: formattedDate,
+          author: item.author || 'Karnataka Varthe',
           imageSrc: item.newsImage ?? "/placeholder.svg",
         }
       })
@@ -66,6 +84,7 @@ useEffect(() => {
       const shuffled = [...normalized].sort(() => Math.random() - 0.5)
       const randomTwo = shuffled.slice(0, 2)
       console.log('✅ SideBar - Random articles selected, count:', randomTwo.length)
+      console.log('📅 SideBar - Sample article dates:', randomTwo.map(a => a.date))
       setArticles(randomTwo)
     }
   }, [language, rawData])
