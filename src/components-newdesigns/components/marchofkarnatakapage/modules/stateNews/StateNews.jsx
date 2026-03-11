@@ -178,11 +178,11 @@ function StateNewsOfMarchOfKarnataka() {
     return (
         <Section aria-labelledby="state-news-heading">
             <HeaderRow>
-                <Title id="state-news-heading">{headerText[language] || " News"}</Title>
+                <Title id="state-news-heading">{headerText[language] || "State News"}</Title>
                 <SeeMore
                     as={Link}
                     to="/news"
-                    aria-label={`${seeMoreText[language] || "See more"} ${headerText[language] || " news"}`}
+                    aria-label={`${seeMoreText[language] || "See more"} ${headerText[language] || "State news"}`}
                 >
                     {seeMoreText[language] || "See more"}
                     <ArrowIcon aria-hidden="true">

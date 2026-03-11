@@ -140,7 +140,7 @@ export const FeaturedImage = styled.div`
   position: relative;
   width: 100%;
   min-height: 380px;
-  background-image: url(${props => props.$src || '/state/state.jpg'});
+  background-image: url("${props => props.$src || '/state/state.jpg'}");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -345,7 +345,7 @@ export const Thumb = styled.div`
   bottom: 0;
   width: 100%;
   height: 100%;
-  background-image: url(${props => props.$src || '/state/2ndimage.jpg'});
+  background-image: url("${props => props.$src || '/state/2ndimage.jpg'}");
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
