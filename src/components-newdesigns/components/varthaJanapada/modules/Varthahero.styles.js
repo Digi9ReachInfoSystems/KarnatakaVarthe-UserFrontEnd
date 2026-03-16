@@ -162,13 +162,13 @@ export const HeroBackground = styled.div`
   background-image: url(${props => props.src});
   background-size: 100% 100%;
   background-position: center;
-  filter: brightness(0.7);
+  filter: brightness(0.92);
 `
 
 export const HeroOverlay = styled.div`
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 100%);
+  background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.2) 100%);
 `
 export const HeroContent = styled.div`
   position: relative;
@@ -177,7 +177,7 @@ export const HeroContent = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: ${theme.spacing1(3)};
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(8px);
   border-radius: ${theme.borderRadius.medium} ${theme.borderRadius.medium} 0 0;
   width: 100%;
