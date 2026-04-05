@@ -18,8 +18,8 @@ export default function VarthaJanapadasection() {
           <StateNews />
           <StateGovernmentWebsites />
         </FlexContainer>
-        <NewsArticlesNews />
         <ArticlesNews />
+        <NewsArticlesNews />
         <LongVideos />
         <ShortsCarousel />
         <GallerySection />

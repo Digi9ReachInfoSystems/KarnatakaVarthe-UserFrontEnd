@@ -30,7 +30,7 @@ export default function Varthahero({ notifications = [] }) {
   };
 
   const heroData = {
-    image: "/newupdate/vartha.jpg",
+    image: "/newupdate/aprilvartha.jpg",
     magazineType: "magazine",
     link: "/magazinesvartha",
   };

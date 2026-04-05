@@ -31,8 +31,8 @@ function MarchofKarnatakaV1() {
         <StateNewsOfMarchOfKarnataka/>
         <NewsGovermentWebsite/>
         </FlexContainer>
-        <NewsMarchArticles/>
         <ArticleNewsMarchOfKarnatala/>
+        <NewsMarchArticles/>
         <LongVideoMOK/>
         <ShortsCarouselsMOK/>
         <GalleryMOK/>
