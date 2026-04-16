@@ -12,7 +12,7 @@ export const getLatestNotification = async () => {
 
 export const getLatestService = async () => {
   try{
-    const response = await axios.get('https://diprkarnataka.duckdns.org/api/newarticles/list');
+    const response = await axios.get('https://varthe.digi9.co.in/api/newarticles/list');
     return response.data;
   }
   catch(err){
