@@ -32,7 +32,7 @@ export const PhotosApi = {
   getPhotoCategories: async () => {
     try {
       // Use axios directly with full URL - same pattern as LatestNotification.js
-      const response = await axios.get('https://diprkarnataka.duckdns.org/api/photo-category/list');
+      const response = await axios.get('https://varthe.digi9.co.in/api/photo-category/list');
       
       if (!response || !response.data) {
         throw new Error("No data received from photo categories API");
@@ -61,7 +61,7 @@ export const PhotosApi = {
   getDistricts: async () => {
     try {
       // Use axios directly with full URL - same pattern as LatestNotification.js
-      const response = await axios.get('https://diprkarnataka.duckdns.org/api/districts/list');
+      const response = await axios.get('https://varthe.digi9.co.in/api/districts/list');
       
       if (!response || !response.data) {
         throw new Error("No data received from districts API");
@@ -92,7 +92,7 @@ export const PhotosApi = {
   getDistrictNews: async (districtSlug, dateFilter = null) => {
     try {
       // Build query string with date parameter only
-      let url = `https://diprkarnataka.duckdns.org/api/districts/news/${districtSlug}`;
+      let url = `https://varthe.digi9.co.in/api/districts/news/${districtSlug}`;
       if (dateFilter && dateFilter.date) {
         url += `?date=${dateFilter.date}`;
       }

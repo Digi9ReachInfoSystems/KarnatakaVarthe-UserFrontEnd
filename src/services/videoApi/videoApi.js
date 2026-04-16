@@ -25,7 +25,7 @@ export const getLongVideos = async () => {
 export const getLongVideosList = async () => {
   try {
     // Use axios directly with full URL - same pattern as photo categories
-    const response = await axios.get('https://diprkarnataka.duckdns.org/api/longvideos/list');
+    const response = await axios.get('https://varthe.digi9.co.in/api/longvideos/list');
     
     if (!response || !response.data) {
       throw new Error("No data received from long videos list API");
@@ -132,7 +132,7 @@ export const ShortVideoaddComment = async (commentData) => {
 export const getVideoCategories = async () => {
   try {
     // Use axios directly with full URL - same pattern as photo categories
-    const response = await axios.get('https://diprkarnataka.duckdns.org/api/video-category/list');
+    const response = await axios.get('https://varthe.digi9.co.in/api/video-category/list');
     
     if (!response || !response.data) {
       throw new Error("No data received from video categories API");

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Base URL for the API - use DuckDNS URL directly
-const BASE_URL = "https://diprkarnataka.duckdns.org";
+const BASE_URL = "https://varthe.digi9.co.in";
 
 /**
  * Get Special News with date filter

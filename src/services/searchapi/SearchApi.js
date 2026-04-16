@@ -13,7 +13,7 @@ export const SearchMagazineApi = async (query) => {
 export const getMagazineContext = async (query) => {
   try {
     // This endpoint uses a different URL structure, so use direct axios call
-    const response = await axios.post(`https://diprkarnataka.duckdns.org/api/search/query`, { query });
+    const response = await axios.post(`https://varthe.digi9.co.in/api/search/query`, { query });
     return response.data;
   } catch (err) {
     console.error('API Error in getMagazineContext:', err);
