@@ -5,6 +5,7 @@ import { LanguageContext } from '../../../context/LanguageContext';
 import SearchModal from '../searchsection/SearchModal';
 import {
   LanguageNavContainer,
+  PdfLink,
   SocialIcons,
   SocialIcon,
   LanguageSelector,
@@ -36,6 +37,13 @@ const LanguageNavbar = () => {
     };
     return searchTranslations[language] || "Search";
   };
+
+  const pdfByLang = {
+    Kannada: { href: "https://firebasestorage.googleapis.com/v0/b/varthajanapadanewsapp.firebasestorage.app/o/magazinePdfs%2FNavakarnataka%203%20years%20book%20cover%20print%201.pdf?alt=media&token=007ae8d1-9951-4ec1-8aba-704c1119a11b", label: "ನವ ಕರ್ನಾಟಕ" },
+    English: { href: "https://firebasestorage.googleapis.com/v0/b/varthajanapadanewsapp.firebasestorage.app/o/magazinePdfs%2FNavaKarnataka_ENG_Final_Print.pdf?alt=media&token=f722faaf-9391-4c50-b925-b21fca598c2b", label: "Nava Karnataka" },
+    Hindi: { href: "https://firebasestorage.googleapis.com/v0/b/varthajanapadanewsapp.firebasestorage.app/o/magazinePdfs%2FNavaKarnataka_ENG_Final_Print.pdf?alt=media&token=f722faaf-9391-4c50-b925-b21fca598c2b", label: "Nava Karnataka" }
+  };
+  const pdf = pdfByLang[language] || pdfByLang.English;
 
   const handleLanguageSelect = (selectedLang) => {
     // If on a magazine page, update that magazine's language
@@ -96,6 +104,16 @@ const LanguageNavbar = () => {
 
   return (
     <LanguageNavContainer>
+      <PdfLink
+        href={pdf.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Open Nava Karnataka 3 Years report (PDF)"
+        className={language === "Kannada" || language === "Hindi" ? "kannada-text" : "english-text"}
+      >
+        {pdf.label}
+      </PdfLink>
+
       <SocialIcons aria-label="Social media links">
         <SocialIcon href="https://www.instagram.com/karnatakavarthe" aria-label="Follow us on Instagram" target="_blank" rel="noopener noreferrer">
           <Instagram size={22} aria-hidden="true" />

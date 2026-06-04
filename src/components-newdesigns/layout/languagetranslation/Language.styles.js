@@ -25,6 +25,87 @@ export const LanguageNavContainer = styled.div`
   }
 `;
 
+export const PdfLink = styled.a`
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: ${theme.spacing(1)};
+  margin-right: auto;
+  text-decoration: none;
+  cursor: pointer;
+  padding: ${theme.spacing(1)} ${theme.spacing(1.75)};
+  border-radius: 999px;
+  color: #a01b32;
+  font-weight: 700;
+  font-size: ${theme.fontSizes.medium};
+  font-family: ${theme.fonts.body};
+  background: ${theme.colors.white};
+  white-space: nowrap;
+  z-index: 0;
+  transition: color ${theme.transitions.fast}, transform ${theme.transitions.fast};
+
+  /* thin border with colors flowing/running around it */
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    padding: 2px;
+    background: linear-gradient(
+      90deg,
+      #7a1530,
+      #c0392b,
+      #f39c12,
+      #1e88e5,
+      #28a745,
+      #7a1530
+    );
+    background-size: 300% 100%;
+    animation: pdfBorderRun 3s linear infinite;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    z-index: -1;
+  }
+
+  @keyframes pdfBorderRun {
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 300% 50%;
+    }
+  }
+
+  &:hover {
+    transform: translateY(-1px);
+    color: #7a1530;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${theme.colors.primary};
+    outline-offset: 2px;
+  }
+
+  &.kannada-text,
+  &.english-text {
+    font-weight: 700;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::before {
+      animation: none;
+    }
+  }
+
+  /* Hidden on tablet/mobile - shown beside the CM image instead */
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    display: none;
+  }
+`;
+
 export const SocialIcons = styled.div`
   display: flex;
   align-items: center;
