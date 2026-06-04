@@ -11,12 +11,22 @@ import {
   SiteTitle,
   CMSection,
   CMImage,
+  MobileCMPdfLink,
   VisuallyHidden,
 } from './Header.styles';
 import { FontSizeContext } from '../../../context/FontSizeProvider';
+import { LanguageContext } from '../../../context/LanguageContext';
 
 const Header = () => {
   const { fontSize } = useContext(FontSizeContext);
+  const { language } = useContext(LanguageContext);
+
+  const pdfByLang = {
+    Kannada: { href: 'https://firebasestorage.googleapis.com/v0/b/varthajanapadanewsapp.firebasestorage.app/o/magazinePdfs%2FNavakarnataka%203%20years%20book%20cover%20print%201.pdf?alt=media&token=007ae8d1-9951-4ec1-8aba-704c1119a11b', label: 'ನವ ಕರ್ನಾಟಕ' },
+    English: { href: 'https://firebasestorage.googleapis.com/v0/b/varthajanapadanewsapp.firebasestorage.app/o/magazinePdfs%2FNavaKarnataka_ENG_Final_Print.pdf?alt=media&token=f722faaf-9391-4c50-b925-b21fca598c2b', label: 'Nava Karnataka' },
+    Hindi: { href: 'https://firebasestorage.googleapis.com/v0/b/varthajanapadanewsapp.firebasestorage.app/o/magazinePdfs%2FNavaKarnataka_ENG_Final_Print.pdf?alt=media&token=f722faaf-9391-4c50-b925-b21fca598c2b', label: 'Nava Karnataka' },
+  };
+  const pdf = pdfByLang[language] || pdfByLang.English;
   return (
     <HeaderContainer role="banner">
       <VisuallyHidden as="h1">
@@ -54,16 +64,24 @@ const Header = () => {
         </TitleSection>     
       </LogoSection>
       <CMSection aria-label="Government Officials">
+        <MobileCMPdfLink
+          href={pdf.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Open Nava Karnataka 3 Years report (PDF)"
+        >
+          {pdf.label}
+        </MobileCMPdfLink>
         <CMImage 
-          src="/header/cm.png" 
-          alt="Chief Minister Siddaramaiah portrait" 
+          src="/header/newcm.png" 
+          alt="Chief Minister D K Shivakumar portrait" 
           loading="eager"
         />
-        <CMImage 
+        {/* <CMImage 
           src="/header/dcm.png" 
           alt="Deputy Chief Minister D K Shivakumar portrait" 
           loading="eager"
-        />
+        /> */}
       </CMSection>
     </HeaderContainer>
   );

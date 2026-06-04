@@ -260,7 +260,7 @@ export const CMSection = styled.div`
 
   @media (max-width: ${theme.breakpoints.tablet}) {
     min-width: auto;
-    justify-content: center;
+    justify-content: space-between;
     width: 100%;
     max-width: 100%;
     margin-top: 0;
@@ -269,11 +269,84 @@ export const CMSection = styled.div`
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     min-width: auto;
-    justify-content: center;
+    justify-content: space-between;
     width: 100%;
     max-width: 100%;
     margin-top: 0;
     gap: ${theme.spacing(0.5)};
+  }
+`;
+
+// Mobile-only Nava Karnataka PDF link shown beside the CM image (left side)
+export const MobileCMPdfLink = styled.a`
+  display: none;
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    padding: ${theme.spacing(1)} ${theme.spacing(1.5)};
+    border-radius: 999px;
+    color: #a01b32;
+    font-weight: 700;
+    font-size: 13px;
+    font-family: ${theme.fonts.body};
+    background: ${theme.colors.white};
+    white-space: nowrap;
+    z-index: 0;
+    transition: color ${theme.transitions.fast}, transform ${theme.transitions.fast};
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 999px;
+      padding: 2px;
+      background: linear-gradient(
+        90deg,
+        #7a1530,
+        #c0392b,
+        #f39c12,
+        #1e88e5,
+        #28a745,
+        #7a1530
+      );
+      background-size: 300% 100%;
+      animation: cmPdfBorderRun 3s linear infinite;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      z-index: -1;
+    }
+
+    @keyframes cmPdfBorderRun {
+      0% {
+        background-position: 0% 50%;
+      }
+      100% {
+        background-position: 300% 50%;
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::before {
+      animation: none;
+    }
+  }
+
+  @media (max-width: 400px) {
+    font-size: 12px;
+    padding: ${theme.spacing(0.75)} ${theme.spacing(1.25)};
+
+    &::before {
+      padding: 1.5px;
+    }
   }
 `;
 
@@ -293,26 +366,26 @@ export const CMImage = styled.img`
   }
 
   @media (max-width: ${theme.breakpoints.tablet}) {
-    max-width: ${theme.spacing(22)};
-    height: 60px;
+    max-width: ${theme.spacing(30)};
+    height: 85px;
     padding: ${theme.spacing(0.3)};
   }
 
   @media (max-width: 600px) {
-    max-width: ${theme.spacing(18)};
-    height: 55px;
+    max-width: ${theme.spacing(28)};
+    height: 80px;
     padding: ${theme.spacing(0.4)};
   }
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    max-width: ${theme.spacing(20)};
-    height: 60px;
+    max-width: ${theme.spacing(30)};
+    height: 85px;
     padding: ${theme.spacing(0.5)};
   }
 
   @media (max-width: 400px) {
-    max-width: ${theme.spacing(18)};
-    height: 55px;
+    max-width: ${theme.spacing(26)};
+    height: 75px;
     padding: ${theme.spacing(0.4)};
   }
 `;
