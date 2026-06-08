@@ -260,24 +260,47 @@ export const CMSection = styled.div`
 
   @media (max-width: ${theme.breakpoints.tablet}) {
     min-width: auto;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
     max-width: 100%;
     margin-top: 0;
-    gap: ${theme.spacing(0.5)};
+    gap: ${theme.spacing(0.75)};
+    padding: 0 ${theme.spacing(1)};
   }
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     min-width: auto;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
     max-width: 100%;
     margin-top: 0;
     gap: ${theme.spacing(0.5)};
+    padding: 0 ${theme.spacing(0.5)};
   }
 `;
 
-// Mobile-only Nava Karnataka PDF link shown beside the CM image (left side)
+export const CMImagesWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: ${theme.spacing(1)};
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    width: 100%;
+    max-width: 100%;
+    gap: ${theme.spacing(0.5)};
+    justify-content: center;
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    width: 100%;
+    gap: ${theme.spacing(0.375)};
+  }
+`;
+
+// Mobile-only Nava Karnataka PDF link shown centered below the CM images
 export const MobileCMPdfLink = styled.a`
   display: none;
 
@@ -340,9 +363,14 @@ export const MobileCMPdfLink = styled.a`
     }
   }
 
-  @media (max-width: 400px) {
+  @media (max-width: ${theme.breakpoints.mobile}) {
     font-size: 12px;
     padding: ${theme.spacing(0.75)} ${theme.spacing(1.25)};
+  }
+
+  @media (max-width: 400px) {
+    font-size: 11px;
+    padding: ${theme.spacing(0.625)} ${theme.spacing(1)};
 
     &::before {
       padding: 1.5px;
@@ -366,26 +394,26 @@ export const CMImage = styled.img`
   }
 
   @media (max-width: ${theme.breakpoints.tablet}) {
-    max-width: ${theme.spacing(30)};
-    height: 85px;
-    padding: ${theme.spacing(0.3)};
+    flex: 1;
+    width: calc(50% - 4px);
+    max-width: calc(50% - 4px);
+    height: 82px;
+    padding: 0;
+    object-fit: contain;
   }
 
   @media (max-width: 600px) {
-    max-width: ${theme.spacing(28)};
-    height: 80px;
-    padding: ${theme.spacing(0.4)};
+    height: 78px;
   }
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    max-width: ${theme.spacing(30)};
-    height: 85px;
-    padding: ${theme.spacing(0.5)};
+    width: calc(50% - 3px);
+    max-width: calc(50% - 3px);
+    height: 74px;
+    padding: 0;
   }
 
   @media (max-width: 400px) {
-    max-width: ${theme.spacing(26)};
-    height: 75px;
-    padding: ${theme.spacing(0.4)};
+    height: 68px;
   }
 `;

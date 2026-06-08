@@ -10,6 +10,7 @@ import {
   Subtitle,
   SiteTitle,
   CMSection,
+  CMImagesWrapper,
   CMImage,
   MobileCMPdfLink,
   VisuallyHidden,
@@ -64,6 +65,18 @@ const Header = () => {
         </TitleSection>     
       </LogoSection>
       <CMSection aria-label="Government Officials">
+        <CMImagesWrapper>
+          <CMImage 
+            src="/header/newcm.png" 
+            alt="Chief Minister D K Shivakumar portrait" 
+            loading="eager"
+          />
+          <CMImage 
+            src="/header/newdcm.png" 
+            alt="Deputy Chief Minister Dr. G Parameshwara portrait" 
+            loading="eager"
+          />
+        </CMImagesWrapper>
         <MobileCMPdfLink
           href={pdf.href}
           target="_blank"
@@ -72,16 +85,6 @@ const Header = () => {
         >
           {pdf.label}
         </MobileCMPdfLink>
-        <CMImage 
-          src="/header/newcm.png" 
-          alt="Chief Minister D K Shivakumar portrait" 
-          loading="eager"
-        />
-        {/* <CMImage 
-          src="/header/dcm.png" 
-          alt="Deputy Chief Minister D K Shivakumar portrait" 
-          loading="eager"
-        /> */}
       </CMSection>
     </HeaderContainer>
   );
