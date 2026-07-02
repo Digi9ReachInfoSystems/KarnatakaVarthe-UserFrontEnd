@@ -42,7 +42,7 @@ function MarchOfKarnatakaHero( {notifications = []} ) {
     const carouselData = [
 
       {
-        image: "newupdate/marchvartha.jpg",
+        image: "newupdate/marchofkarnatakjuly.jpg",
         magazineType: "magazine2",
         subtitle: "",
         link: "/marchofkarnatakmagzine"
@@ -77,7 +77,7 @@ function MarchOfKarnatakaHero( {notifications = []} ) {
         <HeroBackground src={`/${carouselData[0].image}`} />
 
                         <HeroContent>
-                          <HeroTitle className="text-balance">
+                          <HeroTitle className="text-balance" $isKannada={language === "Kannada"}>
                             {getTranslatedTitle("magazine")}
                           </HeroTitle>
                           <HeroCta as={Link} to="/marchofkarnatakmagzine" aria-label={`${translations.viewButton[language]} - ${getTranslatedTitle("magazine")}`}>
