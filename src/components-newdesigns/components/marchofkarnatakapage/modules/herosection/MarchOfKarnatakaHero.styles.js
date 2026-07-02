@@ -222,7 +222,8 @@ export const HeroText = styled.div`
 
 export const HeroTitle = styled.h2`
   font-family: ${theme.fonts.heading};
-  font-size: clamp(18px, 2.5vw, 28px);
+  font-size: ${({ $isKannada }) =>
+    $isKannada ? "clamp(14px, 2vw, 20px)" : "clamp(18px, 2.5vw, 28px)"};
   font-weight: 700;
   line-height: 1.2;
   margin: 0;
@@ -236,11 +237,13 @@ export const HeroTitle = styled.h2`
   }
 
   @media (max-width: ${theme.breakpoints.tablet}) {
-    font-size: clamp(16px, 3.2vw, 18px);
+    font-size: ${({ $isKannada }) =>
+      $isKannada ? "clamp(13px, 2.4vw, 17px)" : "clamp(16px, 3.2vw, 18px)"};
   }
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    font-size: clamp(15px, 3.6vw, 16px);
+    font-size: ${({ $isKannada }) =>
+      $isKannada ? "clamp(12px, 2.8vw, 15px)" : "clamp(15px, 3.6vw, 16px)"};
   }
 `;
 

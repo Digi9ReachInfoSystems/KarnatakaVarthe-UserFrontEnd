@@ -30,7 +30,7 @@ export default function Varthahero({ notifications = [] }) {
   };
 
   const heroData = {
-    image: "/newupdate/junevartha.jpg",
+    image: "/newupdate/varthajanapada.jpg",
     magazineType: "magazine",
     link: "/magazinesvartha",
   };
@@ -70,7 +70,7 @@ export default function Varthahero({ notifications = [] }) {
         <HeroBackground aria-hidden="true" src={heroData.image} />
         <HeroOverlay aria-hidden="true" />
         <HeroContent>
-          <HeroTitle className="text-balance">
+          <HeroTitle className="text-balance" $isKannada={language === "Kannada"}>
             {translations.magazine[language] || translations.magazine.English}
           </HeroTitle>
           <HeroCta
