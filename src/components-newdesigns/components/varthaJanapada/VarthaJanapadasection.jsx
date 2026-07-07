@@ -14,11 +14,11 @@ export default function VarthaJanapadasection() {
     <main aria-label="Vartha Janapada main content">
       <PageLayout>
         <Varthahero />
+        <ArticlesNews />
         <FlexContainer>
           <StateNews />
           <StateGovernmentWebsites />
         </FlexContainer>
-        <ArticlesNews />
         <NewsArticlesNews />
         <LongVideos />
         <ShortsCarousel />
