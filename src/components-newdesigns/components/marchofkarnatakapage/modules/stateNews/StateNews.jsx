@@ -6,7 +6,7 @@ import { Link } from "react-router-dom"
 import { useState, useEffect, useContext } from "react"
 import { LanguageContext } from "../../../../../context/LanguageContext.jsx"
 import { Section, HeaderRow, Title, SeeMore, ArrowIcon, PageLayout, FeaturedCard, FeaturedImage, Overlay, FeaturedContent, Badge, FeaturedTitle, FeaturedExcerpt, MetaBar, MetaBarSmall, MetaItem, MiddleCol, SmallCard, Thumb, SmallContent, SmallBadge, SmallTitle, SkeletonFeaturedCard, SkeletonFeaturedImage, SkeletonMetaBar, SkeletonText, SkeletonSmallCard, SkeletonThumb } from "./StateNews.Styles.js"
-import { getNews } from "../../../../../services/newsApi/NewsApi"
+import { getStateNews } from "../../../../../services/newsApi/newsducks"
 import { CategoryApi } from "../../../../../services/categoryapi/CategoryApi"
 
 const emptyFeatured = {
@@ -56,18 +56,17 @@ function StateNewsOfMarchOfKarnataka() {
     }, [])
 
     useEffect(() => {
-        const fetchNews = async () => {
+        const fetchStateNews = async () => {
             try {
                 setLoading(true)
-                const response = await getNews()
+                const response = await getStateNews()
                 console.log("State news API response:", response)
 
-                if (response?.success && Array.isArray(response.data)) {
-                    // Filter only by magazineType
-                    const filteredData = response.data.filter(item =>
-                        item.magazineType === "magazine2"
+                if (response?.success && Array.isArray(response.data?.news)) {
+                    const filteredData = response.data.news.filter(item =>
+                        item.magazineType === "magazine2" &&
+                        item.newsType === "statenews"
                     )
-                    console.log("Filtered state news:", filteredData)
                     setRawData(filteredData)
                 } else {
                     setRawData([])
@@ -80,16 +79,19 @@ function StateNewsOfMarchOfKarnataka() {
             }
         }
 
-        fetchNews()
+        fetchStateNews()
     }, [language])
 
     useEffect(() => {
-        if (rawData.length > 0 && categories.length > 0) {
+        if (rawData.length > 0) {
             // Process data based on current language (Kannada by default)
             const langKey = language === "English" ? "English" :
                            language === "Hindi" ? "hindi" : "kannada"
 
             const processedData = rawData.map((item) => {
+                const newsId = item._id?.$oid || item._id
+                const publishedDate = item.publishedAt?.$date || item.publishedAt
+
                 // Get title and limit to 70 characters
                 const fullTitle = item[langKey]?.title || item.title || ""
                 const limitedTitle = fullTitle.length > 70 ? fullTitle.substring(0, 70) + "..." : fullTitle
@@ -98,9 +100,12 @@ function StateNewsOfMarchOfKarnataka() {
                 const fullExcerpt = item[langKey]?.description || item.description || ""
                 const limitedExcerpt = fullExcerpt.length > 120 ? fullExcerpt.substring(0, 120) + "..." : fullExcerpt
 
-                // Get category ID and find matching category name from API
-                const categoryId = item.category
-                const category = categories.find((cat) => cat._id === categoryId)
+                // Handle category being either an object, a string ID, or null
+                let categoryId = null
+                if (item.category) {
+                    categoryId = typeof item.category === "object" ? item.category._id : item.category
+                }
+                const category = categoryId ? categories.find((cat) => cat._id === categoryId) : null
                 const categoryName = category
                     ? (language === "English" ? category.name : language === "Hindi" ? category.hindi : category.kannada)
                     : ""
@@ -120,15 +125,15 @@ function StateNewsOfMarchOfKarnataka() {
                 }
 
                 return {
-                    id: item._id,
+                    id: newsId,
                     title: limitedTitle,
                     excerpt: limitedExcerpt,
                     image: imageUrl,
                     category: categoryName,
-                    date: item.publishedAt ? new Date(item.publishedAt).toLocaleDateString() : "",
+                    date: publishedDate ? new Date(publishedDate).toLocaleDateString() : "",
                     author: item.author || "Admin",
-                    meta: [item.author || "Admin", item.publishedAt ? new Date(item.publishedAt).toLocaleDateString() : ""],
-                    publishedAt: item.publishedAt
+                    meta: [item.author || "Admin", publishedDate ? new Date(publishedDate).toLocaleDateString() : ""],
+                    publishedAt: publishedDate
                 }
             })
 

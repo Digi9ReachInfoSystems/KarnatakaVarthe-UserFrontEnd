@@ -27,11 +27,11 @@ function MarchofKarnatakaV1() {
     <main aria-label="March of Karnataka main content">
       <PageLayout>
         <MarchOfKarnatakaHero/>
+        <ArticleNewsMarchOfKarnatala/>
         <FlexContainer>
         <StateNewsOfMarchOfKarnataka/>
         <NewsGovermentWebsite/>
         </FlexContainer>
-        <ArticleNewsMarchOfKarnatala/>
         <NewsMarchArticles/>
         <LongVideoMOK/>
         <ShortsCarouselsMOK/>

@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
 
-import { getNewsByTypeDistrict } from '../../../../../services/newsApi/NewsApi'
+import { getDistrictNews } from '../../../../../services/newsApi/newsducks'
 import {
   ArticlesSection,
   Container,
@@ -57,21 +57,19 @@ export default function ArticleNewsMarchOfKarnatala() {
 
   const [itemsPerPage, setItemsPerPage] = useState(getItemsPerPage())
 
-  // Fetch district news
+  // Fetch district news (same API as /district route)
   useEffect(() => {
     const fetchDistrictNews = async () => {
       try {
         setLoading(true)
-        const response = await getNewsByTypeDistrict()
+        const response = await getDistrictNews()
         console.log("District news API response:", response)
         
-        if (response?.success && Array.isArray(response.data)) {
-          // Filter by magazineType and newsType
-          const filteredData = response.data.filter(item => 
-            item.magazineType === "magazine" && 
+        if (response?.success && Array.isArray(response.data?.news)) {
+          const filteredData = response.data.news.filter(item =>
+            item.magazineType === "magazine2" &&
             item.newsType === "districtnews"
           )
-          console.log("Filtered district news:", filteredData)
           setRawData(filteredData)
         } else {
           setRawData([])
@@ -85,7 +83,7 @@ export default function ArticleNewsMarchOfKarnatala() {
     }
     
     fetchDistrictNews()
-  }, [])
+  }, [language])
 
   // Process data based on language
   useEffect(() => {
@@ -94,17 +92,20 @@ export default function ArticleNewsMarchOfKarnatala() {
                      language === "Hindi" ? "hindi" : "kannada"
       
       const processedData = rawData.map((item, index) => {
+        const newsId = item._id?.$oid || item._id
+        const publishedDate = item.publishedAt?.$date || item.publishedAt
+
         // Get title and limit to 50 characters for one line
         const fullTitle = item[langKey]?.title || item.title || ""
         const limitedTitle = fullTitle.length > 50 ? fullTitle.substring(0, 50) + "..." : fullTitle
         
         return {
-          id: item._id,
+          id: newsId,
           title: limitedTitle,
-          date: item.publishedAt ? new Date(item.publishedAt).toLocaleDateString() : "",
+          date: publishedDate ? new Date(publishedDate).toLocaleDateString() : "",
           image: item.newsImage || "/placeholder.svg",
           number: String(index + 1).padStart(2, '0'),
-          publishedAt: item.publishedAt
+          publishedAt: publishedDate
         }
       })
 
