@@ -11,6 +11,7 @@ import {
   NavItem,
   NavLinkStyled,
   NavLabel,
+  ServiceNavTrigger,
   ActiveIndicator,
   MobileNav,
   MobileNavContent,
@@ -23,17 +24,24 @@ import {
   ExpandIcon,
 } from "./Header.styles";
 import DistrictDropdown from "./DistrictDropdown";
+import ServiceDropdown from "./ServiceDropdown";
 import MobileDistrictMenu from "./MobileDistrictMenu";
+import MobileServiceMenu from "./MobileServiceMenu";
 
 const HeaderTab = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDistrictDropdownOpen, setIsDistrictDropdownOpen] = useState(false);
+  const [isServiceDropdownOpen, setIsServiceDropdownOpen] = useState(false);
   const [isMobileDistrictMenuOpen, setIsMobileDistrictMenuOpen] = useState(false);
+  const [isMobileServiceMenuOpen, setIsMobileServiceMenuOpen] = useState(false);
   const location = useLocation();
   const { language } = useContext(LanguageContext);
   const districtDropdownRef = useRef(null);
   const districtNavItemRef = useRef(null);
+  const serviceDropdownRef = useRef(null);
+  const serviceNavItemRef = useRef(null);
   const hoverTimeoutRef = useRef(null);
+  const serviceHoverTimeoutRef = useRef(null);
 
   // Navigation items with translations
   const navItems = [
@@ -189,6 +197,16 @@ const HeaderTab = () => {
     closeMobileMenu();
   };
 
+  const handleMobileServiceSelect = () => {
+    setIsMobileServiceMenuOpen(false);
+    closeMobileMenu();
+  };
+
+  const toggleMobileServiceMenu = (e) => {
+    e.preventDefault();
+    setIsMobileServiceMenuOpen(!isMobileServiceMenuOpen);
+  };
+
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
@@ -218,6 +236,7 @@ const HeaderTab = () => {
       clearTimeout(hoverTimeoutRef.current);
     }
     setIsDistrictDropdownOpen(true);
+    setIsServiceDropdownOpen(false);
   };
 
   const handleDistrictMouseLeave = () => {
@@ -234,30 +253,62 @@ const HeaderTab = () => {
     }
   };
 
+  const handleServiceMouseEnter = () => {
+    if (serviceHoverTimeoutRef.current) {
+      clearTimeout(serviceHoverTimeoutRef.current);
+    }
+    setIsServiceDropdownOpen(true);
+    setIsDistrictDropdownOpen(false);
+  };
+
+  const handleServiceMouseLeave = () => {
+    serviceHoverTimeoutRef.current = setTimeout(() => {
+      setIsServiceDropdownOpen(false);
+    }, 200);
+  };
+
+  const handleServiceClick = () => {
+    if (window.innerWidth < 1026) {
+      setIsServiceDropdownOpen(!isServiceDropdownOpen);
+    }
+  };
+
   // Close district dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        districtDropdownRef.current && 
+        districtDropdownRef.current &&
         !districtDropdownRef.current.contains(event.target) &&
         districtNavItemRef.current &&
         !districtNavItemRef.current.contains(event.target)
       ) {
         setIsDistrictDropdownOpen(false);
       }
+
+      if (
+        serviceDropdownRef.current &&
+        !serviceDropdownRef.current.contains(event.target) &&
+        serviceNavItemRef.current &&
+        !serviceNavItemRef.current.contains(event.target)
+      ) {
+        setIsServiceDropdownOpen(false);
+      }
     };
 
-    if (isDistrictDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+    if (isDistrictDropdownOpen || isServiceDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
       if (hoverTimeoutRef.current) {
         clearTimeout(hoverTimeoutRef.current);
       }
+      if (serviceHoverTimeoutRef.current) {
+        clearTimeout(serviceHoverTimeoutRef.current);
+      }
     };
-  }, [isDistrictDropdownOpen]);
+  }, [isDistrictDropdownOpen, isServiceDropdownOpen]);
 
   return (
     <HeaderContainer role="navigation" aria-label="Main navigation">
@@ -302,6 +353,37 @@ const HeaderTab = () => {
                       onClose={() => setIsDistrictDropdownOpen(false)}
                       onMouseEnter={handleDistrictMouseEnter}
                       onMouseLeave={handleDistrictMouseLeave}
+                    />
+                  </div>
+                ) : item.path === "/ourservice" ? (
+                  <div
+                    ref={serviceNavItemRef}
+                    onMouseEnter={handleServiceMouseEnter}
+                    onMouseLeave={handleServiceMouseLeave}
+                    style={{ position: "relative", display: "inline-flex", justifyContent: "center" }}
+                  >
+                    <ServiceNavTrigger
+                      role="button"
+                      tabIndex={0}
+                      onClick={handleServiceClick}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          handleServiceClick();
+                        }
+                      }}
+                      className={`${isServiceDropdownOpen ? "open" : ""} ${language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}`}
+                      aria-expanded={isServiceDropdownOpen}
+                      aria-haspopup="true"
+                    >
+                      {getTranslatedName(item)}
+                    </ServiceNavTrigger>
+                    <ServiceDropdown
+                      ref={serviceDropdownRef}
+                      isOpen={isServiceDropdownOpen}
+                      onClose={() => setIsServiceDropdownOpen(false)}
+                      onMouseEnter={handleServiceMouseEnter}
+                      onMouseLeave={handleServiceMouseLeave}
                     />
                   </div>
                 ) : item.clickable === false ? (
@@ -354,6 +436,24 @@ const HeaderTab = () => {
                       <MobileDistrictMenu
                         isOpen={isMobileDistrictMenuOpen}
                         onDistrictSelect={handleMobileDistrictSelect}
+                      />
+                    </>
+                  ) : item.path === "/ourservice" ? (
+                    <>
+                      <MobileNavLink
+                        to="#"
+                        onClick={toggleMobileServiceMenu}
+                        className={language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}
+                        style={{ position: "relative", justifyContent: "center" }}
+                      >
+                        <span style={{ textAlign: "center" }}>{getTranslatedName(item)}</span>
+                        <ExpandIcon isOpen={isMobileServiceMenuOpen} style={{ position: "absolute", right: "16px" }}>
+                          <ChevronDown size={18} />
+                        </ExpandIcon>
+                      </MobileNavLink>
+                      <MobileServiceMenu
+                        isOpen={isMobileServiceMenuOpen}
+                        onServiceSelect={handleMobileServiceSelect}
                       />
                     </>
                   ) : item.clickable === false ? (

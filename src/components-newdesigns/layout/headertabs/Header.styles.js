@@ -198,6 +198,22 @@ export const NavLabel = styled.span`
   }
 `;
 
+export const ServiceNavTrigger = styled(NavLabel)`
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  &:hover,
+  &.open {
+    background-color: ${theme.colors.primary};
+    color: ${theme.colors.white};
+    border-radius: 0;
+  }
+`;
+
 export const ActiveIndicator = styled.span`
   position: absolute;
   left: 50%;
