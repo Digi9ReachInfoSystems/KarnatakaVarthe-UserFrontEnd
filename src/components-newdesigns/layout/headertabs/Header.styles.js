@@ -38,7 +38,7 @@ export const HeaderContent = styled.div`
   display: flex;
   height: 56px;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   position: relative;
   gap: ${theme.spacing(1)};
 
@@ -87,6 +87,7 @@ export const DesktopNav = styled.nav`
   gap: ${theme.spacing(1)};
   flex: 1;
   min-width: 0;
+  justify-content: flex-start;
 
   @media (min-width: 1026px) {
     display: flex;
@@ -145,6 +146,48 @@ export const NavLinkStyled = styled(NavLink)`
   &.kannada-text {
     font-weight: 700;
     
+    @media (min-width: 1040px) and (max-width: 1391px) {
+      font-size: clamp(10px, 0.85vw, 13px);
+    }
+
+    @media (max-width: 1039px) {
+      font-size: 11px;
+    }
+
+    &.active {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      line-height: 1.3;
+    }
+  }
+`;
+
+export const NavLabel = styled.span`
+  position: relative;
+  padding: ${theme.spacing(1)} ${theme.spacing(2)};
+  font-size: ${theme.fontSizes.medium};
+  font-weight: 500;
+  color: ${theme.colors.text};
+  display: block;
+  white-space: nowrap;
+  cursor: default;
+  user-select: none;
+
+  @media (min-width: 1040px) and (max-width: 1391px) {
+    padding: ${theme.spacing(0.625)} ${theme.spacing(1.25)};
+    font-size: clamp(10px, 0.85vw, 13px);
+  }
+
+  @media (max-width: 1039px) {
+    padding: ${theme.spacing(0.5)} ${theme.spacing(1)};
+    font-size: 11px;
+  }
+
+  &.kannada-text {
+    font-weight: 700;
+
     @media (min-width: 1040px) and (max-width: 1391px) {
       font-size: clamp(10px, 0.85vw, 13px);
     }
@@ -379,6 +422,36 @@ export const MobileNavLink = styled(NavLink)`
 
   &.active.kannada-text {
     font-weight: 700;
+  }
+`;
+
+export const MobileNavLabel = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: ${theme.spacing(2)} ${theme.spacing(3)};
+  font-size: ${theme.fontSizes.medium};
+  font-weight: 500;
+  color: ${theme.colors.text};
+  border-radius: ${theme.borderRadius.small};
+  margin: 0 ${theme.spacing(2)};
+  cursor: default;
+  user-select: none;
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    padding: ${theme.spacing(1.5)} ${theme.spacing(2)};
+    font-size: ${theme.fontSizes.small};
+    margin: 0 ${theme.spacing(1)};
+  }
+
+  &.kannada-text {
+    font-weight: 700;
+    font-size: ${theme.fontSizes.medium};
+
+    @media (max-width: ${theme.breakpoints.mobile}) {
+      font-size: ${theme.fontSizes.small};
+    }
   }
 `;
 

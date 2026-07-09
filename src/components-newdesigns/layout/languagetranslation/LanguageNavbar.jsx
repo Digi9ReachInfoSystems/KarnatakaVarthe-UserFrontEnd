@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { Facebook, Instagram, Search, ChevronDown } from 'lucide-react';
+import { Facebook, Instagram, Search, ChevronDown, LogIn, User, Settings, LogOut } from 'lucide-react';
 import { FaXTwitter } from 'react-icons/fa6';
+import Cookies from 'js-cookie';
 import { LanguageContext } from '../../../context/LanguageContext';
 import SearchModal from '../searchsection/SearchModal';
 import {
@@ -13,14 +14,34 @@ import {
   Overlay,
   SearchContainer,
   SearchIcon,
-  SearchText
+  SearchText,
 } from './Language.styles';
+import {
+  LoginButton,
+  ProfileContainer,
+  ProfileButton,
+  DropdownMenu,
+  DropdownItem,
+  DropdownLink,
+  UserInfo,
+  UserName,
+  UserEmail,
+} from '../headertabs/Header.styles';
+import { navaKarnatakaPdfByLang } from '../../../config/specialPublicationData';
 
 const LanguageNavbar = () => {
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const { language, setLanguage, currentMagazineType } = useContext(LanguageContext);
   const dropdownRef = useRef(null);
+  const profileDropdownRef = useRef(null);
+
+  const userId = Cookies.get('userId');
+  const username = Cookies.get('UserName');
+  const email = Cookies.get('Email');
+  const phone = Cookies.get('Phone');
+  const cleanPhone = phone ? phone.slice(-10) : null;
 
   const languages = [
     { code: 'kn', name: 'Kannada' },
@@ -28,7 +49,6 @@ const LanguageNavbar = () => {
     { code: 'hi', name: 'Hindi' }
   ];
 
-  // Get translated Search text
   const getSearchText = () => {
     const searchTranslations = {
       English: "Search",
@@ -38,16 +58,36 @@ const LanguageNavbar = () => {
     return searchTranslations[language] || "Search";
   };
 
-  const pdfByLang = {
-    Kannada: { href: "https://firebasestorage.googleapis.com/v0/b/varthajanapadanewsapp.firebasestorage.app/o/magazinePdfs%2FNavakarnataka%203%20years%20book%20cover%20print%201.pdf?alt=media&token=007ae8d1-9951-4ec1-8aba-704c1119a11b", label: "ನವ ಕರ್ನಾಟಕ" },
-    English: { href: "https://firebasestorage.googleapis.com/v0/b/varthajanapadanewsapp.firebasestorage.app/o/magazinePdfs%2FNavaKarnataka_ENG_Final_Print.pdf?alt=media&token=f722faaf-9391-4c50-b925-b21fca598c2b", label: "Nava Karnataka" },
-    Hindi: { href: "https://firebasestorage.googleapis.com/v0/b/varthajanapadanewsapp.firebasestorage.app/o/magazinePdfs%2FNavaKarnataka_ENG_Final_Print.pdf?alt=media&token=f722faaf-9391-4c50-b925-b21fca598c2b", label: "Nava Karnataka" }
+  const getLoginText = () => {
+    const loginTranslations = {
+      English: "Login",
+      Kannada: "ಲಾಗಿನ್",
+      Hindi: "लॉगिन"
+    };
+    return loginTranslations[language] || "Login";
   };
-  const pdf = pdfByLang[language] || pdfByLang.English;
+
+  const getLogoutText = () => {
+    const logoutTranslations = {
+      English: "Logout",
+      Kannada: "ಲಾಗ್ ಔಟ್",
+      Hindi: "लॉगआउट"
+    };
+    return logoutTranslations[language] || "Logout";
+  };
+
+  const getSettingsText = () => {
+    const settingsTranslations = {
+      English: "Settings",
+      Kannada: "ಸೆಟ್ಟಿಂಗ್ಸ್",
+      Hindi: "सेटिंग्स"
+    };
+    return settingsTranslations[language] || "Settings";
+  };
+
+  const pdf = navaKarnatakaPdfByLang[language] || navaKarnatakaPdfByLang.English;
 
   const handleLanguageSelect = (selectedLang) => {
-    // If on a magazine page, update that magazine's language
-    // Otherwise, update global language
     setLanguage(selectedLang.name, currentMagazineType);
     setIsLanguageOpen(false);
   };
@@ -68,39 +108,55 @@ const LanguageNavbar = () => {
     setIsSearchOpen(false);
   };
 
-  // Close dropdown when clicking outside
+  const toggleProfileDropdown = () => {
+    setIsProfileDropdownOpen(!isProfileDropdownOpen);
+  };
+
+  const handleLogout = () => {
+    Cookies.remove('userId');
+    Cookies.remove('accessToken');
+    Cookies.remove('Phone');
+    Cookies.remove('UserName');
+    Cookies.remove('Email');
+    setIsProfileDropdownOpen(false);
+    window.location.href = '/';
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsLanguageOpen(false);
       }
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
+        setIsProfileDropdownOpen(false);
+      }
     };
 
-    if (isLanguageOpen) {
+    if (isLanguageOpen || isProfileDropdownOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isLanguageOpen]);
+  }, [isLanguageOpen, isProfileDropdownOpen]);
 
-  // Close dropdown on escape key
   useEffect(() => {
     const handleEscape = (event) => {
       if (event.key === 'Escape') {
         setIsLanguageOpen(false);
+        setIsProfileDropdownOpen(false);
       }
     };
 
-    if (isLanguageOpen) {
+    if (isLanguageOpen || isProfileDropdownOpen) {
       document.addEventListener('keydown', handleEscape);
     }
 
     return () => {
       document.removeEventListener('keydown', handleEscape);
     };
-  }, [isLanguageOpen]);
+  }, [isLanguageOpen, isProfileDropdownOpen]);
 
   return (
     <LanguageNavContainer>
@@ -175,6 +231,53 @@ const LanguageNavbar = () => {
           {getSearchText()}
         </SearchText>
       </SearchContainer>
+
+      {userId ? (
+        <ProfileContainer ref={profileDropdownRef}>
+          <ProfileButton
+            onClick={toggleProfileDropdown}
+            aria-label="User profile menu"
+            aria-expanded={isProfileDropdownOpen}
+          >
+            <User />
+          </ProfileButton>
+
+          <DropdownMenu isOpen={isProfileDropdownOpen}>
+            {(username || email || phone) && (
+              <UserInfo>
+                {username && <UserName>{username}</UserName>}
+                {email && <UserEmail>{email}</UserEmail>}
+                {!email && phone && <UserEmail>{`+91 ${cleanPhone}`}</UserEmail>}
+              </UserInfo>
+            )}
+
+            <DropdownLink
+              to="/settings"
+              onClick={() => setIsProfileDropdownOpen(false)}
+              className={language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}
+            >
+              <Settings />
+              {getSettingsText()}
+            </DropdownLink>
+
+            <DropdownItem
+              onClick={handleLogout}
+              className={language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}
+            >
+              <LogOut />
+              {getLogoutText()}
+            </DropdownItem>
+          </DropdownMenu>
+        </ProfileContainer>
+      ) : (
+        <LoginButton
+          to="/signin"
+          className={language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}
+        >
+          <LogIn style={{ width: '16px', height: '16px', marginRight: '4px' }} />
+          {getLoginText()}
+        </LoginButton>
+      )}
 
       <SearchModal isOpen={isSearchOpen} onClose={closeSearchModal} />
     </LanguageNavContainer>

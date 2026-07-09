@@ -8,7 +8,6 @@ import {
   TitleSection,
   MainTitle,
   Subtitle,
-  SiteTitle,
   CMSection,
   CMImagesWrapper,
   CMImage,
@@ -17,17 +16,13 @@ import {
 } from './Header.styles';
 import { FontSizeContext } from '../../../context/FontSizeProvider';
 import { LanguageContext } from '../../../context/LanguageContext';
+import { navaKarnatakaPdfByLang } from '../../../config/specialPublicationData';
 
 const Header = () => {
   const { fontSize } = useContext(FontSizeContext);
   const { language } = useContext(LanguageContext);
 
-  const pdfByLang = {
-    Kannada: { href: 'https://firebasestorage.googleapis.com/v0/b/varthajanapadanewsapp.firebasestorage.app/o/magazinePdfs%2FNavakarnataka%203%20years%20book%20cover%20print%201.pdf?alt=media&token=007ae8d1-9951-4ec1-8aba-704c1119a11b', label: 'ನವ ಕರ್ನಾಟಕ' },
-    English: { href: 'https://firebasestorage.googleapis.com/v0/b/varthajanapadanewsapp.firebasestorage.app/o/magazinePdfs%2FNavaKarnataka_ENG_Final_Print.pdf?alt=media&token=f722faaf-9391-4c50-b925-b21fca598c2b', label: 'Nava Karnataka' },
-    Hindi: { href: 'https://firebasestorage.googleapis.com/v0/b/varthajanapadanewsapp.firebasestorage.app/o/magazinePdfs%2FNavaKarnataka_ENG_Final_Print.pdf?alt=media&token=f722faaf-9391-4c50-b925-b21fca598c2b', label: 'Nava Karnataka' },
-  };
-  const pdf = pdfByLang[language] || pdfByLang.English;
+  const pdf = navaKarnatakaPdfByLang[language] || navaKarnatakaPdfByLang.English;
   return (
     <HeaderContainer role="banner">
       <VisuallyHidden as="h1">
@@ -42,13 +37,6 @@ const Header = () => {
           />
         </LogoLink>
         <TitleSection style={fontSize !== 100 ? { fontSize: `${fontSize}%` } : undefined}>
-          <SiteTitle 
-            as="p" 
-            aria-label="Site name"
-            style={fontSize !== 100 ? { fontSize: `${fontSize}%` } : undefined}
-          >
-            Karnataka Varthe
-          </SiteTitle>
           <MainTitle 
             as="p" 
             aria-label="Department name"

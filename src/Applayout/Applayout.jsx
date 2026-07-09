@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+import TopLogoBar from "../components-newdesigns/layout/Header/TopLogoBar";
 import Header from "../components-newdesigns/layout/Header/Header";
 import HeaderTab from "../components-newdesigns/layout/headertabs/HeaderTab";
 import LanguageNavbar from "../components-newdesigns/layout/languagetranslation/LanguageNavbar";
@@ -9,6 +10,7 @@ import TrendingBar from "../components-newdesigns/layout/trendingbar/TrendingBar
 const Applayout = () => {
   return (
       <div role="application" aria-label="DIPR Website">
+        <TopLogoBar />
         <Header />
         <LanguageNavbar />
         <HeaderTab />
