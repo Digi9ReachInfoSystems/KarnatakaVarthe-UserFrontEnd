@@ -24,7 +24,7 @@ import {
   SkeletonArrow,
 } from "./Heronews.styles"
 import { LanguageContext } from "../../../../../../context/LanguageContext"
-import { PhotosApi } from "../../../../../../services/gallery/GalleryApi"
+import { fetchDistrictNewsBySlug } from "../../../../../../services/newapis/newapis-services"
 import { useNavigate } from "react-router-dom"
 
 export default function NewsHero({ districtSlug, dateFilter = null }) {
@@ -50,9 +50,9 @@ export default function NewsHero({ districtSlug, dateFilter = null }) {
           return;
         }
         
-        console.log('🌐 HeroNews - Calling API with:', { districtSlug, dateFilter });
-        const response = await PhotosApi.getDistrictNews(districtSlug, dateFilter);
-        const newsData = response?.news || [];
+        const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
+        const response = await fetchDistrictNewsBySlug(districtSlug, 1, { date: cleanDateFilter });
+        const newsData = response?.data?.news || [];
         console.log('📦 HeroNews - Received news count:', newsData.length);
         
         if (mounted) {

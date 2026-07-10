@@ -24,7 +24,7 @@ import {
   SkeletonExcerpt,
   SkeletonSideItem,
 } from "../latest/Tabsection.styles"
-import { PhotosApi } from "../../../../../../services/gallery/GalleryApi"
+import { fetchDistrictNewsBySlug } from "../../../../../../services/newapis/newapis-services"
 import { LanguageContext } from "../../../../../../context/LanguageContext"
 import { useNavigate } from "react-router-dom"
 
@@ -50,8 +50,9 @@ export default function OlderNewsSection({ districtSlug, dateFilter = null }) {
       }
       
       try {
-        const response = await PhotosApi.getDistrictNews(districtSlug, dateFilter)
-        const newsData = response?.news || []
+        const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
+        const response = await fetchDistrictNewsBySlug(districtSlug, 1, { date: cleanDateFilter })
+        const newsData = response?.data?.news || []
         
         // Sort by publishedAt date (newest first)
         const sortedNews = newsData.sort((a, b) => {
@@ -62,7 +63,7 @@ export default function OlderNewsSection({ districtSlug, dateFilter = null }) {
         
         // If date filter is active, hide older news section (all news shown in latest)
         // Otherwise, apply the existing logic for older news
-        if (dateFilter) {
+        if (cleanDateFilter) {
           // When date filter is active, don't show older news section
           setRawNews([])
         } else {

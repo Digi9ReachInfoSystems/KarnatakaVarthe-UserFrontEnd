@@ -26,7 +26,7 @@ import {
   SkeletonExcerpt,
   SkeletonSideItem,
 } from "./Tabsection.styles"
-import { getDistrictNews } from "../../../../../services/newsApi/newsducks"
+import { fetchAllDistrictsNewsPage } from "../../../../../services/newapis/newapis-services"
 import { LanguageContext } from "../../../../../context/LanguageContext"
 import { useNavigate } from "react-router-dom"
 
@@ -51,7 +51,7 @@ import { useNavigate } from "react-router-dom"
         // Ensure dateFilter is string or null, never an object
         const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
         console.log('🔍 TabSection - Clean dateFilter:', cleanDateFilter)
-        const res = await getDistrictNews(cleanDateFilter)
+        const res = await fetchAllDistrictsNewsPage(1, { date: cleanDateFilter })
         console.log('✅ TabSection - API response:', res)
         if (res?.success && Array.isArray(res.data.news)) {
           console.log('📰 TabSection - News count:', res.data.news.length)

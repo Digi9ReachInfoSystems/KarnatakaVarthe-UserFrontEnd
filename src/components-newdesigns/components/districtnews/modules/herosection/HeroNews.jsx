@@ -24,7 +24,7 @@ import {
   SkeletonArrow,
 } from "./Heronews.styles"
 import { LanguageContext } from "../../../../../context/LanguageContext"
-import { getDistrictNews } from "../../../../../services/newsApi/newsducks"
+import { fetchAllDistrictsNewsPage } from "../../../../../services/newapis/newapis-services"
 import { useNavigate } from "react-router-dom"
 import EmptyState from "../DateFilter/EmptyState"
 
@@ -66,7 +66,7 @@ useEffect(() => {
       // Ensure dateFilter is string or null, never an object
       const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
       console.log('🔍 HeroNews - Clean dateFilter:', cleanDateFilter)
-      const response = await getDistrictNews(cleanDateFilter);
+      const response = await fetchAllDistrictsNewsPage(1, { date: cleanDateFilter });
       console.log('✅ HeroNews - API response:', response)
       if (response?.success && Array.isArray(response.data.news)) {
         console.log('📰 HeroNews - News count:', response.data.news.length)

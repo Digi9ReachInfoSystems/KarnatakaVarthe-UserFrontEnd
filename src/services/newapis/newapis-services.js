@@ -22,6 +22,24 @@ import apiClient from "../apiClient";
  * @property {number} [page] - page number (default 1)
  * @property {number} [limit] - min 1, max 50 (default 20 when homepage is false)
  * @property {MagazineType} [magazineType] - news endpoints only
+ * @property {string} [date] - YYYY-MM-DD date filter (news-new + districts-new)
+ */
+
+/**
+ * @typedef {Object} NewsListPageOptions
+ * @property {string} [date] - YYYY-MM-DD — filters publishedAt UTC day
+ * @property {number} [limit] - default 20, max 50
+ * @property {MagazineType} [magazineType]
+ */
+
+/**
+ * @typedef {Object} DistrictsNewsOptions
+ * @property {boolean} [homepage]
+ * @property {number} [page]
+ * @property {number} [limit]
+ * @property {MagazineType} [magazineType]
+ * @property {string} [date]
+ * @property {string} [districtSlug]
  */
 
 /**
@@ -48,9 +66,34 @@ const buildQueryString = (opts = {}) => {
     params.set("magazineType", opts.magazineType);
   }
 
+  if (opts.date) {
+    params.set("date", opts.date);
+  }
+
   const query = params.toString();
   return query ? `?${query}` : "";
 };
+
+/**
+ * Normalize date filter to YYYY-MM-DD or null.
+ * @param {string|null|undefined} date
+ * @returns {string|null}
+ */
+export const normalizeDateFilter = (date) =>
+  date && typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date)
+    ? date
+    : null;
+
+/**
+ * @param {number} [page]
+ * @param {NewsListPageOptions} [opts]
+ */
+const buildListPageOpts = (page = 1, opts = {}) => ({
+  page,
+  limit: opts.limit ?? 20,
+  date: normalizeDateFilter(opts.date) ?? undefined,
+  magazineType: opts.magazineType,
+});
 
 /**
  * @param {import("axios").AxiosResponse} response
@@ -200,51 +243,60 @@ export const fetchHomepageLongVideos = () =>
   fetchLongVideos({ homepage: true });
 
 // ==================================================
-// LIST PAGE HELPERS (pagination / load more)
+// LIST PAGE HELPERS (pagination / load more / date filter)
 // Use pagination.hasNextPage for Load More button
+// date=YYYY-MM-DD filters publishedAt UTC day (reset page=1 on date change)
 // ==================================================
 
 /**
  * @param {number} [page]
- * @param {MagazineType} [magazineType]
+ * @param {NewsListPageOptions} [opts]
  */
-export const fetchDistrictNewsPage = (page = 1, magazineType) =>
-  fetchNewsByType("districtnews", { page, magazineType });
+export const fetchDistrictNewsPage = (page = 1, opts = {}) =>
+  fetchNewsByType("districtnews", buildListPageOpts(page, opts));
 
 /**
  * @param {number} [page]
- * @param {MagazineType} [magazineType]
+ * @param {NewsListPageOptions} [opts]
  */
-export const fetchStateNewsPage = (page = 1, magazineType) =>
-  fetchNewsByType("statenews", { page, magazineType });
+export const fetchStateNewsPage = (page = 1, opts = {}) =>
+  fetchNewsByType("statenews", buildListPageOpts(page, opts));
 
 /**
  * @param {number} [page]
- * @param {MagazineType} [magazineType]
+ * @param {NewsListPageOptions} [opts]
  */
-export const fetchSpecialNewsPage = (page = 1, magazineType) =>
-  fetchNewsByType("specialnews", { page, magazineType });
+export const fetchSpecialNewsPage = (page = 1, opts = {}) =>
+  fetchNewsByType("specialnews", buildListPageOpts(page, opts));
 
 /**
  * @param {number} [page]
- * @param {MagazineType} [magazineType]
+ * @param {NewsListPageOptions} [opts]
  */
-export const fetchArticlesPage = (page = 1, magazineType) =>
-  fetchNewsByType("articles", { page, magazineType });
+export const fetchArticlesPage = (page = 1, opts = {}) =>
+  fetchNewsByType("articles", buildListPageOpts(page, opts));
 
 /**
  * @param {number} [page]
- * @param {MagazineType} [magazineType]
+ * @param {NewsListPageOptions} [opts]
  */
-export const fetchCombinedLatestNewsPage = (page = 1, magazineType) =>
-  fetchNewsByType("combinedlatestnews", { page, magazineType });
+export const fetchCombinedLatestNewsPage = (page = 1, opts = {}) =>
+  fetchNewsByType("combinedlatestnews", buildListPageOpts(page, opts));
 
 /**
  * @param {number} [page]
- * @param {MagazineType} [magazineType]
+ * @param {NewsListPageOptions} [opts]
  */
-export const fetchCombinedNewsPage = (page = 1, magazineType) =>
-  fetchCombinedLatestNewsPage(page, magazineType);
+export const fetchCombinedNewsPage = (page = 1, opts = {}) =>
+  fetchCombinedLatestNewsPage(page, opts);
+
+/**
+ * Combined latest via getLatestCombinedNews route (supports date filter).
+ * @param {number} [page]
+ * @param {NewsListPageOptions} [opts]
+ */
+export const fetchCombinedNewsPageLegacy = (page = 1, opts = {}) =>
+  fetchCombinedNews(buildListPageOpts(page, opts));
 
 /**
  * @param {number} [page]
@@ -260,11 +312,113 @@ export const fetchShortVideosPage = (page = 1, limit) =>
 export const fetchLongVideosPage = (page = 1, limit) =>
   fetchLongVideos({ page, limit });
 
+// ==================================================
+// DISTRICTS-NEW APIs
+// GET /api/districts-new/list
+// GET /api/districts-new/news
+// GET /api/districts-new/news/:districtSlug
+// ==================================================
+
+/**
+ * @param {import("axios").AxiosResponse} response
+ */
+const parseDistrictsResponse = (response) => {
+  const json = response.data;
+
+  if (response.status >= 400 || json?.success === false) {
+    throw new Error(json?.message || "Request failed");
+  }
+
+  return json;
+};
+
+/**
+ * @returns {Promise<Array<{ _id: string, name: string, slug: string, english: string, hindi: string, kannada: string, code: string }>>}
+ */
+export const fetchDistrictsList = async () => {
+  try {
+    const response = await apiClient.get("/api/districts-new/list");
+    const json = parseDistrictsResponse(response);
+    const districts = json?.data?.districts || [];
+
+    return districts.map((district) => ({
+      _id: district._id?.$oid || district._id,
+      name: district.district_name,
+      slug: district.district_slug,
+      english: district.english || district.district_name,
+      hindi: district.hindi || district.district_name,
+      kannada: district.kannada || district.district_name,
+      code: district.district_code,
+    }));
+  } catch (error) {
+    const message =
+      error.response?.data?.message ||
+      error.message ||
+      "Failed to fetch districts list";
+    console.error("fetchDistrictsList error:", message);
+    throw new Error(message);
+  }
+};
+
+/**
+ * @param {DistrictsNewsOptions} [opts]
+ * @returns {Promise<{ success: boolean, district: object|null, data: { news: Array, total: number, page: number, page_size: number }, pagination: PaginationMeta }>}
+ */
+export const fetchDistrictsNews = async (opts = {}) => {
+  try {
+    const { districtSlug, ...queryOpts } = opts;
+    const query = buildQueryString(queryOpts);
+    const path = districtSlug
+      ? `/api/districts-new/news/${encodeURIComponent(districtSlug)}`
+      : "/api/districts-new/news";
+
+    const response = await apiClient.get(`${path}${query}`);
+    return parseDistrictsResponse(response);
+  } catch (error) {
+    const message =
+      error.response?.data?.message ||
+      error.message ||
+      "Failed to fetch district news";
+    console.error("fetchDistrictsNews error:", message);
+    throw new Error(message);
+  }
+};
+
+/**
+ * @param {number} [page]
+ * @param {{ date?: string, limit?: number, magazineType?: MagazineType }} [opts]
+ */
+export const fetchAllDistrictsNewsPage = (page = 1, opts = {}) =>
+  fetchDistrictsNews({
+    page,
+    limit: opts.limit ?? 20,
+    date: normalizeDateFilter(opts.date) ?? undefined,
+    magazineType: opts.magazineType,
+  });
+
+/**
+ * @param {string} districtSlug
+ * @param {number} [page]
+ * @param {{ date?: string, limit?: number, magazineType?: MagazineType }} [opts]
+ */
+export const fetchDistrictNewsBySlug = (districtSlug, page = 1, opts = {}) =>
+  fetchDistrictsNews({
+    districtSlug,
+    page,
+    limit: opts.limit ?? 20,
+    date: normalizeDateFilter(opts.date) ?? undefined,
+    magazineType: opts.magazineType,
+  });
+
+export const fetchHomepageAllDistrictsNews = (opts = {}) =>
+  fetchDistrictsNews({ homepage: true, ...opts });
+
 export default {
   fetchNewsByType,
   fetchCombinedNews,
   fetchShortVideos,
   fetchLongVideos,
+  normalizeDateFilter,
   fetchHomepageDistrictNews,
   fetchHomepageStateNews,
   fetchHomepageSpecialNews,
@@ -279,6 +433,12 @@ export default {
   fetchArticlesPage,
   fetchCombinedLatestNewsPage,
   fetchCombinedNewsPage,
+  fetchCombinedNewsPageLegacy,
   fetchShortVideosPage,
   fetchLongVideosPage,
+  fetchDistrictsList,
+  fetchDistrictsNews,
+  fetchAllDistrictsNewsPage,
+  fetchDistrictNewsBySlug,
+  fetchHomepageAllDistrictsNews,
 };

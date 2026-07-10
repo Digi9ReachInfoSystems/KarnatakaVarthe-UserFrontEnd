@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import DistrictNewsSlug from '../../components/news-section/DistrictNewsslg/DistrictNewsSlug'
-import { PhotosApi } from '../../../services/gallery/GalleryApi'
+import { fetchDistrictsList } from '../../../services/newapis/newapis-services'
 
 export default function IndividualDistrictNewspage() {
   const [searchParams] = useSearchParams()
@@ -18,7 +18,7 @@ export default function IndividualDistrictNewspage() {
 
       try {
         setLoading(true)
-        const districts = await PhotosApi.getDistricts()
+        const districts = await fetchDistrictsList()
         const district = districts.find(d => 
           d.name === districtName || 
           d.english === districtName || 

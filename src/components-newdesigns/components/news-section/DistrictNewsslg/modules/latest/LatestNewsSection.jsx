@@ -24,7 +24,7 @@ import {
   SkeletonExcerpt,
   SkeletonSideItem,
 } from "./Tabsection.styles"
-import { PhotosApi } from "../../../../../../services/gallery/GalleryApi"
+import { fetchDistrictNewsBySlug } from "../../../../../../services/newapis/newapis-services"
 import { LanguageContext } from "../../../../../../context/LanguageContext"
 import { useNavigate } from "react-router-dom"
 
@@ -50,8 +50,9 @@ export default function LatestNewsSection({ districtSlug, dateFilter = null }) {
       }
       
       try {
-        const response = await PhotosApi.getDistrictNews(districtSlug, dateFilter)
-        const newsData = response?.news || []
+        const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
+        const response = await fetchDistrictNewsBySlug(districtSlug, 1, { date: cleanDateFilter })
+        const newsData = response?.data?.news || []
         
         // Sort by publishedAt date (newest first)
         const sortedNews = newsData.sort((a, b) => {
@@ -62,7 +63,7 @@ export default function LatestNewsSection({ districtSlug, dateFilter = null }) {
         
         // If date filter is active, show all filtered results (API already filtered by date)
         // Otherwise, apply the existing logic for latest news
-        if (dateFilter) {
+        if (cleanDateFilter) {
           // Exclude first 6 items (3 for hero + 3 for featured) when date filter is active
           const newsAfterHeroAndFeatured = sortedNews.slice(6)
           setRawNews(newsAfterHeroAndFeatured)
