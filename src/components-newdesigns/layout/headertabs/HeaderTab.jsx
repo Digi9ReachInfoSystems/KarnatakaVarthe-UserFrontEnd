@@ -67,12 +67,12 @@ const HeaderTab = () => {
     },   
     
     { 
-      name: "CMO Events", 
+      name: "CM Events", 
       path: "/specialnews",
       translations: {
-        English: "CMO Events",
-        Kannada: "ಸಿಎಮೊ ಇವೆಂಟ್ಸ್",
-        Hindi: "सीएमओ इवेंट्स"
+        English: "CM Events",
+        Kannada: "ಸಿಎಂ ಇವೆಂಟ್ಸ್",
+        Hindi: "सीएम इवेंट्स"
       }
     },
     //Article tab
