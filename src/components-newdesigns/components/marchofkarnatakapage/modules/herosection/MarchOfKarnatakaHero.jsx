@@ -69,7 +69,7 @@ function MarchOfKarnatakaHero( {notifications = []} ) {
   return (
    <HeroLayout aria label="March of Karnataka Hero Section">
           {/* Left: Hero Content */}
-    <Services />
+    <Services magazineType="magazine2" />
     <HeroRoot aria-label="Featured magazines"
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}

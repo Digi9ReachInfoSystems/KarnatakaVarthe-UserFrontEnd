@@ -58,7 +58,7 @@ export default function Varthahero({ notifications = [] }) {
   return (
     <HeroLayout aria-label="Home hero">
       {/* Left: Hero Content */}
-      <Services />
+      <Services magazineType="magazine" />
 
       {/* Middle: Services */}
       <HeroRoot
