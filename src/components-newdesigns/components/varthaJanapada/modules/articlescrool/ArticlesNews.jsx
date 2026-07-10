@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { LanguageContext } from '../../../../../context/LanguageContext'
-import { getDistrictNews } from '../../../../../services/newsApi/newsducks'
+import { fetchHomepageDistrictNews } from '../../../../../services/newapis/newapis-services'
 import {
   ArticlesSection,
   Container,
@@ -52,23 +52,13 @@ export default function ArticlesNews() {
 
   const [itemsPerPage, setItemsPerPage] = useState(getItemsPerPage())
 
-  // Fetch district news (same API as /district route)
+  // Fetch latest 10 district news for homepage (magazine)
   useEffect(() => {
     const fetchDistrictNews = async () => {
       try {
         setLoading(true)
-        const response = await getDistrictNews()
-        console.log("District news API response:", response)
-        
-        if (response?.success && Array.isArray(response.data?.news)) {
-          const filteredData = response.data.news.filter(item =>
-            item.magazineType === "magazine" &&
-            item.newsType === "districtnews"
-          )
-          setRawData(filteredData)
-        } else {
-          setRawData([])
-        }
+        const response = await fetchHomepageDistrictNews("magazine")
+        setRawData(Array.isArray(response?.data) ? response.data : [])
       } catch (error) {
         console.error("Error fetching district news:", error)
         setRawData([])
@@ -118,6 +108,8 @@ export default function ArticlesNews() {
       }))
 
       setArticles(reNumbered)
+    } else {
+      setArticles([])
     }
   }, [rawData, language])
 
