@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useContext, useEffect, useRef, useState } from "react";
-import { fetchHomepageCombinedNews } from "../../../../../services/newapis/newapis-services";
+import { fetchHomepageCombinedLatestNews } from "../../../../../services/newapis/newapis-services";
 import { LanguageContext } from "../../../../../context/LanguageContext";
 import {
   NotificationPanel,
@@ -63,7 +63,7 @@ function Services({ magazineType = "magazine" }) {
       try {
         setLoading(true);
         setError(null);
-        const response = await fetchHomepageCombinedNews(magazineType);
+        const response = await fetchHomepageCombinedLatestNews(magazineType);
         setNewsItems(Array.isArray(response?.data) ? response.data : []);
       } catch (err) {
         console.error("Error fetching latest news:", err);
@@ -75,7 +75,7 @@ function Services({ magazineType = "magazine" }) {
     };
 
     fetchLatestNews();
-  }, [magazineType]);
+  }, [magazineType, language]);
 
   useEffect(() => {
     if (newsItems.length > 0 && !loading && !error && scrollRef.current && !isHovered) {

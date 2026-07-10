@@ -1,7 +1,7 @@
 import apiClient from "../apiClient";
 
 /**
- * @typedef {"statenews" | "districtnews" | "specialnews"} NewsType
+ * @typedef {"statenews" | "districtnews" | "specialnews" | "articles" | "combinedlatestnews"} NewsType
  * @typedef {"magazine" | "magazine2"} MagazineType
  *
  * @typedef {Object} PaginationMeta
@@ -182,8 +182,16 @@ export const fetchHomepageSpecialNews = (magazineType) =>
   fetchNewsByType("specialnews", { homepage: true, magazineType });
 
 /** @param {MagazineType} [magazineType] */
+export const fetchHomepageArticles = (magazineType) =>
+  fetchNewsByType("articles", { homepage: true, magazineType });
+
+/** @param {MagazineType} [magazineType] */
+export const fetchHomepageCombinedLatestNews = (magazineType) =>
+  fetchNewsByType("combinedlatestnews", { homepage: true, magazineType });
+
+/** @param {MagazineType} [magazineType] */
 export const fetchHomepageCombinedNews = (magazineType) =>
-  fetchCombinedNews({ homepage: true, magazineType });
+  fetchHomepageCombinedLatestNews(magazineType);
 
 export const fetchHomepageShortVideos = () =>
   fetchShortVideos({ homepage: true });
@@ -221,8 +229,22 @@ export const fetchSpecialNewsPage = (page = 1, magazineType) =>
  * @param {number} [page]
  * @param {MagazineType} [magazineType]
  */
+export const fetchArticlesPage = (page = 1, magazineType) =>
+  fetchNewsByType("articles", { page, magazineType });
+
+/**
+ * @param {number} [page]
+ * @param {MagazineType} [magazineType]
+ */
+export const fetchCombinedLatestNewsPage = (page = 1, magazineType) =>
+  fetchNewsByType("combinedlatestnews", { page, magazineType });
+
+/**
+ * @param {number} [page]
+ * @param {MagazineType} [magazineType]
+ */
 export const fetchCombinedNewsPage = (page = 1, magazineType) =>
-  fetchCombinedNews({ page, magazineType });
+  fetchCombinedLatestNewsPage(page, magazineType);
 
 /**
  * @param {number} [page]
@@ -246,12 +268,16 @@ export default {
   fetchHomepageDistrictNews,
   fetchHomepageStateNews,
   fetchHomepageSpecialNews,
+  fetchHomepageArticles,
+  fetchHomepageCombinedLatestNews,
   fetchHomepageCombinedNews,
   fetchHomepageShortVideos,
   fetchHomepageLongVideos,
   fetchDistrictNewsPage,
   fetchStateNewsPage,
   fetchSpecialNewsPage,
+  fetchArticlesPage,
+  fetchCombinedLatestNewsPage,
   fetchCombinedNewsPage,
   fetchShortVideosPage,
   fetchLongVideosPage,
