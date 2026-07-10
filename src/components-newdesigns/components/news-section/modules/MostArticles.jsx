@@ -24,7 +24,7 @@ import {
   SkeletonLine,
 } from "./MostArticles.styles"
 import { LanguageContext } from "../../../../context/LanguageContext"
-import { getAllNews } from "../../../../services/newsApi/newsducks"
+import { fetchAllLatestNewsPage } from "../../../../services/newapis/newapis-services"
 import { useNavigate } from "react-router-dom"
 import { useEffect, useContext, useState } from "react"
 import EmptyState from "../../districtnews/modules/DateFilter/EmptyState"
@@ -46,11 +46,11 @@ export default function TabSection({ dateFilter = null }) {
         // Ensure dateFilter is string or null
         const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
         console.log('🔍 MostArticles - Clean dateFilter:', cleanDateFilter)
-        const res = await getAllNews(cleanDateFilter)
+        const res = await fetchAllLatestNewsPage(1, { date: cleanDateFilter })
         console.log('✅ MostArticles - API response:', res)
-        if (res?.success && Array.isArray(res.data.news)) {
-          console.log('📰 MostArticles - News count:', res.data.news.length)
-          setRawNews(res.data.news)
+        if (res?.success && Array.isArray(res.data)) {
+          console.log('📰 MostArticles - News count:', res.data.length)
+          setRawNews(res.data)
         } else {
           console.warn('⚠️ MostArticles - No data or invalid format')
           setRawNews([])

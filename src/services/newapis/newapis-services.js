@@ -161,6 +161,49 @@ export const fetchCombinedNews = async (opts = {}) => {
 };
 
 // ==================================================
+// API 2b — ALL LATEST NEWS (STATE + SPECIAL + DATE)
+// GET /api/news-new/getAllLatestNews
+// ==================================================
+
+/**
+ * @param {PaginationOptions} [opts]
+ * @returns {Promise<PaginatedResponse>}
+ */
+export const fetchAllLatestNews = async (opts = {}) => {
+  try {
+    const query = buildQueryString(opts);
+    const response = await apiClient.get(
+      `/api/news-new/getAllLatestNews${query}`
+    );
+    return parsePaginatedResponse(response);
+  } catch (error) {
+    const message =
+      error.response?.data?.message ||
+      error.message ||
+      "Failed to fetch all latest news";
+    console.error("fetchAllLatestNews error:", message);
+    throw new Error(message);
+  }
+};
+
+/**
+ * @param {number} [page]
+ * @param {NewsListPageOptions} [opts]
+ */
+export const fetchAllLatestNewsPage = (page = 1, opts = {}) =>
+  fetchAllLatestNews(buildListPageOpts(page, opts));
+
+/**
+ * @param {NewsListPageOptions} [opts]
+ */
+export const fetchHomepageAllLatestNews = (opts = {}) =>
+  fetchAllLatestNews({
+    homepage: true,
+    date: normalizeDateFilter(opts.date) ?? undefined,
+    magazineType: opts.magazineType,
+  });
+
+// ==================================================
 // API 3 — SHORT VIDEOS
 // GET /api/video-new
 // ==================================================
@@ -416,6 +459,9 @@ export const fetchHomepageAllDistrictsNews = (opts = {}) =>
 export default {
   fetchNewsByType,
   fetchCombinedNews,
+  fetchAllLatestNews,
+  fetchAllLatestNewsPage,
+  fetchHomepageAllLatestNews,
   fetchShortVideos,
   fetchLongVideos,
   normalizeDateFilter,
