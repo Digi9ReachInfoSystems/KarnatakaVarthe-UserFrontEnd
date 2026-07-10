@@ -10,10 +10,10 @@ import {
   HeroTitle,
   HeroCta,
 } from "./Varthahero.styles.js";
-import LatestNotification from "./LatestNotification.jsx";
+import HeroShortVideos from "./heroshorts/HeroShortVideos.jsx";
 import Services from "./servicess/Services.jsx";
 
-export default function Varthahero({ notifications = [] }) {
+export default function Varthahero() {
   const { language } = useContext(LanguageContext);
 
   const translations = {
@@ -86,8 +86,8 @@ export default function Varthahero({ notifications = [] }) {
         </HeroContent>
       </HeroRoot>
 
-      {/* Right: Latest Notifications */}
-      <LatestNotification notifications={notifications} />
+      {/* Right: Hero Shorts */}
+      <HeroShortVideos />
     </HeroLayout>
   );
 }

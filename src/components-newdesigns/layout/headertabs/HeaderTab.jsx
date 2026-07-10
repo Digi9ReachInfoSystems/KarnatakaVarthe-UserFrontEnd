@@ -7,6 +7,7 @@ import {
   Container,
   HeaderContent,
   MobileMenuButton,
+  MobileHeaderAuth,
   DesktopNav,
   NavItem,
   NavLinkStyled,
@@ -27,6 +28,7 @@ import DistrictDropdown from "./DistrictDropdown";
 import ServiceDropdown from "./ServiceDropdown";
 import MobileDistrictMenu from "./MobileDistrictMenu";
 import MobileServiceMenu from "./MobileServiceMenu";
+import HeaderAuthMenu from "./HeaderAuthMenu";
 
 const HeaderTab = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -326,6 +328,10 @@ const HeaderTab = () => {
               <Menu size={20} aria-hidden="true" />
             )}
           </MobileMenuButton>
+
+          <MobileHeaderAuth>
+            <HeaderAuthMenu variant="mobile" />
+          </MobileHeaderAuth>
 
           {/* Desktop Navigation */}
           <DesktopNav aria-label="Primary navigation">

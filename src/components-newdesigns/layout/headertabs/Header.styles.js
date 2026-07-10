@@ -53,6 +53,62 @@ export const HeaderContent = styled.div`
   }
 `;
 
+export const TopBarAuth = styled.div`
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+
+  @media (max-width: 1024px) {
+    display: none;
+  }
+`;
+
+export const MobileHeaderAuth = styled.div`
+  display: none;
+  margin-left: auto;
+  align-items: center;
+  flex-shrink: 0;
+
+  @media (max-width: 1024px) {
+    display: flex;
+  }
+`;
+
+export const MobileLoginButton = styled(NavLink)`
+  border: 1px solid ${theme.colors.primary};
+  color: ${theme.colors.primary};
+  background-color: #e9f1ff;
+  font-size: ${theme.fontSizes.small};
+  padding: ${theme.spacing(0.75)} ${theme.spacing(1.5)};
+  border-radius: ${theme.borderRadius.small};
+  transition: all ${theme.transitions.fast};
+  cursor: pointer;
+  font-family: ${theme.fonts.body};
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  &:hover {
+    background-color: ${theme.colors.primary};
+    color: ${theme.colors.white};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${theme.colors.primary};
+    outline-offset: 2px;
+  }
+
+  &.kannada-text {
+    font-weight: 700;
+    font-size: 11px;
+    padding: ${theme.spacing(0.625)} ${theme.spacing(1.25)};
+  }
+`;
+
 export const MobileMenuButton = styled.button`
   display: block;
   padding: ${theme.spacing(1)};
