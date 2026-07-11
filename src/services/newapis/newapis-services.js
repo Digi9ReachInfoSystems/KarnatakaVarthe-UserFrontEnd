@@ -448,6 +448,74 @@ export const fetchVideoCategories = async () => {
   }
 };
 
+/**
+ * Photo categories for gallery filters (not news /api/category).
+ * GET /api/photo-category
+ * @returns {Promise<Array<{ _id: string, name: string, english: string, hindi: string, kannada: string }>>}
+ */
+export const fetchPhotoCategories = async () => {
+  try {
+    const response = await apiClient.get("/api/photo-category");
+    const json = response.data;
+    if (response.status >= 400 || json?.success === false) {
+      throw new Error(json?.message || "Failed to fetch photo categories");
+    }
+    const list = Array.isArray(json?.data) ? json.data : [];
+    return list.map((category) => ({
+      _id: category._id?.$oid || category._id,
+      name: category.name || category.category_name || category.english || "",
+      english:
+        category.english || category.category_name || category.name || "",
+      hindi: category.hindi || category.name || "",
+      kannada: category.kannada || category.name || "",
+    }));
+  } catch (error) {
+    const message =
+      error.response?.data?.message ||
+      error.message ||
+      "Failed to fetch photo categories";
+    console.error("fetchPhotoCategories error:", message);
+    throw new Error(message);
+  }
+};
+
+/**
+ * GET /api/photos-new
+ * @param {PaginationOptions & { category?: string }} [opts]
+ * @returns {Promise<PaginatedResponse>}
+ */
+export const fetchPhotosList = async (opts = {}) => {
+  try {
+    const query = buildQueryString(opts);
+    const response = await apiClient.get(`/api/photos-new${query}`);
+    return parsePaginatedResponse(response);
+  } catch (error) {
+    const message =
+      error.response?.data?.message ||
+      error.message ||
+      "Failed to fetch photos";
+    console.error("fetchPhotosList error:", message);
+    throw new Error(message);
+  }
+};
+
+/**
+ * @param {number} [page]
+ * @param {{ category?: string, limit?: number }} [opts]
+ */
+export const fetchPhotosPage = (page = 1, opts = {}) =>
+  fetchPhotosList({
+    page,
+    limit: opts.limit ?? 20,
+    category: opts.category || undefined,
+  });
+
+export const fetchHomepagePhotos = (opts = {}) =>
+  fetchPhotosList({
+    homepage: true,
+    category: opts.category || undefined,
+  });
+
 // ==================================================
 // LIST PAGE HELPERS (pagination / load more / date filter)
 // Use pagination.hasNextPage for Load More button
@@ -650,6 +718,10 @@ export default {
   fetchHomepageShortVideos,
   fetchHomepageLongVideos,
   fetchVideoCategories,
+  fetchPhotoCategories,
+  fetchPhotosList,
+  fetchPhotosPage,
+  fetchHomepagePhotos,
   fetchDistrictNewsPage,
   fetchStateNewsPage,
   fetchSpecialNewsPage,
