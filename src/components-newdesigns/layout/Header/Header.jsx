@@ -11,18 +11,12 @@ import {
   CMSection,
   CMImagesWrapper,
   CMImage,
-  MobileCMPdfLink,
   VisuallyHidden,
 } from './Header.styles';
 import { FontSizeContext } from '../../../context/FontSizeProvider';
-import { LanguageContext } from '../../../context/LanguageContext';
-import { navaKarnatakaPdfByLang } from '../../../config/specialPublicationData';
 
 const Header = () => {
   const { fontSize } = useContext(FontSizeContext);
-  const { language } = useContext(LanguageContext);
-
-  const pdf = navaKarnatakaPdfByLang[language] || navaKarnatakaPdfByLang.English;
   return (
     <HeaderContainer role="banner">
       <VisuallyHidden as="h1">
@@ -65,14 +59,6 @@ const Header = () => {
             loading="eager"
           />
         </CMImagesWrapper>
-        <MobileCMPdfLink
-          href={pdf.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Open Nava Karnataka 3 Years report (PDF)"
-        >
-          {pdf.label}
-        </MobileCMPdfLink>
       </CMSection>
     </HeaderContainer>
   );

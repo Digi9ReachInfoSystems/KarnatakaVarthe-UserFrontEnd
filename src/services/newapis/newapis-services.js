@@ -23,6 +23,7 @@ import apiClient from "../apiClient";
  * @property {number} [limit] - min 1, max 50 (default 20 when homepage is false)
  * @property {MagazineType} [magazineType] - news endpoints only
  * @property {string} [date] - YYYY-MM-DD date filter (news-new + districts-new)
+ * @property {string} [category] - category ObjectId filter (longVideo-new)
  */
 
 /**
@@ -68,6 +69,10 @@ const buildQueryString = (opts = {}) => {
 
   if (opts.date) {
     params.set("date", opts.date);
+  }
+
+  if (opts.category) {
+    params.set("category", String(opts.category));
   }
 
   const query = params.toString();
@@ -412,6 +417,37 @@ export const fetchHomepageShortVideos = () =>
 export const fetchHomepageLongVideos = () =>
   fetchLongVideos({ homepage: true });
 
+/**
+ * Video categories for long-video filters (not news /api/category).
+ * GET /api/video-category
+ * @returns {Promise<Array<{ _id: string, name: string, english: string, hindi: string, kannada: string }>>}
+ */
+export const fetchVideoCategories = async () => {
+  try {
+    const response = await apiClient.get("/api/video-category");
+    const json = response.data;
+    if (response.status >= 400 || json?.success === false) {
+      throw new Error(json?.message || "Failed to fetch video categories");
+    }
+    const list = Array.isArray(json?.data) ? json.data : [];
+    return list.map((category) => ({
+      _id: category._id?.$oid || category._id,
+      name: category.name || category.category_name || category.english || "",
+      english:
+        category.english || category.category_name || category.name || "",
+      hindi: category.hindi || category.name || "",
+      kannada: category.kannada || category.name || "",
+    }));
+  } catch (error) {
+    const message =
+      error.response?.data?.message ||
+      error.message ||
+      "Failed to fetch video categories";
+    console.error("fetchVideoCategories error:", message);
+    throw new Error(message);
+  }
+};
+
 // ==================================================
 // LIST PAGE HELPERS (pagination / load more / date filter)
 // Use pagination.hasNextPage for Load More button
@@ -477,10 +513,14 @@ export const fetchShortVideosPage = (page = 1, limit) =>
 
 /**
  * @param {number} [page]
- * @param {number} [limit]
+ * @param {{ category?: string, limit?: number }} [opts]
  */
-export const fetchLongVideosPage = (page = 1, limit) =>
-  fetchLongVideos({ page, limit });
+export const fetchLongVideosPage = (page = 1, opts = {}) =>
+  fetchLongVideos({
+    page,
+    limit: opts.limit ?? 20,
+    category: opts.category || undefined,
+  });
 
 // ==================================================
 // DISTRICTS-NEW APIs
@@ -609,6 +649,7 @@ export default {
   fetchHomepageCombinedNews,
   fetchHomepageShortVideos,
   fetchHomepageLongVideos,
+  fetchVideoCategories,
   fetchDistrictNewsPage,
   fetchStateNewsPage,
   fetchSpecialNewsPage,

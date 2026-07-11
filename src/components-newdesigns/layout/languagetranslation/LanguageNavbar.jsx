@@ -5,7 +5,6 @@ import { LanguageContext } from '../../../context/LanguageContext';
 import SearchModal from '../searchsection/SearchModal';
 import {
   LanguageNavContainer,
-  PdfLink,
   SocialIcons,
   SocialIcon,
   LanguageSelector,
@@ -17,7 +16,6 @@ import {
 } from './Language.styles';
 import { TopBarAuth } from '../headertabs/Header.styles';
 import HeaderAuthMenu from '../headertabs/HeaderAuthMenu';
-import { navaKarnatakaPdfByLang } from '../../../config/specialPublicationData';
 
 const LanguageNavbar = () => {
   const [isLanguageOpen, setIsLanguageOpen] = useState(false);
@@ -39,8 +37,6 @@ const LanguageNavbar = () => {
     };
     return searchTranslations[language] || "Search";
   };
-
-  const pdf = navaKarnatakaPdfByLang[language] || navaKarnatakaPdfByLang.English;
 
   const handleLanguageSelect = (selectedLang) => {
     setLanguage(selectedLang.name, currentMagazineType);
@@ -97,16 +93,6 @@ const LanguageNavbar = () => {
 
   return (
     <LanguageNavContainer>
-      <PdfLink
-        href={pdf.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Open Nava Karnataka 3 Years report (PDF)"
-        className={language === "Kannada" || language === "Hindi" ? "kannada-text" : "english-text"}
-      >
-        {pdf.label}
-      </PdfLink>
-
       <SocialIcons aria-label="Social media links">
         <SocialIcon href="https://www.instagram.com/karnatakavarthe" aria-label="Follow us on Instagram" target="_blank" rel="noopener noreferrer">
           <Instagram size={22} aria-hidden="true" />
