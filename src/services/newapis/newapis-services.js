@@ -290,6 +290,47 @@ export const fetchHomepageSpecialNewsList = (opts = {}) =>
   });
 
 // ==================================================
+// API 2e — ARTICLES LIST (DATE + PAGINATION)
+// GET /api/news-new/getArticles
+// ==================================================
+
+/**
+ * @param {PaginationOptions} [opts]
+ * @returns {Promise<PaginatedResponse>}
+ */
+export const fetchArticlesList = async (opts = {}) => {
+  try {
+    const query = buildQueryString(opts);
+    const response = await apiClient.get(`/api/news-new/getArticles${query}`);
+    return parsePaginatedResponse(response);
+  } catch (error) {
+    const message =
+      error.response?.data?.message ||
+      error.message ||
+      "Failed to fetch articles";
+    console.error("fetchArticlesList error:", message);
+    throw new Error(message);
+  }
+};
+
+/**
+ * @param {number} [page]
+ * @param {NewsListPageOptions} [opts]
+ */
+export const fetchArticlesListPage = (page = 1, opts = {}) =>
+  fetchArticlesList(buildListPageOpts(page, opts));
+
+/**
+ * @param {NewsListPageOptions} [opts]
+ */
+export const fetchHomepageArticlesList = (opts = {}) =>
+  fetchArticlesList({
+    homepage: true,
+    date: normalizeDateFilter(opts.date) ?? undefined,
+    magazineType: opts.magazineType,
+  });
+
+// ==================================================
 // API 3 — SHORT VIDEOS
 // GET /api/video-new
 // ==================================================
@@ -554,6 +595,9 @@ export default {
   fetchSpecialNewsList,
   fetchSpecialNewsListPage,
   fetchHomepageSpecialNewsList,
+  fetchArticlesList,
+  fetchArticlesListPage,
+  fetchHomepageArticlesList,
   fetchShortVideos,
   fetchLongVideos,
   normalizeDateFilter,

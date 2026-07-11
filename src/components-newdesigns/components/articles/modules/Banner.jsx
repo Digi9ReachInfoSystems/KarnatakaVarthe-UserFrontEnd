@@ -23,7 +23,7 @@ import {
   SkeletonArrows,
   SkeletonArrow,
 } from "./styles/Banner.style";
-import { getArticles } from "../../../../services/newsApi/newsducks";
+import { fetchArticlesListPage } from "../../../../services/newapis/newapis-services";
 
 import { LanguageContext } from "../../../../context/LanguageContext";
 import { useNavigate } from "react-router-dom";
@@ -47,13 +47,13 @@ function Banner({ dateFilter = null }) {
             // Ensure dateFilter is string or null, never an object
             const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
             console.log('🔍 Banner - Clean dateFilter:', cleanDateFilter)
-            const response = await getArticles(cleanDateFilter);
+            const response = await fetchArticlesListPage(1, { date: cleanDateFilter });
             console.log('✅ Banner - API response:', response)
          
-            if (response?.success && Array.isArray(response.data.news)) {
-              console.log('📰 Banner - News count:', response.data.news.length)
+            if (response?.success && Array.isArray(response.data)) {
+              console.log('📰 Banner - News count:', response.data.length)
               if (mounted) {
-                setRawData(response.data.news);
+                setRawData(response.data);
                 setIndex(0);
               }
             } else {
