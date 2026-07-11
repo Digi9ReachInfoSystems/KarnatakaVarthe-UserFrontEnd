@@ -204,6 +204,92 @@ export const fetchHomepageAllLatestNews = (opts = {}) =>
   });
 
 // ==================================================
+// API 2c — STATE NEWS LIST (DATE + PAGINATION)
+// GET /api/news-new/getStateNews
+// ==================================================
+
+/**
+ * @param {PaginationOptions} [opts]
+ * @returns {Promise<PaginatedResponse>}
+ */
+export const fetchStateNewsList = async (opts = {}) => {
+  try {
+    const query = buildQueryString(opts);
+    const response = await apiClient.get(
+      `/api/news-new/getStateNews${query}`
+    );
+    return parsePaginatedResponse(response);
+  } catch (error) {
+    const message =
+      error.response?.data?.message ||
+      error.message ||
+      "Failed to fetch state news";
+    console.error("fetchStateNewsList error:", message);
+    throw new Error(message);
+  }
+};
+
+/**
+ * @param {number} [page]
+ * @param {NewsListPageOptions} [opts]
+ */
+export const fetchStateNewsListPage = (page = 1, opts = {}) =>
+  fetchStateNewsList(buildListPageOpts(page, opts));
+
+/**
+ * @param {NewsListPageOptions} [opts]
+ */
+export const fetchHomepageStateNewsList = (opts = {}) =>
+  fetchStateNewsList({
+    homepage: true,
+    date: normalizeDateFilter(opts.date) ?? undefined,
+    magazineType: opts.magazineType,
+  });
+
+// ==================================================
+// API 2d — SPECIAL NEWS LIST (DATE + PAGINATION)
+// GET /api/news-new/getSpecialNews
+// ==================================================
+
+/**
+ * @param {PaginationOptions} [opts]
+ * @returns {Promise<PaginatedResponse>}
+ */
+export const fetchSpecialNewsList = async (opts = {}) => {
+  try {
+    const query = buildQueryString(opts);
+    const response = await apiClient.get(
+      `/api/news-new/getSpecialNews${query}`
+    );
+    return parsePaginatedResponse(response);
+  } catch (error) {
+    const message =
+      error.response?.data?.message ||
+      error.message ||
+      "Failed to fetch special news";
+    console.error("fetchSpecialNewsList error:", message);
+    throw new Error(message);
+  }
+};
+
+/**
+ * @param {number} [page]
+ * @param {NewsListPageOptions} [opts]
+ */
+export const fetchSpecialNewsListPage = (page = 1, opts = {}) =>
+  fetchSpecialNewsList(buildListPageOpts(page, opts));
+
+/**
+ * @param {NewsListPageOptions} [opts]
+ */
+export const fetchHomepageSpecialNewsList = (opts = {}) =>
+  fetchSpecialNewsList({
+    homepage: true,
+    date: normalizeDateFilter(opts.date) ?? undefined,
+    magazineType: opts.magazineType,
+  });
+
+// ==================================================
 // API 3 — SHORT VIDEOS
 // GET /api/video-new
 // ==================================================
@@ -462,6 +548,12 @@ export default {
   fetchAllLatestNews,
   fetchAllLatestNewsPage,
   fetchHomepageAllLatestNews,
+  fetchStateNewsList,
+  fetchStateNewsListPage,
+  fetchHomepageStateNewsList,
+  fetchSpecialNewsList,
+  fetchSpecialNewsListPage,
+  fetchHomepageSpecialNewsList,
   fetchShortVideos,
   fetchLongVideos,
   normalizeDateFilter,

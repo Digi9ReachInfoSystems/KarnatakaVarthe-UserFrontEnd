@@ -1,4 +1,4 @@
-import { getSpecialNews } from "../../../../services/newsApi/newsducks"
+import { fetchSpecialNewsListPage } from "../../../../services/newapis/newapis-services"
 import {
   GlobalScrollbars,
   Wrapper,
@@ -206,11 +206,11 @@ export default function LatestNews({ dateFilter = null }) {
         // Ensure dateFilter is string or null, never an object
         const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
         console.log('🔍 LatestNews - Clean dateFilter:', cleanDateFilter)
-        const response = await getSpecialNews(cleanDateFilter)
+        const response = await fetchSpecialNewsListPage(1, { date: cleanDateFilter })
         console.log('✅ LatestNews - API response:', response)
-        if (response?.success && Array.isArray(response.data.news)) {
-          console.log('📰 LatestNews - News count:', response.data.news.length)
-          setRawData(response.data.news)
+        if (response?.success && Array.isArray(response.data)) {
+          console.log('📰 LatestNews - News count:', response.data.length)
+          setRawData(response.data)
         } else {
           console.warn('⚠️ LatestNews - No data or invalid format')
           setRawData([])

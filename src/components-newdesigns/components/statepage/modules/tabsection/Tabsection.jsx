@@ -1,5 +1,5 @@
 import React from "react"
-import { useState, useEffect, useContext } from "react"
+import { useState, useEffect, useContext, useRef, useCallback } from "react"
 import {
   Section,
   Container,
@@ -17,8 +17,6 @@ import {
   SideDate,
   SideTitle,
   SideExcerpt,
-  SeeMoreWrap,
-  SeeMoreBtn,
   SkeletonCard,
   SkeletonImage,
   SkeletonContent,
@@ -28,41 +26,102 @@ import {
   SkeletonSideItem,
 } from "./Tabsection.styles"
 import { LanguageContext } from "../../../../../context/LanguageContext"
-import { getStateNews } from "../../../../../services/newsApi/newsducks"
+import { fetchStateNewsListPage } from "../../../../../services/newapis/newapis-services"
+import LoadMoreSpinner from "../../../common/LoadMoreSpinner/LoadMoreSpinner"
 import { useNavigate } from "react-router-dom"
 
 export default function TabSection({ dateFilter = null }) {
   const [news, setNews] = useState([])
   const [rawNews, setRawNews] = useState([])
   const [loading, setLoading] = useState(true)
-  const [visibleCount, setVisibleCount] = useState(8) // Show 4 big + 4 small initially
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [page, setPage] = useState(1)
+  const [hasNextPage, setHasNextPage] = useState(false)
   const { language } = useContext(LanguageContext)
   const navigate = useNavigate()
+  const sentinelRef = useRef(null)
+  const loadingMoreRef = useRef(false)
+
+  const cleanDate =
+    dateFilter && typeof dateFilter === "string" ? dateFilter : null
 
   useEffect(() => {
-    // get news by type state
+    let cancelled = false
+
     const fetchNews = async () => {
       console.log('🔍 TabSection - Fetching with dateFilter:', dateFilter, 'Type:', typeof dateFilter)
+      setLoading(true)
+      setPage(1)
+      setHasNextPage(false)
       try {
-        // Ensure dateFilter is string or null, never an object
-        const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
-        console.log('🔍 TabSection - Clean dateFilter:', cleanDateFilter)
-        const res = await getStateNews(cleanDateFilter)
+        console.log('🔍 TabSection - Clean dateFilter:', cleanDate)
+        const res = await fetchStateNewsListPage(1, { date: cleanDate })
         console.log('✅ TabSection - API response:', res)
-        if (res?.success && Array.isArray(res.data.news)) {
-          console.log('📰 TabSection - News count:', res.data.news.length)
-          setRawNews(res.data.news)
+        if (cancelled) return
+        if (res?.success && Array.isArray(res.data)) {
+          console.log('📰 TabSection - News count:', res.data.length)
+          setRawNews(res.data)
+          setHasNextPage(Boolean(res.pagination?.hasNextPage))
+          setPage(1)
         } else {
           console.warn('⚠️ TabSection - No data or invalid format')
           setRawNews([])
+          setHasNextPage(false)
         }
       } catch (error) {
         console.error('❌ TabSection - Error:', error)
-        setRawNews([])
+        if (!cancelled) {
+          setRawNews([])
+          setHasNextPage(false)
+        }
+      } finally {
+        if (!cancelled) setLoading(false)
       }
     }
     fetchNews()
-  }, [language, dateFilter])
+    return () => {
+      cancelled = true
+    }
+  }, [language, dateFilter, cleanDate])
+
+  const loadMore = useCallback(async () => {
+    if (loadingMoreRef.current || !hasNextPage || loading) return
+    loadingMoreRef.current = true
+    setLoadingMore(true)
+    const nextPage = page + 1
+    try {
+      const res = await fetchStateNewsListPage(nextPage, { date: cleanDate })
+      if (res?.success && Array.isArray(res.data)) {
+        setRawNews((prev) => [...prev, ...res.data])
+        setHasNextPage(Boolean(res.pagination?.hasNextPage))
+        setPage(nextPage)
+      } else {
+        setHasNextPage(false)
+      }
+    } catch (error) {
+      console.error('❌ TabSection - Load more error:', error)
+    } finally {
+      loadingMoreRef.current = false
+      setLoadingMore(false)
+    }
+  }, [hasNextPage, loading, page, cleanDate])
+
+  useEffect(() => {
+    const node = sentinelRef.current
+    if (!node || loading) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          loadMore()
+        }
+      },
+      { root: null, rootMargin: "200px", threshold: 0 }
+    )
+
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [loadMore, loading, hasNextPage])
 
   // Transform raw news to localized news
   useEffect(() => {
@@ -72,10 +131,7 @@ export default function TabSection({ dateFilter = null }) {
         language === "Hindi" ? "hindi" : language === "Kannada" ? "kannada" : "English"
 
       const localized = rawNews.map((item) => {
-        // Extract proper ID from MongoDB format
         const newsId = item._id?.$oid || item._id
-        
-        // Extract proper date from MongoDB format
         const publishedDate = item.publishedAt?.$date || item.publishedAt
         
         return {
@@ -95,32 +151,15 @@ export default function TabSection({ dateFilter = null }) {
       }})
       console.log('✅ TabSection - Localized news, count:', localized.length)
       setNews(localized)
-      setLoading(false)
     } else {
       console.log('⚠️ TabSection - No rawNews to process')
       setNews([])
-      setLoading(false)
     }
   }, [language, rawNews])
 
-  // Handle show more - increase visible count by 4 for small cards only
-  const handleShowMore = () => {
-    setVisibleCount(prevCount => prevCount + 4)
-  }
+  const bigCardNews = news.slice(0, 4)
+  const allSmallCardNews = news
 
-  // Handle show less - reset to initial view
-  const handleShowLess = () => {
-    setVisibleCount(8)
-  }
-
-  // Get news to display
-  const bigCardNews = news.slice(0, 4) // First 4 as big cards (always shown)
-  const allSmallCardNews = news // All remaining news for sidebar
-  const smallCardNews = allSmallCardNews.slice(0, visibleCount - 4) // Show limited small cards
-  const hasMore = allSmallCardNews.length > (visibleCount - 4)
-  const showingAll = allSmallCardNews.length > 4 && (visibleCount - 4) >= allSmallCardNews.length
-
-  // Parse date for datetime attribute
   const parseDateTimeAttr = (dateStr) => {
     try {
       const parsed = new Date(dateStr);
@@ -130,7 +169,6 @@ export default function TabSection({ dateFilter = null }) {
     }
   };
 
-  // Shimmer loading component
   if (loading) {
     return (
       <Section aria-labelledby="news-heading">
@@ -218,7 +256,7 @@ export default function TabSection({ dateFilter = null }) {
             >
               More State News
             </h3>
-            <SideList role="list">
+            <SideList role="list" aria-busy={loadingMore}>
               {allSmallCardNews.map((item) => (
                 <SideItem
                   key={item.id}
@@ -234,31 +272,16 @@ export default function TabSection({ dateFilter = null }) {
                 </SideItem>
               ))}
             </SideList>
-
-            {/* {hasMore && (
-              <SeeMoreWrap>
-                <SeeMoreBtn
-                  type="button"
-                  onClick={handleShowMore}
-                  aria-label="Load more state news articles"
-                >
-                  Show More
-                </SeeMoreBtn>
-              </SeeMoreWrap>
-            )}
-            {showingAll && (
-              <SeeMoreWrap>
-                <SeeMoreBtn
-                  type="button"
-                  onClick={handleShowLess}
-                  aria-label="Show less state news articles"
-                >
-                  Show Less
-                </SeeMoreBtn>
-              </SeeMoreWrap>
-            )} */}
           </Sidebar>
         </Layout>
+        {hasNextPage && (
+          <div
+            ref={sentinelRef}
+            aria-hidden="true"
+            style={{ height: 1, width: "100%" }}
+          />
+        )}
+        {loadingMore && <LoadMoreSpinner />}
       </Container>
     </Section>
   )

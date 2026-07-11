@@ -23,7 +23,7 @@ import {
   SkeletonArrows,
   SkeletonArrow,
 } from "./Heronews.styles";
-import { getStateNews } from "../../../../../services/newsApi/newsducks";
+import { fetchStateNewsListPage } from "../../../../../services/newapis/newapis-services";
 import { LanguageContext } from "../../../../../context/LanguageContext";
 import { useNavigate } from "react-router-dom";
 
@@ -45,12 +45,12 @@ export default function NewsHero({ dateFilter = null }) {
         // Ensure dateFilter is string or null, never an object
         const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
         console.log('🔍 HeroNews - Clean dateFilter:', cleanDateFilter)
-        const response = await getStateNews(cleanDateFilter);
+        const response = await fetchStateNewsListPage(1, { date: cleanDateFilter });
         console.log('✅ HeroNews - API response:', response)
-        if (response?.success && Array.isArray(response.data.news)) {
-          console.log('📰 HeroNews - News count:', response.data.news.length)
+        if (response?.success && Array.isArray(response.data)) {
+          console.log('📰 HeroNews - News count:', response.data.length)
           if (mounted) {
-            setRawData(response.data.news);
+            setRawData(response.data);
             setIndex(0);
           }
         } else {

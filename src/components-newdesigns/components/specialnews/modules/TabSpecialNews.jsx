@@ -37,16 +37,25 @@ import {
   SkeletonLine,
 } from "./TabSpecialNews.styles"
 import { LanguageContext } from '../../../../context/LanguageContext'
-import { useState, useContext, useEffect } from 'react'
-import { getSpecialNews } from '../../../../services/newsApi/newsducks'
+import { useState, useContext, useEffect, useRef, useCallback } from 'react'
+import { fetchSpecialNewsListPage } from '../../../../services/newapis/newapis-services'
+import LoadMoreSpinner from '../../common/LoadMoreSpinner/LoadMoreSpinner'
 import { useNavigate } from "react-router-dom"
 
 export default function TabSpecialNews({ dateFilter = null }) {
   const [news, setNews] = useState([])
   const [rawNews, setRawNews] = useState([])
   const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [page, setPage] = useState(1)
+  const [hasNextPage, setHasNextPage] = useState(false)
   const { language } = useContext(LanguageContext)
   const navigate = useNavigate()
+  const sentinelRef = useRef(null)
+  const loadingMoreRef = useRef(false)
+
+  const cleanDate =
+    dateFilter && typeof dateFilter === "string" ? dateFilter : null
 
   // Add responsive styles
   useEffect(() => {
@@ -75,29 +84,81 @@ export default function TabSpecialNews({ dateFilter = null }) {
   }, []);
 
   useEffect(() => {
-    // get special news using new API
+    let cancelled = false
     const fetchNews = async () => {
       console.log('🔍 TabSpecialNews - Fetching news with dateFilter:', dateFilter, 'Type:', typeof dateFilter)
       setLoading(true)
+      setPage(1)
+      setHasNextPage(false)
       try {
-        // Ensure dateFilter is string or null, never an object
-        const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
-        console.log('🔍 TabSpecialNews - Clean dateFilter:', cleanDateFilter)
-        const res = await getSpecialNews(cleanDateFilter)
+        console.log('🔍 TabSpecialNews - Clean dateFilter:', cleanDate)
+        const res = await fetchSpecialNewsListPage(1, { date: cleanDate })
         console.log('✅ TabSpecialNews - API response:', res)
-        if (res?.success && Array.isArray(res.data.news)) {
-          console.log('📰 TabSpecialNews - News count:', res.data.news.length)
-          setRawNews(res.data.news)
+        if (cancelled) return
+        if (res?.success && Array.isArray(res.data)) {
+          console.log('📰 TabSpecialNews - News count:', res.data.length)
+          setRawNews(res.data)
+          setHasNextPage(Boolean(res.pagination?.hasNextPage))
+          setPage(1)
         } else {
           console.warn('⚠️ TabSpecialNews - Invalid response format:', res)
+          setRawNews([])
+          setHasNextPage(false)
         }
       } catch (error) {
         console.error('❌ TabSpecialNews - Error fetching special news:', error)
+        if (!cancelled) {
+          setRawNews([])
+          setHasNextPage(false)
+        }
+      } finally {
+        if (!cancelled) setLoading(false)
       }
-      setLoading(false)
     }
     fetchNews()
-  }, [language, dateFilter])
+    return () => {
+      cancelled = true
+    }
+  }, [language, dateFilter, cleanDate])
+
+  const loadMore = useCallback(async () => {
+    if (loadingMoreRef.current || !hasNextPage || loading) return
+    loadingMoreRef.current = true
+    setLoadingMore(true)
+    const nextPage = page + 1
+    try {
+      const res = await fetchSpecialNewsListPage(nextPage, { date: cleanDate })
+      if (res?.success && Array.isArray(res.data)) {
+        setRawNews((prev) => [...prev, ...res.data])
+        setHasNextPage(Boolean(res.pagination?.hasNextPage))
+        setPage(nextPage)
+      } else {
+        setHasNextPage(false)
+      }
+    } catch (error) {
+      console.error('❌ TabSpecialNews - Load more error:', error)
+    } finally {
+      loadingMoreRef.current = false
+      setLoadingMore(false)
+    }
+  }, [hasNextPage, loading, page, cleanDate])
+
+  useEffect(() => {
+    const node = sentinelRef.current
+    if (!node || loading) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          loadMore()
+        }
+      },
+      { root: null, rootMargin: "200px", threshold: 0 }
+    )
+
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [loadMore, loading, hasNextPage])
 
   // Transform raw news to localized news
   useEffect(() => {
@@ -107,10 +168,8 @@ export default function TabSpecialNews({ dateFilter = null }) {
         language === "Hindi" ? "hindi" : language === "Kannada" ? "kannada" : "English"
 
       const localized = rawNews.map((item) => {
-        // Extract category name based on language context
         let categoryName = "News"
         if (typeof item.category === "object" && item.category) {
-          // If category is an object, extract the name based on language
           if (langKey === "English") {
             categoryName = item.category.name || item.category.title || "News"
           } else if (langKey === "hindi") {
@@ -119,14 +178,10 @@ export default function TabSpecialNews({ dateFilter = null }) {
             categoryName = item.category.kannada || item.category.name || item.category.title || "News"
           }
         } else if (typeof item.category === "string") {
-          // If category is a string (ID), we don't have categories array to find it in, so just use "News"
           categoryName = "News"
         }
 
-        // Extract proper ID from MongoDB format
         const newsId = item._id?.$oid || item._id
-        
-        // Extract proper date from MongoDB format
         const publishedDate = item.publishedAt?.$date || item.publishedAt
 
         return {
@@ -155,11 +210,9 @@ export default function TabSpecialNews({ dateFilter = null }) {
     }
   }, [language, rawNews])
 
-  // Get the first 3 items for big cards and the rest for the scrollable list
   const bigCardNews = news.slice(0, 3)
   const smallCardNews = news.slice(3)
 
-  // Parse date for datetime attribute
   const parseDateTimeAttr = (dateStr) => {
     try {
       const parsed = new Date(dateStr);
@@ -169,7 +222,6 @@ export default function TabSpecialNews({ dateFilter = null }) {
     }
   };
 
-  // Minimal shimmer loading
   if (loading) {
     return (
       <Wrapper as="section" aria-labelledby="special-news-heading" role="region">
@@ -194,7 +246,6 @@ export default function TabSpecialNews({ dateFilter = null }) {
     )
   }
 
-  // Minimal, consistent design
   return (
     <Wrapper as="section" aria-labelledby="special-news-heading" role="region">
       <h2 id="special-news-heading" style={{ position: "absolute", left: "-9999px", top: 'auto', width: '1px', height: '1px', overflow: 'hidden' }}>
@@ -262,19 +313,15 @@ export default function TabSpecialNews({ dateFilter = null }) {
                 <FeatureExcerpt style={{ fontSize: '13px', marginBottom: '6px', color: '#444' }}>
                   {item.excerpt}
                 </FeatureExcerpt>
-                {/* <FeatureTagsRow>
-                  <FeatureBadge>{item.category}</FeatureBadge>
-                  <FeatureBadge>{item.readTime}</FeatureBadge>
-                </FeatureTagsRow> */}
               </div>
             </FeatureCard>
           ))}
         </Column>
         <Column>
-          <List>
+          <List aria-busy={loadingMore}>
             {smallCardNews.map((n, idx) => (
               <Item
-                key={idx}
+                key={n.id || idx}
                 as="article"
                 role="article"
                 aria-labelledby={`news-item-${idx}`}
@@ -306,6 +353,15 @@ export default function TabSpecialNews({ dateFilter = null }) {
           </List>
         </Column>
       </Grid>
+      {hasNextPage && (
+        <div
+          ref={sentinelRef}
+          aria-hidden="true"
+          style={{ height: 1, width: "100%" }}
+        />
+      )}
+      {loadingMore && <LoadMoreSpinner />}
     </Wrapper>
   )
 }
+

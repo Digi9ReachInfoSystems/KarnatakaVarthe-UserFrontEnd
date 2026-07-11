@@ -38,6 +38,7 @@ import { LanguageContext } from "../../../../context/LanguageContext";
 import { formatDate } from "../../../../utils/formatters";
 import { useNavigate } from "react-router-dom";
 import EmptyState from "../../districtnews/modules/DateFilter/EmptyState";
+import LoadMoreSpinner from "../../common/LoadMoreSpinner/LoadMoreSpinner";
 
 const NewsArticles = ({ dateFilter = null }) => {
   const [newsData, setNewsData] = useState([])
@@ -511,11 +512,7 @@ const NewsArticles = ({ dateFilter = null }) => {
           style={{ height: 1, width: "100%" }}
         />
       )}
-      {loadingMore && (
-        <p style={{ textAlign: "center", padding: "12px 0", opacity: 0.7 }}>
-          Loading more…
-        </p>
-      )}
+      {loadingMore && <LoadMoreSpinner />}
     </Container>
   )
 }
