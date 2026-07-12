@@ -411,6 +411,30 @@ export const fetchHomepageCombinedLatestNews = (magazineType) =>
 export const fetchHomepageCombinedNews = (magazineType) =>
   fetchHomepageCombinedLatestNews(magazineType);
 
+// ==================================================
+// TRENDING NEWS (lean, fast)
+// GET /api/news-new/trending
+// ==================================================
+
+/**
+ * @param {{ limit?: number, magazineType?: MagazineType }} [opts]
+ * @returns {Promise<{ success: boolean, data: Array }>}
+ */
+export const fetchTrendingNews = async (opts = {}) => {
+  try {
+    const query = buildQueryString({ limit: opts.limit ?? 10, magazineType: opts.magazineType });
+    const response = await apiClient.get(`/api/news-new/trending${query}`);
+    return parsePaginatedResponse(response);
+  } catch (error) {
+    const message =
+      error.response?.data?.message ||
+      error.message ||
+      "Failed to fetch trending news";
+    console.error("fetchTrendingNews error:", message);
+    throw new Error(message);
+  }
+};
+
 export const fetchHomepageShortVideos = () =>
   fetchShortVideos({ homepage: true });
 
@@ -715,6 +739,7 @@ export default {
   fetchHomepageArticles,
   fetchHomepageCombinedLatestNews,
   fetchHomepageCombinedNews,
+  fetchTrendingNews,
   fetchHomepageShortVideos,
   fetchHomepageLongVideos,
   fetchVideoCategories,
