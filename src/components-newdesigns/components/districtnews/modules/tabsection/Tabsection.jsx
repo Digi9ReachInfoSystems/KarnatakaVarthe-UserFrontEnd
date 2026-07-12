@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react"
+import React, { useContext, useState, useEffect, useRef, useCallback } from "react"
 import {
   Section,
   Container,
@@ -16,8 +16,6 @@ import {
   SideDate,
   SideTitle,
   SideExcerpt,
-  SeeMoreWrap,
-  SeeMoreBtn,
   SkeletonCard,
   SkeletonImage,
   SkeletonContent,
@@ -26,108 +24,147 @@ import {
   SkeletonExcerpt,
   SkeletonSideItem,
 } from "./Tabsection.styles"
-import { getDistrictNews } from "../../../../../services/newsApi/newsducks"
+import { fetchAllDistrictsNewsPage } from "../../../../../services/newapis/newapis-services"
 import { LanguageContext } from "../../../../../context/LanguageContext"
+import LoadMoreSpinner from "../../../common/LoadMoreSpinner/LoadMoreSpinner"
 import { useNavigate } from "react-router-dom"
 
-// Demo data for district news
-
-// Fallback posts for other tabs reuse local news data as placeholder
-
-
-  export default function TabSection({ dateFilter = null }) {
+export default function TabSection({ dateFilter = null }) {
   const [news, setNews] = useState([])
   const [rawNews, setRawNews] = useState([])
   const [loading, setLoading] = useState(true)
-  const [visibleCount, setVisibleCount] = useState(8) // Show 4 big + 4 small initially
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [page, setPage] = useState(1)
+  const [hasNextPage, setHasNextPage] = useState(false)
   const { language } = useContext(LanguageContext)
   const navigate = useNavigate()
+  const sentinelRef = useRef(null)
+  const loadingMoreRef = useRef(false)
+
+  const cleanDate =
+    dateFilter && typeof dateFilter === "string" ? dateFilter : null
 
   useEffect(() => {
-    // get news by type district
+    let cancelled = false
     const fetchNews = async () => {
-      console.log('🔍 TabSection - Fetching with dateFilter:', dateFilter, 'Type:', typeof dateFilter)
+      console.log("🔍 TabSection - Fetching with dateFilter:", dateFilter)
+      setLoading(true)
+      setPage(1)
+      setHasNextPage(false)
       try {
-        // Ensure dateFilter is string or null, never an object
-        const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
-        console.log('🔍 TabSection - Clean dateFilter:', cleanDateFilter)
-        const res = await getDistrictNews(cleanDateFilter)
-        console.log('✅ TabSection - API response:', res)
-        if (res?.success && Array.isArray(res.data.news)) {
-          console.log('📰 TabSection - News count:', res.data.news.length)
-          setRawNews(res.data.news)
+        const res = await fetchAllDistrictsNewsPage(1, { date: cleanDate })
+        if (cancelled) return
+        const list = Array.isArray(res?.data?.news) ? res.data.news : []
+        if (res?.success) {
+          setRawNews(list)
+          setHasNextPage(Boolean(res.pagination?.hasNextPage))
+          setPage(1)
         } else {
-          console.warn('⚠️ TabSection - No data or invalid format')
           setRawNews([])
+          setHasNextPage(false)
         }
       } catch (error) {
-        console.error('❌ TabSection - Error:', error)
-        setRawNews([])
+        console.error("❌ TabSection - Error:", error)
+        if (!cancelled) {
+          setRawNews([])
+          setHasNextPage(false)
+        }
+      } finally {
+        if (!cancelled) setLoading(false)
       }
     }
     fetchNews()
-  }, [language, dateFilter])
+    return () => {
+      cancelled = true
+    }
+  }, [language, dateFilter, cleanDate])
 
-  // Transform raw news to localized news
+  const loadMore = useCallback(async () => {
+    if (loadingMoreRef.current || !hasNextPage || loading) return
+    loadingMoreRef.current = true
+    setLoadingMore(true)
+    const nextPage = page + 1
+    try {
+      const res = await fetchAllDistrictsNewsPage(nextPage, { date: cleanDate })
+      const list = Array.isArray(res?.data?.news) ? res.data.news : []
+      if (res?.success && list.length > 0) {
+        setRawNews((prev) => [...prev, ...list])
+        setHasNextPage(Boolean(res.pagination?.hasNextPage))
+        setPage(nextPage)
+      } else {
+        setHasNextPage(false)
+      }
+    } catch (error) {
+      console.error("❌ TabSection - Load more error:", error)
+    } finally {
+      loadingMoreRef.current = false
+      setLoadingMore(false)
+    }
+  }, [hasNextPage, loading, page, cleanDate])
+
+  useEffect(() => {
+    const node = sentinelRef.current
+    if (!node || loading) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          loadMore()
+        }
+      },
+      { root: null, rootMargin: "200px", threshold: 0 }
+    )
+
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [loadMore, loading, hasNextPage])
+
   useEffect(() => {
     if (rawNews.length > 0) {
-      console.log('🔄 TabSection - Processing rawNews, count:', rawNews.length)
       const langKey =
         language === "Hindi" ? "hindi" : language === "Kannada" ? "kannada" : "English"
-      
-      const localized = rawNews.map((item) => {
-        // Extract proper ID from MongoDB format
-        const newsId = item._id?.$oid || item._id
-        
-        // Extract proper date from MongoDB format
-        const publishedDate = item.publishedAt?.$date || item.publishedAt
-        
-        return {
-        _id: newsId,
-        id: newsId,
-        title: item[langKey]?.title?.slice(0, 50) + "..." || item.title || "",
-        excerpt: item[langKey]?.description?.slice(0, 150) + "..." || item.description || "",
-        date: publishedDate
-          ? new Date(publishedDate).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })
-          : "",
-        image: item.newsImage || "/placeholder.svg",
-        alt: item.title || "",
-      }})
 
-      console.log('✅ TabSection - Localized news, count:', localized.length)
+      const localized = rawNews.map((item) => {
+        const newsId = item._id?.$oid || item._id
+        const publishedDate = item.publishedAt?.$date || item.publishedAt
+
+        return {
+          _id: newsId,
+          id: newsId,
+          title: item[langKey]?.title?.slice(0, 50) + "..." || item.title || "",
+          excerpt:
+            item[langKey]?.description?.slice(0, 150) + "..." ||
+            item.description ||
+            "",
+          date: publishedDate
+            ? new Date(publishedDate).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })
+            : "",
+          image: item.newsImage || "/placeholder.svg",
+          alt: item.title || "",
+        }
+      })
+
       setNews(localized)
-      setLoading(false)
     } else {
-      console.log('⚠️ TabSection - No rawNews to process')
       setNews([])
-      setLoading(false)
     }
   }, [language, rawNews])
 
-  // Handle show more - increase visible count by 4 for small cards only
-  const handleShowMore = () => {
-    setVisibleCount(prevCount => prevCount + 4)
+  const bigCardNews = news.slice(0, 4)
+  const allSmallCardNews = news.slice(4)
+
+  const parseDateTimeAttr = (dateStr) => {
+    try {
+      return new Date(dateStr).toISOString().split("T")[0]
+    } catch {
+      return ""
+    }
   }
 
-  // Handle show less - reset to initial view
-  const handleShowLess = () => {
-    setVisibleCount(8)
-  }
-
-  // Get news to display
-  const bigCardNews = news.slice(0, 4) // First 4 as big cards (always shown)
-  const allSmallCardNews = news.slice(4) // All remaining news for sidebar
-  const smallCardNews = allSmallCardNews.slice(0, visibleCount - 4) // Show limited small cards
-  const hasMore = allSmallCardNews.length > (visibleCount - 4)
-  const showingAll = allSmallCardNews.length > 4 && (visibleCount - 4) >= allSmallCardNews.length
-
- 
-
-  // Shimmer loading component
   if (loading) {
     return (
       <Section aria-labelledby="news-heading">
@@ -169,20 +206,20 @@ import { useNavigate } from "react-router-dom"
     )
   }
 
-  // Parse date for datetime attribute
-  const parseDateTimeAttr = (dateStr) => {
-    try {
-      const parsed = new Date(dateStr);
-      return parsed.toISOString().split('T')[0];
-    } catch {
-      return '';
-    }
-  };
-
   return (
     <Section as="section" aria-labelledby="news-heading" role="region">
       <Container>
-        <h2 id="news-heading" style={{ position: "absolute", left: "-9999px", top: 'auto', width: '1px', height: '1px', overflow: 'hidden' }}>
+        <h2
+          id="news-heading"
+          style={{
+            position: "absolute",
+            left: "-9999px",
+            top: "auto",
+            width: "1px",
+            height: "1px",
+            overflow: "hidden",
+          }}
+        >
           District News
         </h2>
 
@@ -190,25 +227,29 @@ import { useNavigate } from "react-router-dom"
           <div role="main">
             <Grid>
               {bigCardNews.map((p) => (
-                <Card 
-                  key={p.id} 
-                  as="article" 
+                <Card
+                  key={p.id}
+                  as="article"
                   role="article"
                   aria-labelledby={`card-title-${p.id}`}
                   tabIndex="0"
                 >
                   <ImageWrap>
-                    <img 
-                      src={p.image || "/placeholder.svg"} 
+                    <img
+                      src={p.image || "/placeholder.svg"}
                       alt={p.alt || `Image for ${p.title}`}
                       loading="lazy"
                       onClick={() => navigate(`/newsdetails/${p._id}`)}
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: "pointer" }}
                     />
                   </ImageWrap>
                   <Content>
-                    <DateText as="time" dateTime={parseDateTimeAttr(p.date)}>{p.date}</DateText>
-                    <Title id={`card-title-${p.id}`} as="h3">{p.title}</Title>
+                    <DateText as="time" dateTime={parseDateTimeAttr(p.date)}>
+                      {p.date}
+                    </DateText>
+                    <Title id={`card-title-${p.id}`} as="h3">
+                      {p.title}
+                    </Title>
                     <Excerpt>{p.excerpt}</Excerpt>
                   </Content>
                 </Card>
@@ -216,39 +257,56 @@ import { useNavigate } from "react-router-dom"
             </Grid>
           </div>
 
-          <Sidebar 
-            as="aside" 
-            role="complementary" 
+          <Sidebar
+            as="aside"
+            role="complementary"
             aria-labelledby="small-news-heading"
           >
-            <h3 
-              id="small-news-heading" 
-              style={{ position: 'absolute', left: '-9999px', top: 'auto', width: '1px', height: '1px', overflow: 'hidden' }}
+            <h3
+              id="small-news-heading"
+              style={{
+                position: "absolute",
+                left: "-9999px",
+                top: "auto",
+                width: "1px",
+                height: "1px",
+                overflow: "hidden",
+              }}
             >
               More District News
             </h3>
-            <SideList role="list">
+            <SideList role="list" aria-busy={loadingMore}>
               {allSmallCardNews.map((item) => (
-                <SideItem 
-                  key={item.id} 
+                <SideItem
+                  key={item.id}
                   role="listitem"
                   tabIndex="0"
                   aria-labelledby={`small-card-${item.id}`}
                   onClick={() => navigate(`/newsdetails/${item._id}`)}
-                  style={{ cursor: 'pointer' }}
+                  style={{ cursor: "pointer" }}
                 >
-                  <SideDate as="time" dateTime={parseDateTimeAttr(item.date)}>{item.date}</SideDate>
-                  <SideTitle id={`small-card-${item.id}`} as="h4">{item.title}</SideTitle>
+                  <SideDate as="time" dateTime={parseDateTimeAttr(item.date)}>
+                    {item.date}
+                  </SideDate>
+                  <SideTitle id={`small-card-${item.id}`} as="h4">
+                    {item.title}
+                  </SideTitle>
                   <SideExcerpt>{item.excerpt}</SideExcerpt>
                 </SideItem>
               ))}
             </SideList>
-            
-  
           </Sidebar>
         </Layout>
+
+        {hasNextPage && (
+          <div
+            ref={sentinelRef}
+            aria-hidden="true"
+            style={{ height: 1, width: "100%" }}
+          />
+        )}
+        {loadingMore && <LoadMoreSpinner />}
       </Container>
     </Section>
   )
 }
-

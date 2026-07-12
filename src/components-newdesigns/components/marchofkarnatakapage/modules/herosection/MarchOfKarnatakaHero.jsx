@@ -13,11 +13,10 @@ import {
     HeroCta,
 
 } from "./MarchOfKarnatakaHero.styles.js"
-import LatestNotification from '../../../varthaJanapada/modules/LatestNotification.jsx'
-import { m } from 'framer-motion'
+import HeroShortVideos from '../../../varthaJanapada/modules/heroshorts/HeroShortVideos.jsx'
 import Services from '../../../varthaJanapada/modules/servicess/Services.jsx'
 
-function MarchOfKarnatakaHero( {notifications = []} ) {
+function MarchOfKarnatakaHero() {
     const { language } = useContext(LanguageContext);
     const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
@@ -69,7 +68,7 @@ function MarchOfKarnatakaHero( {notifications = []} ) {
   return (
    <HeroLayout aria label="March of Karnataka Hero Section">
           {/* Left: Hero Content */}
-    <Services />
+    <Services magazineType="magazine2" />
     <HeroRoot aria-label="Featured magazines"
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
@@ -85,8 +84,8 @@ function MarchOfKarnatakaHero( {notifications = []} ) {
                           </HeroCta>
                         </HeroContent>
     </HeroRoot>
-          {/* Right: Latest notifications */}
-          <LatestNotification notifications={notifications} />
+          {/* Right: Hero Shorts */}
+          <HeroShortVideos />
     </HeroLayout>
   )
 }

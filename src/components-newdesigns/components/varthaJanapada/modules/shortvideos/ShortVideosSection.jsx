@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useContext } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { getVideos } from "../../../../../services/videoApi/videoApi"
+import { fetchHomepageShortVideos } from "../../../../../services/newapis/newapis-services"
 import { LanguageContext } from "../../../../../context/LanguageContext"
 import {
   CarouselContainer,
@@ -24,6 +24,32 @@ import {
   ShimmerTitle,
   ViewMoreButton,
 } from "./ShortVideosSection.styles"
+
+function getVideoId(video, index) {
+  return video._id?.$oid || video._id || String(index)
+}
+
+function getVideoTitle(video, language) {
+  const langKey =
+    language === "English"
+      ? "English"
+      : language === "Hindi"
+        ? "hindi"
+        : "kannada"
+
+  return (
+    video?.[langKey]?.title ||
+    video?.English?.title ||
+    video?.kannada?.title ||
+    video?.hindi?.title ||
+    video?.title ||
+    ""
+  )
+}
+
+function getVideoUrl(video) {
+  return video?.video_url || video?.videoUrl || ""
+}
 
 const  ShortsCarousel = () => {
   const [videos, setVideos] = useState([])
@@ -66,7 +92,7 @@ const  ShortsCarousel = () => {
     const fetchVideos = async () => {
       try {
         setLoading(true)
-        const response = await getVideos()
+        const response = await fetchHomepageShortVideos()
         if (response.success && Array.isArray(response.data)) {
           setVideos(response.data)
         } else {
@@ -306,19 +332,24 @@ const  ShortsCarousel = () => {
                     </ShimmerContainer>
                   </VideoCard>
                 ))
-            : videos.map((video, index) => (
-                <VideoCard key={video._id}   onClick={() => handleVideoClick(video._id)}role="listitem">
-                  {playingVideoId === video._id ? (
+            : videos.map((video, index) => {
+                const id = getVideoId(video, index)
+                const title = getVideoTitle(video, language) || "Video"
+                const url = getVideoUrl(video)
+
+                return (
+                <VideoCard key={id} onClick={() => handleVideoClick(id)} role="listitem">
+                  {playingVideoId === id ? (
                     <VideoPlayer>
                       <video
-                        ref={(el) => (videoRefs.current[video._id] = el)}
+                        ref={(el) => (videoRefs.current[id] = el)}
                         controls
                         autoPlay
                         loop
                         src={
-                          video.video_url || "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                          url || "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
                         }
-                        aria-label={`Playing: ${video[language.toLowerCase()]?.title || video.title || "Farmers' Empowerment"}`}
+                        aria-label={`Playing: ${title}`}
                       >
                         Your browser does not support the video tag.
                       </video>
@@ -336,18 +367,18 @@ const  ShortsCarousel = () => {
                     <VideoThumbnail>
                       <img
                         src={video.thumbnail || "/placeholder.svg?height=400&width=225"}
-                        alt={video[language.toLowerCase()]?.title || video.title || "Video thumbnail"}
+                        alt={title}
                       />
                       <VideoOverlay aria-hidden="true">
                         <PlayButton
-                          onClick={() => handlePlayClick(video._id)}
-                          aria-label={`Play ${video.title || "video"}`}
+                          onClick={() => handlePlayClick(id)}
+                          aria-label={`Play ${title}`}
                           tabIndex="0"
                           role="button"
                           onKeyDown={(e) => {
                             if (e.key === "Enter" || e.key === " ") {
                               e.preventDefault()
-                              handlePlayClick(video._id)
+                              handlePlayClick(id)
                             }
                           }}
                         />
@@ -356,13 +387,14 @@ const  ShortsCarousel = () => {
                   )}
                   <VideoInfo>
                     <VideoTitle>
-                      {limitWords(video[language.toLowerCase()]?.title || video.title || "Farmers' Empowerment", language)}
+                      {limitWords(title, language)}
                     </VideoTitle>
                     <ChannelInfo>
                     </ChannelInfo>
                   </VideoInfo>
                 </VideoCard>
-              ))}
+                )
+              })}
         </CarouselTrack>
       </CarouselWrapper>
 

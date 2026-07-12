@@ -31,28 +31,22 @@ export const PhotosApi = {
   },
   getPhotoCategories: async () => {
     try {
-      // Use axios directly with full URL - same pattern as LatestNotification.js
-      const response = await axios.get('https://varthe.digi9.co.in/api/photo-category/list');
-      
+      const response = await apiClient.get("/api/photo-category");
       if (!response || !response.data) {
         throw new Error("No data received from photo categories API");
       }
-      
-      // API response structure: { success: true, data: { photo_categories: [...], ... } }
-      // So we need to access response.data.data.photo_categories
-      const categories = response.data?.data?.photo_categories || response.data?.photo_categories || [];
-      
-      // Normalize the category data
-      const normalizedCategories = categories.map(category => ({
+      const categories =
+        response.data?.data ||
+        (Array.isArray(response.data) ? response.data : []);
+
+      return categories.map((category) => ({
         _id: category._id?.$oid || category._id,
-        name: category.category_name || category.english,
-        english: category.english,
+        name: category.name || category.category_name || category.english,
+        english: category.english || category.category_name || category.name,
         hindi: category.hindi,
         kannada: category.kannada,
-        date_created: category.date_created?.$date || category.date_created
+        date_created: category.createdTime || category.date_created,
       }));
-      
-      return normalizedCategories;
     } catch (err) {
       console.error("Error fetching photo categories:", err);
       throw err;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useState, useRef, useCallback } from "react";
 import {
   Container,
   PhotoCard,
@@ -16,8 +16,12 @@ import {
   FilterLabel,
 } from "./ShowPhotos.Styles";
 import { LanguageContext } from "../../../context/LanguageContext";
-import { useContext, useEffect, useState } from "react";
-import { PhotosApi } from "../../../services/gallery/GalleryApi";
+import {
+  fetchPhotoCategories,
+  fetchPhotosPage,
+} from "../../../services/newapis/newapis-services";
+import LoadMoreSpinner from "../common/LoadMoreSpinner/LoadMoreSpinner";
+
 const titleText = {
   English: "Photos",
   Kannada: "ಫೋಟೋಗಳು",
@@ -36,31 +40,63 @@ const noPhotosText = {
   Hindi: "कोई फोटो उपलब्ध नहीं",
 };
 
+const PAGE_LIMIT = 20;
+
 function ShowPhotos() {
   const [photos, setPhotos] = useState([]);
-  const [allPhotos, setAllPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(null);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [categories, setCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState(false);
   const { language } = useContext(LanguageContext);
+  const sentinelRef = useRef(null);
+  const loadingMoreRef = useRef(false);
 
-  // Fetch categories
+  const formatPhoto = (photo) => {
+    const langKey =
+      language === "English"
+        ? "English"
+        : language === "Hindi"
+          ? "hindi"
+          : "kannada";
+    const title =
+      photo[langKey] ||
+      photo.english ||
+      photo.English ||
+      photo.title ||
+      "Untitled";
+    const id = photo._id?.$oid || photo._id;
+
+    return {
+      src: photo.photoImage,
+      alt: title,
+      title,
+      id,
+      english: photo.English || photo.english,
+      kannada: photo.kannada,
+      hindi: photo.hindi,
+      categoryId:
+        typeof photo.category === "object"
+          ? photo.category?._id || photo.category?.$oid
+          : photo.category,
+    };
+  };
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         setCategoriesLoading(true);
-        const response = await PhotosApi.getPhotoCategories();
-        if (response && Array.isArray(response) && response.length > 0) {
-          setCategories(response);
-        } else {
-          console.warn("Empty photo category API response.");
-        }
-      } catch (error) {
-        console.error("Error fetching photo categories:", error);
+        const response = await fetchPhotoCategories();
+        setCategories(Array.isArray(response) ? response : []);
+      } catch (err) {
+        console.error("Error fetching photo categories:", err);
+        setCategories([]);
       } finally {
         setCategoriesLoading(false);
       }
@@ -69,78 +105,88 @@ function ShowPhotos() {
     fetchCategories();
   }, []);
 
-  // Fetch photos
   useEffect(() => {
+    let cancelled = false;
     const fetchPhotos = async () => {
+      setLoading(true);
+      setError(null);
+      setPage(1);
+      setHasNextPage(false);
+      setSelectedPhoto(null);
       try {
-        setLoading(true);
-        const response = await PhotosApi.getAllPhotos();
-        console.log("Fetched photos:", response);
-        // Filter only approved photos and map to the format we need
-        const formattedPhotos = response
-          .filter((photo) => photo.status === "approved")
-          .map((photo) => {
-            // Get title based on language
-            const langKey =
-              language === "English"
-                ? "english"
-                : language === "Hindi"
-                ? "hindi"
-                : "kannada";
-
-            const title = photo[langKey] || photo.title || "Untitled";
-
-            // Handle category - support both string ID and object format
-            let categoryId = null;
-            if (photo.category) {
-              // Handle MongoDB ObjectId format ($oid) or plain string
-              if (typeof photo.category === "object") {
-                categoryId = photo.category.$oid || photo.category._id;
-              } else {
-                categoryId = photo.category;
-              }
-            }
-
-            return {
-              src: photo.photoImage,
-              alt: title,
-              title: title,
-              id: photo._id,
-              english: photo.english,
-              kannada: photo.kannada,
-              hindi: photo.hindi,
-              categoryId: categoryId,
-            };
-          });
-
-        setAllPhotos(formattedPhotos);
-        setError(null);
+        const response = await fetchPhotosPage(1, {
+          limit: PAGE_LIMIT,
+          category: activeCategory || undefined,
+        });
+        if (cancelled) return;
+        if (response?.success && Array.isArray(response.data)) {
+          setPhotos(response.data.map(formatPhoto));
+          setHasNextPage(Boolean(response.pagination?.hasNextPage));
+          setPage(1);
+        } else {
+          setPhotos([]);
+          setHasNextPage(false);
+          setError("Failed to load photos");
+        }
       } catch (err) {
         console.error("Error loading gallery photos:", err);
-        setError("Failed to load photos");
+        if (!cancelled) {
+          setPhotos([]);
+          setHasNextPage(false);
+          setError("Failed to load photos");
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
 
     fetchPhotos();
-  }, [language]);
+    return () => {
+      cancelled = true;
+    };
+  }, [language, activeCategory]);
 
-  // Filter photos based on active category
-  useEffect(() => {
-    if (activeCategory === null) {
-      // Show all photos
-      setPhotos(allPhotos);
-    } else {
-      // Filter by category ID
-      const filtered = allPhotos.filter((photo) => {
-        return photo.categoryId === activeCategory;
+  const loadMore = useCallback(async () => {
+    if (loadingMoreRef.current || !hasNextPage || loading) return;
+    loadingMoreRef.current = true;
+    setLoadingMore(true);
+    const nextPage = page + 1;
+    try {
+      const response = await fetchPhotosPage(nextPage, {
+        limit: PAGE_LIMIT,
+        category: activeCategory || undefined,
       });
-      setPhotos(filtered);
+      if (response?.success && Array.isArray(response.data)) {
+        setPhotos((prev) => [...prev, ...response.data.map(formatPhoto)]);
+        setHasNextPage(Boolean(response.pagination?.hasNextPage));
+        setPage(nextPage);
+      } else {
+        setHasNextPage(false);
+      }
+    } catch (err) {
+      console.error("Error loading more photos:", err);
+    } finally {
+      loadingMoreRef.current = false;
+      setLoadingMore(false);
     }
-    // Reset lightbox when category changes
-    setSelectedPhoto(null);
-  }, [activeCategory, allPhotos]);
+  }, [hasNextPage, loading, page, activeCategory, language]);
+
+  useEffect(() => {
+    const node = sentinelRef.current;
+    if (!node || loading) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          loadMore();
+        }
+      },
+      { root: null, rootMargin: "200px", threshold: 0 }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [loadMore, loading, hasNextPage]);
 
   const openLightbox = (photo, index) => {
     setSelectedPhoto(photo);
@@ -165,16 +211,15 @@ function ShowPhotos() {
     setSelectedPhoto(photos[prevIndex]);
   };
 
-  // Get localized category name
   const getLocalizedCategoryName = (category) => {
     if (!category) return "";
     if (language === "English") {
-      return category.name || category.english || "";
-    } else if (language === "Hindi") {
-      return category.hindi || category.name || "";
-    } else {
-      return category.kannada || category.name || "";
+      return category.english || category.name || "";
     }
+    if (language === "Hindi") {
+      return category.hindi || category.name || "";
+    }
+    return category.kannada || category.name || "";
   };
 
   const handleTabClick = (categoryId) => {
@@ -192,13 +237,12 @@ function ShowPhotos() {
       window.addEventListener("keydown", handleKeyDown);
       return () => window.removeEventListener("keydown", handleKeyDown);
     }
-  }, [selectedPhoto, currentIndex]);
+  }, [selectedPhoto, currentIndex, photos]);
 
   return (
     <Container>
       <SectionHeader>
         <Title>{titleText[language]}</Title>
-        {/* Category Dropdown Filter */}
         {!categoriesLoading && categories.length > 0 && (
           <CategoryDropdownContainer>
             <FilterLabel>
@@ -215,7 +259,11 @@ function ShowPhotos() {
               >
                 <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
               </svg>
-              {language === "English" ? "Filter:" : language === "Hindi" ? "फ़िल्टर:" : "ಫಿಲ್ಟರ್:"}
+              {language === "English"
+                ? "Filter:"
+                : language === "Hindi"
+                  ? "फ़िल्टर:"
+                  : "ಫಿಲ್ಟರ್:"}
             </FilterLabel>
             <CategorySelectWrapper>
               <CategorySelect
@@ -271,16 +319,27 @@ function ShowPhotos() {
         </Photos>
       ) : (
         <Photos>
-          <div style={{
-            textAlign: "center",
-            padding: "40px 20px",
-            color: "#666",
-            fontSize: "18px",
-          }}>
-            {noPhotosText[language]}
+          <div
+            style={{
+              textAlign: "center",
+              padding: "40px 20px",
+              color: "#666",
+              fontSize: "18px",
+            }}
+          >
+            {error || noPhotosText[language]}
           </div>
         </Photos>
       )}
+
+      {hasNextPage && (
+        <div
+          ref={sentinelRef}
+          aria-hidden="true"
+          style={{ height: 1, width: "100%" }}
+        />
+      )}
+      {loadingMore && <LoadMoreSpinner />}
 
       {selectedPhoto && (
         <div
@@ -299,7 +358,6 @@ function ShowPhotos() {
           }}
           onClick={closeLightbox}
         >
-          {/* Close Button */}
           <button
             onClick={closeLightbox}
             style={{
@@ -330,7 +388,6 @@ function ShowPhotos() {
             ×
           </button>
 
-          {/* Previous Button */}
           {photos.length > 1 && (
             <button
               onClick={(e) => {
@@ -365,7 +422,6 @@ function ShowPhotos() {
             </button>
           )}
 
-          {/* Next Button */}
           {photos.length > 1 && (
             <button
               onClick={(e) => {
@@ -400,7 +456,6 @@ function ShowPhotos() {
             </button>
           )}
 
-          {/* Image Container */}
           <div
             onClick={(e) => e.stopPropagation()}
             style={{

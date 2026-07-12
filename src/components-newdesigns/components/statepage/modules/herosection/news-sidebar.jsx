@@ -9,7 +9,7 @@ import {
 } from "./news-sidebar.styles"
 import { useContext, useEffect, useState } from "react"
 import { LanguageContext } from "../../../../../context/LanguageContext"
-import { getStateNews } from "../../../../../services/newsApi/newsducks"
+import { fetchStateNewsListPage } from "../../../../../services/newapis/newapis-services"
 import { useNavigate } from "react-router-dom"
 
 export default function NewsSidebar({
@@ -48,11 +48,11 @@ useEffect(() => {
       // Ensure dateFilter is string or null, never an object
       const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
       console.log('🔍 NewsSidebar - Clean dateFilter:', cleanDateFilter)
-      const response = await getStateNews(cleanDateFilter)
+      const response = await fetchStateNewsListPage(1, { date: cleanDateFilter })
       console.log('✅ NewsSidebar - API response:', response)
-      if (response?.success && Array.isArray(response.data.news)) {
-        console.log('📰 NewsSidebar - News count:', response.data.news.length)
-        setRawData(response.data.news)
+      if (response?.success && Array.isArray(response.data)) {
+        console.log('📰 NewsSidebar - News count:', response.data.length)
+        setRawData(response.data)
       } else {
         console.warn('⚠️ NewsSidebar - No data or invalid format')
         setRawData([])

@@ -121,7 +121,7 @@ export const TitleSection = styled.div`
     flex: none;
   }
 @media (max-width: ${theme.breakpoints.desktop}) {
-  padding: 18px ${theme.spacing(2)} 0 ${theme.spacing(2)};
+  padding: ${theme.spacing(1)} ${theme.spacing(2)} 0 ${theme.spacing(2)};
 }
 
   @media (max-width: ${theme.breakpoints.mobile}) {

@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { LanguageContext } from "../../../context/LanguageContext";
-import { PhotosApi } from "../../../services/gallery/GalleryApi";
+import { fetchDistrictsList } from "../../../services/newapis/newapis-services";
 import {
   MobileDistrictSubmenu,
   MobileDistrictList,
@@ -18,7 +18,7 @@ const MobileDistrictMenu = ({ isOpen, onDistrictSelect }) => {
     const fetchDistricts = async () => {
       try {
         setLoading(true);
-        const response = await PhotosApi.getDistricts();
+        const response = await fetchDistrictsList();
         if (response && Array.isArray(response) && response.length > 0) {
           setDistricts(response);
         } else {

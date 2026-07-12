@@ -9,7 +9,7 @@ import {
 import { useContext, useEffect, useState } from "react"
 import { LanguageContext } from "../../../../context/LanguageContext"
 import { useNavigate } from "react-router-dom"
-import { getArticles } from "../../../../services/newsApi/newsducks"
+import { fetchArticlesListPage } from "../../../../services/newapis/newapis-services"
 import SidebarCard from "./sidebarCard"
 function SideBar({ dateFilter = null }) {
     //side for articles page
@@ -26,11 +26,11 @@ useEffect(() => {
       // Ensure dateFilter is string or null, never an object
       const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
       console.log('🔍 SideBar - Clean dateFilter:', cleanDateFilter)
-      const response = await getArticles(cleanDateFilter)
+      const response = await fetchArticlesListPage(1, { date: cleanDateFilter })
       console.log('✅ SideBar - API response:', response)
-      if (response?.success && Array.isArray(response.data.news)) {
-        console.log('📰 SideBar - News count:', response.data.news.length)
-        setRawData(response.data.news)
+      if (response?.success && Array.isArray(response.data)) {
+        console.log('📰 SideBar - News count:', response.data.length)
+        setRawData(response.data)
       } else {
         console.warn('⚠️ SideBar - No data or invalid format')
         setRawData([])

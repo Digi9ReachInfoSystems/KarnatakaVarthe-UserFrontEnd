@@ -9,7 +9,7 @@ import {
 } from "./news-sidebar.styles"
 import { useContext, useState, useEffect } from "react"
 import { LanguageContext } from "../../../../../../context/LanguageContext"
-import { PhotosApi } from "../../../../../../services/gallery/GalleryApi"
+import { fetchDistrictNewsBySlug } from "../../../../../../services/newapis/newapis-services"
 import { useNavigate } from "react-router-dom"
 
 export default function NewsSidebar({ districtSlug, dateFilter = null }) {
@@ -29,8 +29,9 @@ export default function NewsSidebar({ districtSlug, dateFilter = null }) {
       }
       
       try {
-        const response = await PhotosApi.getDistrictNews(districtSlug, dateFilter)
-        const newsData = response?.news || []
+        const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
+        const response = await fetchDistrictNewsBySlug(districtSlug, 1, { date: cleanDateFilter })
+        const newsData = response?.data?.news || []
         setRawData(newsData)
       } catch (error) {
         console.error("Error fetching district news:", error)

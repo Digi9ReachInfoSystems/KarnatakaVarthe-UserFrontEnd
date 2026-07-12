@@ -55,6 +55,8 @@ import SavedListItems from "./components-newdesigns/components/SavedItems/SavedL
 import ShowPhotos from "./components-newdesigns/components/photos/ShowPhotos";
 import Settings from "./components-newdesigns/components/settings/modules/Settings";
 import Articles from "./components-newdesigns/components/articles/Articles";
+import SpecialPublicationPage from "./components-newdesigns/pages/specialpublication/SpecialPublicationPage";
+import SpecialPublicationDetailPage from "./components-newdesigns/pages/specialpublication/SpecialPublicationDetailPage";
 import ScrollToTop from "./components/ScrollToTop";
 
 const App = () => {
@@ -114,6 +116,8 @@ const App = () => {
                   <Route path="/district" element={<DistrictNewspage />} />
                   <Route path="/districtnewsdetails/:id" element={<DistrictNewsId />} />
                   <Route path="/specialnews" element={<SpecialNews />} />
+                  <Route path="/specialpublication" element={<SpecialPublicationPage />} />
+                  <Route path="/specialpublication/:id" element={<SpecialPublicationDetailPage />} />
                   <Route path="/news" element={<News />} />
                   <Route path="/marchofkarnataka" element={<MarchofKarnatakaV1 />} />
                   <Route path="/newsdetails/:id" element={<NewsId />} />

@@ -1,4 +1,4 @@
-import { useEffect, useContext, useState } from "react";
+import { useEffect, useContext, useState, useRef, useCallback } from "react";
 import {
   Container,
   GridLayout,
@@ -33,47 +33,108 @@ import {
   SkeletonPopularItem,
   SkeletonThumbnail,
 } from "./NewsArticles.styles"
-import { getAllNews } from "../../../../services/newsApi/newsducks";
+import { fetchAllLatestNewsPage } from "../../../../services/newapis/newapis-services";
 import { LanguageContext } from "../../../../context/LanguageContext";
 import { formatDate } from "../../../../utils/formatters";
 import { useNavigate } from "react-router-dom";
 import EmptyState from "../../districtnews/modules/DateFilter/EmptyState";
+import LoadMoreSpinner from "../../common/LoadMoreSpinner/LoadMoreSpinner";
 
 const NewsArticles = ({ dateFilter = null }) => {
   const [newsData, setNewsData] = useState([])
   const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
   const [rawData, setRawData] = useState([])
+  const [page, setPage] = useState(1)
+  const [hasNextPage, setHasNextPage] = useState(false)
   const [latestNews, setLatestNews] = useState([])
   const { language } = useContext(LanguageContext)
   const [popularNews, setPopularNews] = useState([])
   const [activeTab, setActiveTab] = useState('latest')
   const navigate = useNavigate()
-  // Parse date for datetime attribute
- useEffect(() => {
-  const fetchNews = async () => {
-    console.log('🔍 NewsArticles - Fetching with dateFilter:', dateFilter, 'Type:', typeof dateFilter)
-    setLoading(true)
+  const sentinelRef = useRef(null)
+  const loadingMoreRef = useRef(false)
+
+  const cleanDate =
+    dateFilter && typeof dateFilter === "string" ? dateFilter : null
+
+  useEffect(() => {
+    let cancelled = false
+
+    const fetchNews = async () => {
+      console.log('🔍 NewsArticles - Fetching with dateFilter:', dateFilter, 'Type:', typeof dateFilter)
+      setLoading(true)
+      setPage(1)
+      setHasNextPage(false)
+      try {
+        console.log('🔍 NewsArticles - Clean dateFilter:', cleanDate)
+        const response = await fetchAllLatestNewsPage(1, { date: cleanDate })
+        console.log('✅ NewsArticles - API response:', response)
+        if (cancelled) return
+        if (response?.success && Array.isArray(response.data)) {
+          console.log('📰 NewsArticles - News count:', response.data.length)
+          setRawData(response.data)
+          setHasNextPage(Boolean(response.pagination?.hasNextPage))
+          setPage(1)
+        } else {
+          console.warn('⚠️ NewsArticles - No data or invalid format')
+          setRawData([])
+          setHasNextPage(false)
+        }
+      } catch (error) {
+        console.error('❌ NewsArticles - Error:', error)
+        if (!cancelled) {
+          setRawData([])
+          setHasNextPage(false)
+        }
+      }
+      if (!cancelled) setLoading(false)
+    }
+    fetchNews()
+    return () => {
+      cancelled = true
+    }
+  }, [language, dateFilter, cleanDate])
+
+  const loadMore = useCallback(async () => {
+    if (loadingMoreRef.current || !hasNextPage || loading) return
+    loadingMoreRef.current = true
+    setLoadingMore(true)
+    const nextPage = page + 1
     try {
-      // Ensure dateFilter is string or null
-      const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
-      console.log('🔍 NewsArticles - Clean dateFilter:', cleanDateFilter)
-      const response = await getAllNews(cleanDateFilter)
-      console.log('✅ NewsArticles - API response:', response)
-      if (response?.success && Array.isArray(response.data.news)) {
-        console.log('📰 NewsArticles - News count:', response.data.news.length)
-        setRawData(response.data.news)
+      const response = await fetchAllLatestNewsPage(nextPage, { date: cleanDate })
+      if (response?.success && Array.isArray(response.data)) {
+        setRawData((prev) => [...prev, ...response.data])
+        setHasNextPage(Boolean(response.pagination?.hasNextPage))
+        setPage(nextPage)
       } else {
-        console.warn('⚠️ NewsArticles - No data or invalid format')
-        setRawData([])
+        setHasNextPage(false)
       }
     } catch (error) {
-      console.error('❌ NewsArticles - Error:', error)
-      setRawData([])
+      console.error('❌ NewsArticles - Load more error:', error)
+    } finally {
+      loadingMoreRef.current = false
+      setLoadingMore(false)
     }
-    setLoading(false)
-  }
-  fetchNews()
- }, [language, dateFilter])
+  }, [hasNextPage, loading, page, cleanDate])
+
+  useEffect(() => {
+    const node = sentinelRef.current
+    if (!node || loading) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          loadMore()
+        }
+      },
+      { root: null, rootMargin: "200px", threshold: 0 }
+    )
+
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [loadMore, loading, hasNextPage])
+
  // get popular news
  useEffect(() => {
   if (rawData.length > 0) {
@@ -116,6 +177,10 @@ const NewsArticles = ({ dateFilter = null }) => {
 
   setPopularNews(popular)
   console.log('✅ NewsArticles - Data processing complete')
+  } else {
+    setNewsData([])
+    setLatestNews([])
+    setPopularNews([])
   }
  }, [rawData, language])
 
@@ -289,7 +354,7 @@ const NewsArticles = ({ dateFilter = null }) => {
         {/* Latest News - Center Column */}
         <NewsColumn as="div" role="region" aria-labelledby="latest-news-heading">
           <ColumnHeader id="latest-news-heading" as="h3">LATEST NEWS</ColumnHeader>
-          <NewsList role="feed" aria-label="Latest news articles" aria-busy="false">
+          <NewsList role="feed" aria-label="Latest news articles" aria-busy={loadingMore}>
             {newsData.map((item, index) => (
               <NewsItem
                 key={item.id}
@@ -371,7 +436,7 @@ const NewsArticles = ({ dateFilter = null }) => {
           </TabContainer>
 
           <TabContent active={activeTab === 'latest'}>
-            <NewsList role="feed" aria-label="Latest news articles" aria-busy="false">
+            <NewsList role="feed" aria-label="Latest news articles" aria-busy={loadingMore}>
               {newsData.map((item, index) => (
                 <NewsItem
                   key={`tab-latest-${item.id}`}
@@ -440,6 +505,14 @@ const NewsArticles = ({ dateFilter = null }) => {
           </TabContent>
         </CombinedColumn>
       </GridLayout>
+      {hasNextPage && (
+        <div
+          ref={sentinelRef}
+          aria-hidden="true"
+          style={{ height: 1, width: "100%" }}
+        />
+      )}
+      {loadingMore && <LoadMoreSpinner />}
     </Container>
   )
 }

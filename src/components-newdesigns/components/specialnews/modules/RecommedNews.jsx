@@ -19,7 +19,7 @@ import {
 import { useContext, useState, useEffect } from "react"
 import { LanguageContext } from "../../../../context/LanguageContext"
 import { CategoryApi } from "../../../../services/categoryapi/CategoryApi"
-import { getSpecialNews } from "../../../../services/newsApi/newsducks"
+import { fetchSpecialNewsListPage } from "../../../../services/newapis/newapis-services"
 
 const items = Array.from({ length: 6 }).map((_, i) => ({
   id: i + 1,
@@ -60,11 +60,11 @@ export default function Recommrednews({ dateFilter = null }) {
         // Ensure dateFilter is string or null, never an object
         const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
         console.log('🔍 RecommedNews - Clean dateFilter:', cleanDateFilter)
-        const res = await getSpecialNews(cleanDateFilter)
+        const res = await fetchSpecialNewsListPage(1, { date: cleanDateFilter })
         console.log('✅ RecommedNews - API response:', res)
-        if (res?.success && Array.isArray(res.data.news)) {
-          console.log('📰 RecommedNews - News count:', res.data.news.length)
-          setRawNews(res.data.news)
+        if (res?.success && Array.isArray(res.data)) {
+          console.log('📰 RecommedNews - News count:', res.data.length)
+          setRawNews(res.data)
         } else {
           console.warn('⚠️ RecommedNews - No data or invalid format')
           setRawNews([])

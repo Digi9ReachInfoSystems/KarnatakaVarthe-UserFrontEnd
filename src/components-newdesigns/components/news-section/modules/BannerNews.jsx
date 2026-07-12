@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import { LanguageContext } from "../../../../context/LanguageContext";
-import { getAllNews } from "../../../../services/newsApi/newsducks";
+import { fetchAllLatestNewsPage } from "../../../../services/newapis/newapis-services";
 import { formatDate } from "../../../../utils/formatters";
 import {
   BannerWrap,
@@ -36,16 +36,19 @@ export default function Banner({ dateFilter = null }) {
         // Ensure dateFilter is string or null
         const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
         console.log('🔍 Banner - Clean dateFilter:', cleanDateFilter)
-        const res = await getAllNews(cleanDateFilter)
+        const res = await fetchAllLatestNewsPage(1, { date: cleanDateFilter })
         console.log('✅ Banner - API response:', res)
-        if (!mounted || !res?.success || !Array.isArray(res.data.news)) {
+        if (!mounted || !res?.success || !Array.isArray(res.data) || res.data.length === 0) {
           console.warn('⚠️ Banner - No data or invalid format')
-          if (mounted) setLoading(false)
+          if (mounted) {
+            setItem(null)
+            setLoading(false)
+          }
           return
         }
 
-        console.log('📰 Banner - News count:', res.data.news.length)
-        const newsData = res.data.news
+        console.log('📰 Banner - News count:', res.data.length)
+        const newsData = res.data
 
         // pick most-recent by publishedAt (fallback to createdAt)
         const latest = newsData.reduce((best, cur) => {
@@ -58,7 +61,10 @@ export default function Banner({ dateFilter = null }) {
 
         if (!latest) {
           console.warn('⚠️ Banner - No latest news found')
-          if (mounted) setLoading(false)
+          if (mounted) {
+            setItem(null)
+            setLoading(false)
+          }
           return
         }
         

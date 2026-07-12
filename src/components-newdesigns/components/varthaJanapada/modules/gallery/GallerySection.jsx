@@ -18,7 +18,7 @@ import {
   SkeletonMainImage,
   SkeletonCaption,
 } from "./GallerySection.styles"
-import { PhotosApi } from "../../../../../services/gallery/GalleryApi"
+import { fetchHomepagePhotos } from "../../../../../services/newapis/newapis-services"
 
 export default function GallerySection() {
   const [index, setIndex] = useState(0)
@@ -40,34 +40,40 @@ export default function GallerySection() {
     Hindi: "और दिखाएँ ->"
   };
 
-  // Fetch photos from API
+  // Latest 10 approved photos for homepage
   useEffect(() => {
     const fetchPhotos = async () => {
       try {
         setLoading(true)
-        const response = await PhotosApi.getAllPhotos()
-        
-        // Filter only approved photos and map to the format we need
-        const formattedPhotos = response
-          .filter(photo => photo.status === "approved")
-          .map(photo => {
-            // Get title based on language
-            const langKey = language === "English" ? "english" : 
-                           language === "Hindi" ? "hindi" : "kannada"
-            
-            const title = photo[langKey] || photo.title || 'Untitled'
-            
-            return {
-              src: photo.photoImage,
-              alt: title,
-              title: title,
-              id: photo._id,
-              english: photo.english,
-              kannada: photo.kannada,
-              hindi: photo.hindi
-            }
-          })
-        
+        const response = await fetchHomepagePhotos()
+        const list = Array.isArray(response?.data) ? response.data : []
+
+        const formattedPhotos = list.map((photo) => {
+          const langKey =
+            language === "English"
+              ? "English"
+              : language === "Hindi"
+                ? "hindi"
+                : "kannada"
+
+          const title =
+            photo[langKey] ||
+            photo.english ||
+            photo.English ||
+            photo.title ||
+            "Untitled"
+
+          return {
+            src: photo.photoImage,
+            alt: title,
+            title: title,
+            id: photo._id?.$oid || photo._id,
+            english: photo.English || photo.english,
+            kannada: photo.kannada,
+            hindi: photo.hindi,
+          }
+        })
+
         setPhotos(formattedPhotos)
         setError(null)
       } catch (err) {

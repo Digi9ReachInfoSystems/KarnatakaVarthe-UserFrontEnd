@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 
-import { getLongVideos } from "../../../../../services/videoApi/videoApi";
+import { fetchHomepageLongVideos } from "../../../../../services/newapis/newapis-services";
 import {
   ArticlesSection,
   Container,
@@ -23,6 +23,32 @@ import {
   ShimmerSmallArticle,
 } from './LognVideo.Style.js';
 import { LanguageContext } from '../../../../../context/LanguageContext.jsx';
+
+function getVideoId(video, index) {
+  return video._id?.$oid || video._id || String(index);
+}
+
+function getVideoTitle(video, language) {
+  const langKey =
+    language === "English"
+      ? "English"
+      : language === "Hindi"
+        ? "hindi"
+        : "kannada";
+
+  return (
+    video?.[langKey]?.title ||
+    video?.English?.title ||
+    video?.kannada?.title ||
+    video?.hindi?.title ||
+    video?.title ||
+    ""
+  );
+}
+
+function getVideoUrl(video) {
+  return video?.video_url || video?.videoUrl || "";
+}
 
 const LongVideoMOK = () => {
   const [articles, setArticles] = useState([]);
@@ -64,7 +90,7 @@ const LongVideoMOK = () => {
     const fetchVideos = async () => {
       setLoading(true);
       try {
-        const response = await getLongVideos();
+        const response = await fetchHomepageLongVideos();
         if (response && Array.isArray(response.data)) {
           setArticles(response.data);
         } else {
@@ -135,8 +161,11 @@ const LongVideoMOK = () => {
   // Get the main article and up to 4 small articles
   const mainArticle = articles[0];
   const smallArticles = articles.slice(1, 5);
+  const mainId = getVideoId(mainArticle, 0);
+  const mainTitle = getVideoTitle(mainArticle, language);
+  const mainUrl = getVideoUrl(mainArticle);
 
-  const handlePlayClick = (articleId, videoSrc) => {
+  const handlePlayClick = (articleId) => {
     setPlayingVideo(playingVideo === articleId ? null : articleId);
     
     // Force the video to load and play after a short delay
@@ -167,28 +196,28 @@ const LongVideoMOK = () => {
           {/* Main Large Article */}
           <MainArticle>
             <ImageContainer large>
-              {playingVideo === mainArticle._id ? (
+              {playingVideo === mainId ? (
                 <video
-                  id={mainArticle._id}
-                  src={mainArticle.video_url}
+                  id={mainId}
+                  src={mainUrl}
                   controls
                   autoPlay
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  aria-label={mainArticle[language.toLowerCase()]?.title || mainArticle.title}
+                  aria-label={mainTitle}
                 />
               ) : (
                 <>
                   <ArticleImage 
                     src={mainArticle.thumbnail || '/public/home/home.png'} 
-                    alt={mainArticle[language.toLowerCase()]?.title || mainArticle.title} 
+                    alt={mainTitle} 
                   />
                   <Badge>{getCategoryName(mainArticle.category)}</Badge>
                   <PlayButton 
-                    onClick={() => handlePlayClick(mainArticle._id, mainArticle.video_url)} 
-                    aria-label={`Play ${mainArticle[language.toLowerCase()]?.title || mainArticle.title}`} 
+                    onClick={() => handlePlayClick(mainId)} 
+                    aria-label={`Play ${mainTitle}`} 
                   />
                   <ArticleContent>
-                    <ArticleTitle large>{mainArticle[language.toLowerCase()]?.title || mainArticle.title}</ArticleTitle>
+                    <ArticleTitle large>{mainTitle}</ArticleTitle>
                   </ArticleContent>
                 </>
               )}
@@ -197,37 +226,43 @@ const LongVideoMOK = () => {
 
           {/* Small Articles Grid */}
           <SmallArticlesGrid>
-            {smallArticles.map((article) => (
-              <SmallArticle key={article._id}>
+            {smallArticles.map((article, index) => {
+              const id = getVideoId(article, index + 1);
+              const title = getVideoTitle(article, language);
+              const url = getVideoUrl(article);
+
+              return (
+              <SmallArticle key={id}>
                 <ImageContainer>
-                  {playingVideo === article._id ? (
+                  {playingVideo === id ? (
                     <video
-                      id={article._id}
-                      src={article.video_url}
+                      id={id}
+                      src={url}
                       controls
                       autoPlay
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      aria-label={article[language.toLowerCase()]?.title || article.title}
+                      aria-label={title}
                     />
                   ) : (
                     <>
                       <ArticleImage 
                         src={article.thumbnail || '/public/home/home.png'} 
-                        alt={article[language.toLowerCase()]?.title || article.title} 
+                        alt={title} 
                       />
                       <PlayButton 
-                        onClick={() => handlePlayClick(article._id, article.video_url)} 
-                        aria-label={`Play ${article[language.toLowerCase()]?.title || article.title}`} 
+                        onClick={() => handlePlayClick(id)} 
+                        aria-label={`Play ${title}`} 
                       />
                     </>
                   )}
                 </ImageContainer>
                 <ArticleContent>
                   <Badge>{getCategoryName(article.category)}</Badge>
-                  <ArticleTitle>{article[language.toLowerCase()]?.title || article.title}</ArticleTitle>
+                  <ArticleTitle>{title}</ArticleTitle>
                 </ArticleContent>
               </SmallArticle>
-            ))}
+              );
+            })}
           </SmallArticlesGrid>
         </ArticlesGrid>
        

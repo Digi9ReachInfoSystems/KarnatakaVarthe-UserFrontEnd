@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
 
-import { getNewsByTypeArticles } from '../../../../../services/newsApi/NewsApi'
+import { fetchHomepageArticles } from '../../../../../services/newapis/newapis-services'
 import {
   ArticlesSection,
   Container,
@@ -57,24 +57,13 @@ export default function NewsMarchArticles() {
 
   const [itemsPerPage, setItemsPerPage] = useState(getItemsPerPage())
 
-  // Fetch district news
+  // Fetch latest 10 articles for homepage (all magazine types)
   useEffect(() => {
-    const fetchDistrictNews = async () => {
+    const fetchArticles = async () => {
       try {
         setLoading(true)
-        const response = await getNewsByTypeArticles()
-        console.log("Articles API response:", response)
-        
-        if (response?.success && Array.isArray(response.data)) {
-          // Filter by newsType
- const filteredData = response.data.filter(item => 
-        item.magazineType === "magazine2" && item.newsType === "articles"
-      )
-          console.log("Filtered articles:", filteredData)
-          setRawData(filteredData)
-        } else {
-          setRawData([])
-        }
+        const response = await fetchHomepageArticles()
+        setRawData(Array.isArray(response?.data) ? response.data : [])
       } catch (error) {
         console.error("Error fetching articles:", error)
         setRawData([])
@@ -83,8 +72,8 @@ export default function NewsMarchArticles() {
       }
     }
     
-    fetchDistrictNews()
-  }, [])
+    fetchArticles()
+  }, [language])
 
   // Process data based on language
   useEffect(() => {

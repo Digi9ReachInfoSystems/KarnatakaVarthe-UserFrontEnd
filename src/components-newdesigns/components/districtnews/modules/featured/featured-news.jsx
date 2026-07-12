@@ -18,7 +18,7 @@ import {
 } from "./featured-news.styles"
 import { useContext, useState, useEffect } from "react"
 import { LanguageContext } from "../../../../../context/LanguageContext"
-import { getDistrictNews } from "../../../../../services/newsApi/newsducks"
+import { fetchAllDistrictsNewsPage } from "../../../../../services/newapis/newapis-services"
 import { CategoryApi } from "../../../../../services/categoryapi/CategoryApi"
 import { useNavigate } from "react-router-dom"
 import EmptyState from "../DateFilter/EmptyState"
@@ -81,7 +81,7 @@ export default function FeaturedNewsSection({ dateFilter = null }) {
         // Ensure dateFilter is string or null, never an object
         const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
         console.log('🔍 FeaturedNewsSection - Clean dateFilter:', cleanDateFilter)
-        const response = await getDistrictNews(cleanDateFilter)
+        const response = await fetchAllDistrictsNewsPage(1, { date: cleanDateFilter })
         console.log('✅ FeaturedNewsSection - API response:', response)
         if (response?.success && Array.isArray(response.data.news)) {
           console.log('📰 FeaturedNewsSection - News count:', response.data.news.length)

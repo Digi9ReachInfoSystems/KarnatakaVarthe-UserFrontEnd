@@ -6,7 +6,7 @@ import { Link } from "react-router-dom"
 import { useState, useEffect, useContext } from "react"
 import { LanguageContext } from "../../../../../context/LanguageContext.jsx"
 import { Section, HeaderRow, Title, SeeMore, ArrowIcon, PageLayout, FeaturedCard, FeaturedImage, Overlay, FeaturedContent, Badge, FeaturedTitle, FeaturedExcerpt, MetaBar, MetaBarSmall, MetaItem, MiddleCol, SmallCard, Thumb, SmallContent, SmallBadge, SmallTitle, SkeletonFeaturedCard, SkeletonFeaturedImage, SkeletonMetaBar, SkeletonText, SkeletonSmallCard, SkeletonThumb } from "./StateNews.Styles.js"
-import { getStateNews } from "../../../../../services/newsApi/newsducks"
+import { fetchHomepageStateNews } from "../../../../../services/newapis/newapis-services"
 import { CategoryApi } from "../../../../../services/categoryapi/CategoryApi"
 
 const emptyFeatured = {
@@ -55,22 +55,13 @@ function StateNewsOfMarchOfKarnataka() {
         fetchCategories()
     }, [])
 
+    // Fetch latest 10 state news for homepage (magazine2)
     useEffect(() => {
         const fetchStateNews = async () => {
             try {
                 setLoading(true)
-                const response = await getStateNews()
-                console.log("State news API response:", response)
-
-                if (response?.success && Array.isArray(response.data?.news)) {
-                    const filteredData = response.data.news.filter(item =>
-                        item.magazineType === "magazine2" &&
-                        item.newsType === "statenews"
-                    )
-                    setRawData(filteredData)
-                } else {
-                    setRawData([])
-                }
+                const response = await fetchHomepageStateNews("magazine2")
+                setRawData(Array.isArray(response?.data) ? response.data : [])
             } catch (error) {
                 console.error("Error fetching state news:", error)
                 setRawData([])
@@ -154,6 +145,9 @@ function StateNewsOfMarchOfKarnataka() {
             // Set list items (next 3 latest items)
             const listItems = sortedByLatest.slice(1, 4)
             setList(listItems)
+        } else {
+            setFeatured(emptyFeatured)
+            setList(emptyList)
         }
     }, [rawData, language, categories])
 

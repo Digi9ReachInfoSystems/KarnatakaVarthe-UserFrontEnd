@@ -1,54 +1,49 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { NavLink, useLocation } from "react-router-dom";
-import { Menu, X, User, Settings, LogOut, LogIn, ChevronDown } from "lucide-react";
+import { useLocation } from "react-router-dom";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { LanguageContext } from "../../../context/LanguageContext";
 import {
   HeaderContainer,
   Container,
   HeaderContent,
   MobileMenuButton,
+  MobileHeaderAuth,
   DesktopNav,
   NavItem,
   NavLinkStyled,
+  NavLabel,
+  ServiceNavTrigger,
   ActiveIndicator,
-  LoginButton,
   MobileNav,
   MobileNavContent,
   MobileNavItem,
   MobileNavLink,
+  MobileNavLabel,
   Overlay,
   SidebarHeader,
   CloseButton,
-  ProfileContainer,
-  ProfileButton,
-  DropdownMenu,
-  DropdownItem,
-  DropdownLink,
-  UserInfo,
-  UserName,
-  UserEmail,
   ExpandIcon,
 } from "./Header.styles";
 import DistrictDropdown from "./DistrictDropdown";
+import ServiceDropdown from "./ServiceDropdown";
 import MobileDistrictMenu from "./MobileDistrictMenu";
-import Cookies from "js-cookie";
+import MobileServiceMenu from "./MobileServiceMenu";
+import HeaderAuthMenu from "./HeaderAuthMenu";
 
 const HeaderTab = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [isDistrictDropdownOpen, setIsDistrictDropdownOpen] = useState(false);
+  const [isServiceDropdownOpen, setIsServiceDropdownOpen] = useState(false);
   const [isMobileDistrictMenuOpen, setIsMobileDistrictMenuOpen] = useState(false);
+  const [isMobileServiceMenuOpen, setIsMobileServiceMenuOpen] = useState(false);
   const location = useLocation();
   const { language } = useContext(LanguageContext);
-  const userId = Cookies.get("userId");
-  const username = Cookies.get("UserName");
-  const email = Cookies.get("Email");
-  const phone = Cookies.get("Phone");
-  const dropdownRef = useRef(null);
   const districtDropdownRef = useRef(null);
   const districtNavItemRef = useRef(null);
+  const serviceDropdownRef = useRef(null);
+  const serviceNavItemRef = useRef(null);
   const hoverTimeoutRef = useRef(null);
-  const cleanPhone = phone ? phone.slice(-10) : null;
+  const serviceHoverTimeoutRef = useRef(null);
 
   // Navigation items with translations
   const navItems = [
@@ -72,12 +67,12 @@ const HeaderTab = () => {
     },   
     
     { 
-      name: "CMO", 
+      name: "CM Events", 
       path: "/specialnews",
       translations: {
-        English: "CMO",
-        Kannada: "ಸಿಎಮೊ",
-        Hindi: "सीएमओ"
+        English: "CM Events",
+        Kannada: "ಸಿಎಂ ಇವೆಂಟ್ಸ್",
+        Hindi: "सीएम इवेंट्स"
       }
     },
     //Article tab
@@ -117,6 +112,25 @@ const HeaderTab = () => {
         English: "All News",
         Kannada: "ಸುದ್ದಿಗಳು",
         Hindi: "सभी समाचार"
+      }
+    },
+    {
+      name: "Our Service",
+      path: "/ourservice",
+      clickable: false,
+      translations: {
+        English: "Our Service",
+        Kannada: "ಅವರ್ ಸರ್ವಿಸ್",
+        Hindi: "आवर सर्विस"
+      }
+    },
+    {
+      name: "Special Publication",
+      path: "/specialpublication",
+      translations: {
+        English: "Special Publication",
+        Kannada: "ಸ್ಪೆಷಲ್ ಪಬ್ಲಿಕೇಶನ್",
+        Hindi: "स्पेशल पब्लिकेशन"
       }
     },
     { 
@@ -164,50 +178,6 @@ const HeaderTab = () => {
     return item.translations[language] || item.translations.English || item.name;
   };
 
-  // Get translated Login text
-  const getLoginText = () => {
-    const loginTranslations = {
-      English: "Login",
-      Kannada: "ಲಾಗಿನ್",
-      Hindi: "लॉगिन"
-    };
-    return loginTranslations[language] || "Login";
-  };
-
-  // Get translated Logout text
-  const getLogoutText = () => {
-    const logoutTranslations = {
-      English: "Logout",
-      Kannada: "ಲಾಗ್ ಔಟ್",
-      Hindi: "लॉगआउट"
-    };
-    return logoutTranslations[language] || "Logout";
-  };
-
-  // Get translated Settings text
-  const getSettingsText = () => {
-    const settingsTranslations = {
-      English: "Settings",
-      Kannada: "ಸೆಟ್ಟಿಂಗ್ಸ್",
-      Hindi: "सेटिंग्स"
-    };
-    return settingsTranslations[language] || "Settings";
-  };
-
-  const handleLogout = () => {
-    Cookies.remove("userId");
-    Cookies.remove("accessToken");
-    Cookies.remove("Phone");
-    Cookies.remove("UserName");
-    Cookies.remove("Email");
-    setIsProfileDropdownOpen(false);
-    window.location.href = "/";
-  };
-
-  const toggleProfileDropdown = () => {
-    setIsProfileDropdownOpen(!isProfileDropdownOpen);
-  };
-
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
@@ -229,6 +199,16 @@ const HeaderTab = () => {
     closeMobileMenu();
   };
 
+  const handleMobileServiceSelect = () => {
+    setIsMobileServiceMenuOpen(false);
+    closeMobileMenu();
+  };
+
+  const toggleMobileServiceMenu = (e) => {
+    e.preventDefault();
+    setIsMobileServiceMenuOpen(!isMobileServiceMenuOpen);
+  };
+
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
@@ -240,23 +220,6 @@ const HeaderTab = () => {
       document.body.style.overflow = 'unset';
     };
   }, [isMobileMenuOpen]);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsProfileDropdownOpen(false);
-      }
-    };
-
-    if (isProfileDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isProfileDropdownOpen]);
 
   // Check if tab should be active
   const isTabActive = (itemPath) => {
@@ -275,6 +238,7 @@ const HeaderTab = () => {
       clearTimeout(hoverTimeoutRef.current);
     }
     setIsDistrictDropdownOpen(true);
+    setIsServiceDropdownOpen(false);
   };
 
   const handleDistrictMouseLeave = () => {
@@ -291,30 +255,62 @@ const HeaderTab = () => {
     }
   };
 
+  const handleServiceMouseEnter = () => {
+    if (serviceHoverTimeoutRef.current) {
+      clearTimeout(serviceHoverTimeoutRef.current);
+    }
+    setIsServiceDropdownOpen(true);
+    setIsDistrictDropdownOpen(false);
+  };
+
+  const handleServiceMouseLeave = () => {
+    serviceHoverTimeoutRef.current = setTimeout(() => {
+      setIsServiceDropdownOpen(false);
+    }, 200);
+  };
+
+  const handleServiceClick = () => {
+    if (window.innerWidth < 1026) {
+      setIsServiceDropdownOpen(!isServiceDropdownOpen);
+    }
+  };
+
   // Close district dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        districtDropdownRef.current && 
+        districtDropdownRef.current &&
         !districtDropdownRef.current.contains(event.target) &&
         districtNavItemRef.current &&
         !districtNavItemRef.current.contains(event.target)
       ) {
         setIsDistrictDropdownOpen(false);
       }
+
+      if (
+        serviceDropdownRef.current &&
+        !serviceDropdownRef.current.contains(event.target) &&
+        serviceNavItemRef.current &&
+        !serviceNavItemRef.current.contains(event.target)
+      ) {
+        setIsServiceDropdownOpen(false);
+      }
     };
 
-    if (isDistrictDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+    if (isDistrictDropdownOpen || isServiceDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
       if (hoverTimeoutRef.current) {
         clearTimeout(hoverTimeoutRef.current);
       }
+      if (serviceHoverTimeoutRef.current) {
+        clearTimeout(serviceHoverTimeoutRef.current);
+      }
     };
-  }, [isDistrictDropdownOpen]);
+  }, [isDistrictDropdownOpen, isServiceDropdownOpen]);
 
   return (
     <HeaderContainer role="navigation" aria-label="Main navigation">
@@ -332,6 +328,10 @@ const HeaderTab = () => {
               <Menu size={20} aria-hidden="true" />
             )}
           </MobileMenuButton>
+
+          <MobileHeaderAuth>
+            <HeaderAuthMenu variant="mobile" />
+          </MobileHeaderAuth>
 
           {/* Desktop Navigation */}
           <DesktopNav aria-label="Primary navigation">
@@ -361,6 +361,43 @@ const HeaderTab = () => {
                       onMouseLeave={handleDistrictMouseLeave}
                     />
                   </div>
+                ) : item.path === "/ourservice" ? (
+                  <div
+                    ref={serviceNavItemRef}
+                    onMouseEnter={handleServiceMouseEnter}
+                    onMouseLeave={handleServiceMouseLeave}
+                    style={{ position: "relative", display: "inline-flex", justifyContent: "center" }}
+                  >
+                    <ServiceNavTrigger
+                      role="button"
+                      tabIndex={0}
+                      onClick={handleServiceClick}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          handleServiceClick();
+                        }
+                      }}
+                      className={`${isServiceDropdownOpen ? "open" : ""} ${language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}`}
+                      aria-expanded={isServiceDropdownOpen}
+                      aria-haspopup="true"
+                    >
+                      {getTranslatedName(item)}
+                    </ServiceNavTrigger>
+                    <ServiceDropdown
+                      ref={serviceDropdownRef}
+                      isOpen={isServiceDropdownOpen}
+                      onClose={() => setIsServiceDropdownOpen(false)}
+                      onMouseEnter={handleServiceMouseEnter}
+                      onMouseLeave={handleServiceMouseLeave}
+                    />
+                  </div>
+                ) : item.clickable === false ? (
+                  <NavLabel
+                    className={language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}
+                  >
+                    {getTranslatedName(item)}
+                  </NavLabel>
                 ) : (
                   <NavLinkStyled
                     to={item.path}
@@ -374,55 +411,6 @@ const HeaderTab = () => {
               </NavItem>
             ))}
           </DesktopNav>
-
-          {/* Profile Dropdown / Login Button */}
-          {userId ? (
-            <ProfileContainer ref={dropdownRef}>
-              <ProfileButton 
-                onClick={toggleProfileDropdown}
-                aria-label="User profile menu"
-                aria-expanded={isProfileDropdownOpen}
-              >
-                <User />
-              </ProfileButton>
-              
-              <DropdownMenu isOpen={isProfileDropdownOpen}>
-                {(username || email || phone) && (
-                  <UserInfo>
-                    {username && <UserName>{username}</UserName>}
-                    {email && <UserEmail>{email}</UserEmail>}
-                    {!email && phone && <UserEmail>{`+91 ${cleanPhone}`}</UserEmail>}
-                  </UserInfo>
-                )}
-                
-                <DropdownLink 
-                  to="/settings"
-                  onClick={() => setIsProfileDropdownOpen(false)}
-                  className={language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}
-                >
-                  <Settings />
-                  {getSettingsText()}
-                </DropdownLink>
-                
-                <DropdownItem 
-                  onClick={handleLogout}
-                  className={language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}
-                >
-                  <LogOut />
-                  {getLogoutText()}
-                </DropdownItem>
-              </DropdownMenu>
-            </ProfileContainer>
-          ) : (
-            <LoginButton 
-              to="/signin"
-              className={language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}
-            >
-              <LogIn style={{ width: '16px', height: '16px', marginRight: '4px' }} />
-              {getLoginText()}
-            </LoginButton>
-          )}
-          
         </HeaderContent>
 
           {/* Mobile Navigation Sidebar */}
@@ -456,6 +444,30 @@ const HeaderTab = () => {
                         onDistrictSelect={handleMobileDistrictSelect}
                       />
                     </>
+                  ) : item.path === "/ourservice" ? (
+                    <>
+                      <MobileNavLink
+                        to="#"
+                        onClick={toggleMobileServiceMenu}
+                        className={language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}
+                        style={{ position: "relative", justifyContent: "center" }}
+                      >
+                        <span style={{ textAlign: "center" }}>{getTranslatedName(item)}</span>
+                        <ExpandIcon isOpen={isMobileServiceMenuOpen} style={{ position: "absolute", right: "16px" }}>
+                          <ChevronDown size={18} />
+                        </ExpandIcon>
+                      </MobileNavLink>
+                      <MobileServiceMenu
+                        isOpen={isMobileServiceMenuOpen}
+                        onServiceSelect={handleMobileServiceSelect}
+                      />
+                    </>
+                  ) : item.clickable === false ? (
+                    <MobileNavLabel
+                      className={language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}
+                    >
+                      {getTranslatedName(item)}
+                    </MobileNavLabel>
                   ) : (
                     <MobileNavLink
                       to={item.path}

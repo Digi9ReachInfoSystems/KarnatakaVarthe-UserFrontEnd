@@ -18,7 +18,7 @@ import {
   SkeletonThumb,
 } from "./styles/FeaturedNews.atyle"
 import { LanguageContext } from '../../../../context/LanguageContext'
-import { getArticles } from '../../../../services/newsApi/newsducks'
+import { fetchArticlesListPage } from '../../../../services/newapis/newapis-services'
 import { useState, useEffect, useContext } from "react"
 import { useNavigate } from "react-router-dom"
 
@@ -66,11 +66,11 @@ function Featurednews({ dateFilter = null }) {
             // Ensure dateFilter is string or null, never an object
             const cleanDateFilter = (dateFilter && typeof dateFilter === 'string') ? dateFilter : null
             console.log('🔍 Featurednews - Clean dateFilter:', cleanDateFilter)
-            const response = await getArticles(cleanDateFilter)
+            const response = await fetchArticlesListPage(1, { date: cleanDateFilter })
             console.log('✅ Featurednews - API response:', response)
-            if (response?.success && Array.isArray(response.data.news)) {
-              console.log('📰 Featurednews - News count:', response.data.news.length)
-              setRawData(response.data.news)
+            if (response?.success && Array.isArray(response.data)) {
+              console.log('📰 Featurednews - News count:', response.data.length)
+              setRawData(response.data)
        
             } else {
               console.warn('⚠️ Featurednews - No data or invalid format')

@@ -166,13 +166,14 @@ const SignUp = () => {
           const result = await confirmationResult.confirm(code);
           const firebaseUID = result.user.uid;
           showSuccess("OTP verified successfully!");
-          // Call signup API with phone data
+          // Call signup API with phone data (email optional — omit when blank)
           const phoneData = {
             firebaseUid: firebaseUID,
-            email: formData.email,
             phone_Number: `+91${formData.phone}`,
             displayName: formData.displayName,
           };
+          const trimmedEmail = formData.email?.trim();
+          if (trimmedEmail) phoneData.email = trimmedEmail;
           try {
             const signupRes = await UserSignupWithPhoneApi(phoneData);
             if (signupRes.success) {
@@ -247,10 +248,10 @@ const SignUp = () => {
             />
           </FormGroup>
           <FormGroup>
-            <Label>Enter your email address</Label>
+            <Label>Email address (optional)</Label>
             <Input
               type="email"
-              placeholder="Enter your email address"
+              placeholder="Email address (optional)"
               value={formData.email}
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
