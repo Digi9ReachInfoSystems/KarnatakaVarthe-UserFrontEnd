@@ -115,22 +115,22 @@ const HeaderTab = () => {
       }
     },
     {
-      name: "Our Service",
+      name: "Our Services",
       path: "/ourservice",
       clickable: false,
       translations: {
-        English: "Our Service",
-        Kannada: "ಅವರ್ ಸರ್ವಿಸ್",
-        Hindi: "आवर सर्विस"
+        English: "Our Services",
+        Kannada: "ಅವರ್ ಸರ್ವಿಸಸ್",
+        Hindi: "आवर सर्विसेज़"
       }
     },
     {
-      name: "Special Publication",
+      name: "Special Publications",
       path: "/specialpublication",
       translations: {
-        English: "Special Publication",
-        Kannada: "ಸ್ಪೆಷಲ್ ಪಬ್ಲಿಕೇಶನ್",
-        Hindi: "स्पेशल पब्लिकेशन"
+        English: "Special Publications",
+        Kannada: "ಸ್ಪೆಷಲ್ ಪಬ್ಲಿಕೇಶನ್ಸ್",
+        Hindi: "स्पेशल पब्लिकेशन्स"
       }
     },
     { 
