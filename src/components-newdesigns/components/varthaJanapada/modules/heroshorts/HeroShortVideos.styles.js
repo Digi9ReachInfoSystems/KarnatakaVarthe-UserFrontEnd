@@ -24,6 +24,7 @@ export const ShortsPanel = styled.aside`
   box-shadow: none;
   border: none;
   width: 100%;
+  position: relative;
 
   @media (max-width: 850px) {
     margin-top: 0;
@@ -36,6 +37,55 @@ export const ShortsPanel = styled.aside`
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     height: 420px;
+  }
+`;
+
+export const NavArrowGroup = styled.div`
+  position: absolute;
+  right: 10px;
+  bottom: 12px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+`;
+
+export const NavArrow = styled.button`
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  transition: background 0.2s ease, opacity 0.2s ease;
+  opacity: 0.9;
+
+  &:hover:not(:disabled) {
+    background: rgba(0, 0, 0, 0.75);
+    opacity: 1;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${theme.colors.primary};
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  svg {
+    width: 22px;
+    height: 22px;
   }
 `;
 
