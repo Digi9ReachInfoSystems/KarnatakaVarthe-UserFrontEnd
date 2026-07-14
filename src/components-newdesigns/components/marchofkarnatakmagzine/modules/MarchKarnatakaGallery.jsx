@@ -207,11 +207,11 @@ const performSearch = async (query) => {
           mag => mag.publishedYear === latestYear && mag.status === 'approved'
         );
         
-        // Sort by month (January to December)
+        // Sort by month (latest first: December → January)
         const sortedMagazines = latestYearMagazines.sort((a, b) => {
           const monthA = monthOrder[a.publishedMonth] || 0;
           const monthB = monthOrder[b.publishedMonth] || 0;
-          return monthA - monthB;
+          return monthB - monthA;
         });
         
         // Take only first 12 magazines (one per month)
@@ -266,11 +266,11 @@ const performSearch = async (query) => {
         mag => mag.publishedYear === year && mag.status === 'approved'
       );
       
-      // Sort by month (January to December)
+      // Sort by month (latest first: December → January)
       const sortedMagazines = yearMagazines.sort((a, b) => {
         const monthA = monthOrder[a.publishedMonth] || 0;
         const monthB = monthOrder[b.publishedMonth] || 0;
-        return monthA - monthB;
+        return monthB - monthA;
       });
       
       // Take only first 12 magazines (one per month)
