@@ -30,6 +30,8 @@ const MobileServiceMenu = ({ isOpen, onServiceSelect }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!isOpen) return;
+
     const fetchServices = async () => {
       try {
         setLoading(true);
@@ -44,7 +46,7 @@ const MobileServiceMenu = ({ isOpen, onServiceSelect }) => {
     };
 
     fetchServices();
-  }, []);
+  }, [isOpen]);
 
   const getServiceTitle = (item) =>
     item?.[languageMap[language]] || item?.title || "";
