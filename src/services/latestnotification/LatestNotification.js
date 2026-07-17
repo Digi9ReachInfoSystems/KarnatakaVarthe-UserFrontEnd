@@ -1,9 +1,10 @@
 import apiClient from "../apiClient";
-import axios from "axios";
 
 export const getLatestNotification = async () => {
   try {
-    const response = await apiClient.get("/api/latestnotifications/getAlllatestNotification");
+    const response = await apiClient.get(
+      "/api/latestnotifications/getAlllatestNotification"
+    );
     return response.data;
   } catch (error) {
     throw error;
@@ -11,11 +12,10 @@ export const getLatestNotification = async () => {
 };
 
 export const getLatestService = async () => {
-  try{
-    const response = await axios.get('https://varthe.digi9.co.in/api/newarticles/list');
+  try {
+    const response = await apiClient.get("/api/newarticles/list");
     return response.data;
-  }
-  catch(err){
+  } catch (err) {
     throw err;
   }
 };

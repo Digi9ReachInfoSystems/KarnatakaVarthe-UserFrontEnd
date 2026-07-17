@@ -44,6 +44,8 @@ const ServiceDropdown = React.forwardRef(
     };
 
     useEffect(() => {
+      if (!isOpen) return;
+
       const fetchServices = async () => {
         try {
           setLoading(true);
@@ -58,7 +60,7 @@ const ServiceDropdown = React.forwardRef(
       };
 
       fetchServices();
-    }, []);
+    }, [isOpen]);
 
     useEffect(() => {
       if (!isOpen && listRef.current) {
