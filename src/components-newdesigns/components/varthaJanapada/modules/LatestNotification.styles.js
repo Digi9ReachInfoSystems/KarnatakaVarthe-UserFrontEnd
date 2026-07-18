@@ -14,17 +14,17 @@ export const NotificationPanel = styled.aside`
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  margin-top: ${theme.spacing1(1)};
-  height: 500px;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  margin-top: 0;
   position: relative;
 
-  @media (max-width: ${theme.breakpoints.tablet}) {
-    margin-top: 0;
-    height: 400px;
-  }
-
+  /* Mobile: fixed height so ~5 items show and the rest scroll */
   @media (max-width: ${theme.breakpoints.mobile}) {
-    height: 350px;
+    flex: none;
+    height: 420px;
+    max-height: 420px;
   }
 `
 
@@ -57,10 +57,15 @@ export const NotificationList = styled.ol`
   padding-top: 80px;
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
   gap: ${theme.spacing1(2)};
   background-color: ${theme.colors.white};
   overflow-y: auto;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   cursor: pointer;
 
   /* Hide scrollbar for Chrome, Safari and Opera */

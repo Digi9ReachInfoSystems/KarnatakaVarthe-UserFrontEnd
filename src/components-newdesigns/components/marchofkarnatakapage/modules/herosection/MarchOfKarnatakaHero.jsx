@@ -15,6 +15,8 @@ import {
 } from "./MarchOfKarnatakaHero.styles.js"
 import HeroShortVideos from '../../../varthaJanapada/modules/heroshorts/HeroShortVideos.jsx'
 import Services from '../../../varthaJanapada/modules/servicess/Services.jsx'
+import LiveTvPanel from '../../../varthaJanapada/modules/liveTv/LiveTvPanel.jsx'
+import { NewsColumnStack } from '../../../varthaJanapada/modules/liveTv/LiveTvPanel.styles.js'
 
 function MarchOfKarnatakaHero() {
     const { language } = useContext(LanguageContext);
@@ -66,9 +68,12 @@ function MarchOfKarnatakaHero() {
   };
 
   return (
-   <HeroLayout aria label="March of Karnataka Hero Section">
-          {/* Left: Hero Content */}
-    <Services magazineType="magazine2" />
+   <HeroLayout aria-label="March of Karnataka Hero Section">
+          {/* Left: Live TV + Latest News */}
+    <NewsColumnStack>
+      <LiveTvPanel />
+      <Services magazineType="magazine2" />
+    </NewsColumnStack>
     <HeroRoot aria-label="Featured magazines"
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
