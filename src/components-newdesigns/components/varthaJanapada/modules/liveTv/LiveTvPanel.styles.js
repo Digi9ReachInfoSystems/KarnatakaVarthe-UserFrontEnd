@@ -15,7 +15,7 @@ const shimmer = keyframes`
 export const NewsColumnStack = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${theme.spacing1(2)};
+  gap: ${theme.spacing1(1.5)};
   width: 100%;
   min-width: 0;
   height: 500px;
@@ -37,7 +37,7 @@ export const LiveCard = styled.div`
   position: relative;
   flex-shrink: 0;
   width: 100%;
-  height: 170px;
+  height: 210px;
   border-radius: ${theme.borderRadius.medium || "8px"};
   overflow: hidden;
   background: #0f0f0f;
@@ -50,14 +50,14 @@ export const LiveCard = styled.div`
   }
 
   @media (max-width: ${theme.breakpoints.tablet}) {
-    height: 160px;
+    height: 180px;
   }
 
-  /* Taller player on mobile so the stream is readable */
+  /* Keep video included on mobile; 16:9 within column */
   @media (max-width: ${theme.breakpoints.mobile}) {
     height: auto;
     aspect-ratio: 16 / 9;
-    min-height: 200px;
+    min-height: 180px;
   }
 `;
 
@@ -212,19 +212,19 @@ export const PlayerFrame = styled.iframe`
 export const ShimmerCard = styled.div`
   flex-shrink: 0;
   width: 100%;
-  height: 170px;
+  height: 210px;
   border-radius: ${theme.borderRadius.medium || "8px"};
   background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: ${shimmer} 1.4s ease-in-out infinite;
 
   @media (max-width: ${theme.breakpoints.tablet}) {
-    height: 160px;
+    height: 180px;
   }
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     height: auto;
     aspect-ratio: 16 / 9;
-    min-height: 200px;
+    min-height: 180px;
   }
 `;
