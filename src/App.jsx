@@ -49,8 +49,7 @@ import Error404 from "./components-newdesigns/layout/Error404/Error404";
 import MarchofKarnataka from "./components-newdesigns/pages/marchofkarnataka/Marchofkarnataka";
 import MarchofKarnatakaV1 from "./components-newdesigns/components/marchofkarnatakapage/MarchofKarnatakaV1";
 import Videos from "./components-newdesigns/components/videos/Videos";
-import ShortsVideo from "./components-newdesigns/components/varthaJanapada/modules/shortvideos/ShortVideosSection";
-import ShortsVIdeo from "./components-newdesigns/components/Shorts/ShortsVIdeo";
+import YoutubeShortsPage from "./components-newdesigns/components/Shorts/YoutubeShortsPage";
 import SavedListItems from "./components-newdesigns/components/SavedItems/SavedListItems";
 import ShowPhotos from "./components-newdesigns/components/photos/ShowPhotos";
 import Settings from "./components-newdesigns/components/settings/modules/Settings";
@@ -127,7 +126,7 @@ const App = () => {
                   <Route path="/marchofkarnatakview/:id" element={<MarchKarnatakIdpage />} />
                   <Route path="/videos" element={<Videos />} />
                   <Route path = '/SavedItems' element = {<SavedListItems />} />
-                  <Route path="/shorts" element={<ShortsVIdeo />} />
+                  <Route path="/shorts" element={<YoutubeShortsPage />} />
                   <Route path="/photos" element={<ShowPhotos />} />
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/articles" element={<Articles />} />
