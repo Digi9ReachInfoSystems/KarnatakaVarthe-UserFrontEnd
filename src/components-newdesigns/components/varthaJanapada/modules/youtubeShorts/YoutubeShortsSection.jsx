@@ -107,7 +107,11 @@ const YoutubeShortsSection = () => {
         <Title id="youtube-shorts-heading">
           {headerText[language] || "Shorts"}
         </Title>
-        <ViewMoreLink href="/shorts">
+        <ViewMoreLink
+          href="https://www.youtube.com/channel/UCED9mQG47OfrV8lFTkTgX9g/shorts"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           {buttonText[language] || "Show More"}
         </ViewMoreLink>
       </SectionHeader>
@@ -164,8 +168,11 @@ const YoutubeShortsSection = () => {
                       <ShortsBadge>Shorts</ShortsBadge>
                       <img
                         src={
-                          video.thumbnail ||
-                          `https://i.ytimg.com/vi/${id}/hqdefault.jpg`
+                          video.thumbnail?.replace(
+                            /hqdefault\.jpg$/,
+                            "maxresdefault.jpg"
+                          ) ||
+                          `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
                         }
                         alt=""
                         loading="lazy"

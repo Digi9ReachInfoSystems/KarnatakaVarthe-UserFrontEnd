@@ -4,7 +4,7 @@ import Varthahero from "./modules/Varthahero";
 import StateNews from "./modules/StateNews";
 import StateGovernmentWebsites from "./modules/StateGovernmentWebsites";
 import ArticlesNews from "./modules/articlescrool/ArticlesNews";
-import LongVideos from "./modules/longvideos/LongVideos";
+import LongVideos from "./modules/youtubeVideos/YoutubeVideosSection";
 import GallerySection from "./modules/gallery/GallerySection";
 import ShortsCarousel from "./modules/youtubeShorts/YoutubeShortsSection";
 import NewsArticlesNews from "./modules/newsarticles/NewsArtilces";

@@ -51,11 +51,18 @@ export const CarouselContainer = styled.div`
 `
 
 export const SectionHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   margin-bottom: ${theme.spacing1(2)};
-  padding-bottom: ${theme.spacing1(6)};
+  padding-bottom: ${theme.spacing1(4)};
+  flex-wrap: nowrap;
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     margin-bottom: ${theme.spacing1(1)};
+    padding-bottom: ${theme.spacing1(3)};
+    gap: 8px;
   }
 `
 
@@ -66,6 +73,8 @@ export const Title = styled.h2`
   color: ${theme.colors.primary};
   margin: 0;
   position: relative;
+  flex: 1;
+  min-width: 0;
 
   &::after {
     content: "";
@@ -89,23 +98,28 @@ export const Title = styled.h2`
     font-size: clamp(16px, 2vw, 18px);
 
     &::after {
-      width: 150px;
+      width: 120px;
     }
   }
 `
 
 export const ViewMoreLink = styled.a`
-  display: block;
-  width: fit-content;
-  margin-left: auto;
-  margin-top: 1rem;
+  display: inline-block;
+  flex-shrink: 0;
+  margin: 0;
   text-decoration: none;
   color: #007bff;
   font-weight: bold;
   white-space: nowrap;
+  font-size: 14px;
+  line-height: 1.2;
 
   &:hover {
     text-decoration: underline;
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    font-size: 12px;
   }
 `
 
@@ -182,7 +196,9 @@ export const VideoThumbnail = styled.div`
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     display: block;
+    image-rendering: auto;
   }
 
   ${VideoCard}:hover & {
