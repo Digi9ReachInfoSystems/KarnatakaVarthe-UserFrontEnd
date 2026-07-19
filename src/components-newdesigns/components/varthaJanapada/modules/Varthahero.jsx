@@ -12,6 +12,8 @@ import {
 } from "./Varthahero.styles.js";
 import HeroShortVideos from "./heroshorts/HeroShortVideos.jsx";
 import Services from "./servicess/Services.jsx";
+import LiveTvPanel from "./liveTv/LiveTvPanel.jsx";
+import { NewsColumnStack } from "./liveTv/LiveTvPanel.styles.js";
 
 export default function Varthahero() {
   const { language } = useContext(LanguageContext);
@@ -57,10 +59,13 @@ export default function Varthahero() {
 
   return (
     <HeroLayout aria-label="Home hero">
-      {/* Left: Hero Content */}
-      <Services magazineType="magazine" />
+      {/* Left: Live TV + Latest News */}
+      <NewsColumnStack>
+        <LiveTvPanel />
+        <Services magazineType="magazine" />
+      </NewsColumnStack>
 
-      {/* Middle: Services */}
+      {/* Middle: Magazine hero */}
       <HeroRoot
         aria-label="Featured content"
         onTouchStart={onTouchStart}

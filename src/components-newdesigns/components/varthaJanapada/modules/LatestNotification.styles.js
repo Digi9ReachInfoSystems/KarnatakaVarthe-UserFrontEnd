@@ -14,17 +14,22 @@ export const NotificationPanel = styled.aside`
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  margin-top: ${theme.spacing1(1)};
-  height: 500px;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 280px;
+  width: 100%;
+  margin-top: 0;
   position: relative;
 
   @media (max-width: ${theme.breakpoints.tablet}) {
-    margin-top: 0;
-    height: 400px;
+    max-height: 210px;
   }
 
+  /* Mobile: shorter list under Live TV; scroll for the rest */
   @media (max-width: ${theme.breakpoints.mobile}) {
-    height: 350px;
+    flex: none;
+    height: 260px;
+    max-height: 260px;
   }
 `
 
@@ -32,9 +37,9 @@ export const PanelHeader = styled.div`
   text-align: center;
   font-family: ${theme.fonts.heading};
   font-weight: 600;
-  font-size: 16px;
-  padding: ${theme.spacing1(3)} ${theme.spacing1(4)};
-  margin-bottom: ${theme.spacing1(2)};
+  font-size: 15px;
+  padding: ${theme.spacing1(2)} ${theme.spacing1(3)};
+  margin-bottom: 0;
   background-color: ${theme.colors.white};
   color: ${theme.colors.gray[800]};
   box-shadow: 0 5px 8px rgba(0, 0, 0, 0.06);
@@ -45,22 +50,27 @@ export const PanelHeader = styled.div`
   z-index: 10;
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    padding: ${theme.spacing1(2)} ${theme.spacing1(3)};
-    font-size: 15px;
+    padding: ${theme.spacing1(1.75)} ${theme.spacing1(2.5)};
+    font-size: 14px;
   }
 `
 
 export const NotificationList = styled.ol`
   list-style: none;
   margin: 0;
-  padding: ${theme.spacing1(3)};
-  padding-top: 80px;
+  padding: ${theme.spacing1(2.5)};
+  padding-top: 56px;
   display: flex;
   flex-direction: column;
-  gap: ${theme.spacing1(2)};
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  gap: ${theme.spacing1(1.5)};
   background-color: ${theme.colors.white};
   overflow-y: auto;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   cursor: pointer;
 
   /* Hide scrollbar for Chrome, Safari and Opera */
@@ -74,14 +84,15 @@ export const NotificationList = styled.ol`
     background-color: ${theme.colors.gray[50] || '#f9fafb'};
   }
    @media (max-width: 1026px) {
-    padding: ${theme.spacing1(2.5)};
+    padding: ${theme.spacing1(2)};
+    padding-top: 52px;
     padding-right: 10px;
-    gap: ${theme.spacing1(3)};
+    gap: ${theme.spacing1(1.5)};
   }
   @media (max-width: ${theme.breakpoints.mobile}) {
     padding: ${theme.spacing1(2)};
-    padding-top: 70px;
-    gap: ${theme.spacing1(1.5)};
+    padding-top: 52px;
+    gap: ${theme.spacing1(1.25)};
   }
 `
 
@@ -89,7 +100,7 @@ export const ListItem = styled.li`
   display: flex;
   gap: ${theme.spacing1(2)};
   align-items: flex-start;
-  padding-bottom: ${theme.spacing1(4)};
+  padding-bottom: ${theme.spacing1(2.5)};
   border-bottom: 1px solid ${theme.colors.gray[300]};
   transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   opacity: 1;
@@ -102,7 +113,7 @@ export const ListItem = styled.li`
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     gap: ${theme.spacing1(1.5)};
-    padding-bottom: ${theme.spacing1(3)};
+    padding-bottom: ${theme.spacing1(2)};
   }
 `
 

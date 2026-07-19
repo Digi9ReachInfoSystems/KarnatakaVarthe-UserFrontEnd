@@ -3,6 +3,11 @@ import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react"
 import { fetchHomepageShortVideos } from "../../../../../services/newapis/newapis-services";
 import { LanguageContext } from "../../../../../context/LanguageContext";
 import {
+  MEDIA_SOURCES,
+  announceMediaPlay,
+  onOtherMediaPlay,
+} from "../mediaPlaybackEvents";
+import {
   ShortsPanel,
   ShortsScrollList,
   ShortCardWrap,
@@ -141,9 +146,29 @@ export default function HeroShortVideos() {
     fetchVideos();
   }, []);
 
+  const stopShortPlayback = useCallback(() => {
+    Object.values(videoRefs.current).forEach((el) => {
+      if (el && typeof el.pause === "function") {
+        el.pause();
+      }
+    });
+    setPlayingId(null);
+  }, []);
+
   const handlePlay = (id) => {
-    setPlayingId((prev) => (prev === id ? null : id));
+    setPlayingId((prev) => {
+      if (prev === id) return null;
+      announceMediaPlay(MEDIA_SOURCES.HERO_SHORTS);
+      return id;
+    });
   };
+
+  // Stop shorts when Live TV (or other media) starts.
+  useEffect(() => {
+    return onOtherMediaPlay(MEDIA_SOURCES.HERO_SHORTS, () => {
+      stopShortPlayback();
+    });
+  }, [stopShortPlayback]);
 
   useEffect(() => {
     if (playingId && videoRefs.current[playingId]) {
