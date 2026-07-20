@@ -135,7 +135,8 @@ const HeaderTab = () => {
     },
     { 
       name: "Videos", 
-      path: "/videos",
+      path: "https://www.youtube.com/channel/UCED9mQG47OfrV8lFTkTgX9g/videos",
+      external: true,
       translations: {
         English: "Videos",
         Kannada: "ವೀಡಿಯೋಗಳು",
@@ -144,7 +145,8 @@ const HeaderTab = () => {
     },
     { 
       name: "Shorts",
-      path: "/shorts",
+      path: "https://www.youtube.com/channel/UCED9mQG47OfrV8lFTkTgX9g/shorts",
+      external: true,
       translations: {
         English: "Shorts",
         Kannada: "ಶಾರ್ಟ್ಸ್",
@@ -398,6 +400,16 @@ const HeaderTab = () => {
                   >
                     {getTranslatedName(item)}
                   </NavLabel>
+                ) : item.external ? (
+                  <NavLinkStyled
+                    as="a"
+                    href={item.path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}
+                  >
+                    {getTranslatedName(item)}
+                  </NavLinkStyled>
                 ) : (
                   <NavLinkStyled
                     to={item.path}
@@ -468,6 +480,17 @@ const HeaderTab = () => {
                     >
                       {getTranslatedName(item)}
                     </MobileNavLabel>
+                  ) : item.external ? (
+                    <MobileNavLink
+                      as="a"
+                      href={item.path}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={closeMobileMenu}
+                      className={language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}
+                    >
+                      {getTranslatedName(item)}
+                    </MobileNavLink>
                   ) : (
                     <MobileNavLink
                       to={item.path}
