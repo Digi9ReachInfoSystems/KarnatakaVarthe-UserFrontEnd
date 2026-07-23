@@ -12,6 +12,7 @@ import {
   SmallCard,
   Thumbnail,
   PlayButton,
+  PlayerFrame,
   Skeleton,
   Empty,
 } from "./YoutubeVideosSection.styles";
@@ -28,27 +29,35 @@ const moreText = {
   Hindi: "और दिखाएँ ->",
 };
 
-function YoutubeVideoCard({ video, main = false }) {
+function YoutubeVideoCard({ video, main = false, playing, onPlay }) {
   const Card = main ? MainCard : SmallCard;
-  const openVideo = () => {
-    const url =
-      video.url ||
-      (video.videoId
-        ? `https://www.youtube.com/watch?v=${video.videoId}`
-        : "");
-    if (url) window.open(url, "_blank", "noopener,noreferrer");
-  };
+  const videoId = video?.videoId;
+  const title = video?.title || "YouTube video";
+
+  if (playing && videoId) {
+    return (
+      <Card as="div" role="region" aria-label={`Playing: ${title}`}>
+        <PlayerFrame
+          src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`}
+          title={title}
+          allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+          allowFullScreen
+          referrerPolicy="strict-origin-when-cross-origin"
+        />
+      </Card>
+    );
+  }
 
   return (
     <Card
       type="button"
-      onClick={openVideo}
-      aria-label="Open video on YouTube"
+      onClick={() => videoId && onPlay?.(videoId)}
+      aria-label={`Play video: ${title}`}
     >
       <Thumbnail
         src={
           video.thumbnail?.replace(/hqdefault\.jpg$/, "maxresdefault.jpg") ||
-          `https://i.ytimg.com/vi/${video.videoId}/maxresdefault.jpg`
+          `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`
         }
         alt=""
         loading={main ? "eager" : "lazy"}
@@ -63,6 +72,7 @@ export default function YoutubeVideosSection() {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [playingId, setPlayingId] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -91,7 +101,7 @@ export default function YoutubeVideosSection() {
   }, []);
 
   return (
-    <Section aria-labelledby="youtube-videos-heading">
+    <Section id="videos" aria-labelledby="youtube-videos-heading">
       <Header>
         <Heading id="youtube-videos-heading">
           {headingText[language] || headingText.English}
@@ -116,10 +126,20 @@ export default function YoutubeVideosSection() {
         </Grid>
       ) : videos.length ? (
         <Grid>
-          <YoutubeVideoCard video={videos[0]} main />
+          <YoutubeVideoCard
+            video={videos[0]}
+            main
+            playing={playingId === videos[0]?.videoId}
+            onPlay={setPlayingId}
+          />
           <SmallGrid>
             {videos.slice(1, 5).map((video) => (
-              <YoutubeVideoCard key={video.videoId} video={video} />
+              <YoutubeVideoCard
+                key={video.videoId}
+                video={video}
+                playing={playingId === video.videoId}
+                onPlay={setPlayingId}
+              />
             ))}
           </SmallGrid>
         </Grid>

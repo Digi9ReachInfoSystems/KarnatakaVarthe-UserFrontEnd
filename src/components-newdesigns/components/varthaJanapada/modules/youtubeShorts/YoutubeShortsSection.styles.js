@@ -43,6 +43,7 @@ export const CarouselContainer = styled.div`
   box-sizing: border-box;
   outline: none;
   overflow: hidden;
+  scroll-margin-top: 120px;
 
   &:focus-visible {
     outline: 2px solid ${theme.colors.primary || "#0070f3"};
@@ -205,6 +206,16 @@ export const VideoThumbnail = styled.div`
     transform: translateY(-3px);
     box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
   }
+`
+
+export const PlayerFrame = styled.iframe`
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  background: #000;
 `
 
 export const VideoOverlay = styled.div`

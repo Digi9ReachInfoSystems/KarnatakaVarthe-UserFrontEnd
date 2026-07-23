@@ -7,6 +7,7 @@ export const Section = styled.section`
   min-width: 0;
   overflow: hidden;
   box-sizing: border-box;
+  scroll-margin-top: 120px;
 `;
 
 export const Header = styled.div`
@@ -153,6 +154,16 @@ export const Thumbnail = styled.img`
   ${SmallCard}:hover & {
     transform: scale(1.04);
   }
+`;
+
+export const PlayerFrame = styled.iframe`
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  background: #000;
 `;
 
 export const PlayButton = styled.span`

@@ -17,6 +17,7 @@ import {
   VideoInfo,
   NavigationButton,
   VideoTitle,
+  PlayerFrame,
   ShimmerContainer,
   ShimmerThumbnail,
   ShimmerTitle,
@@ -25,6 +26,7 @@ import {
 const YoutubeShortsSection = () => {
   const [videos, setVideos] = useState([])
   const [loading, setLoading] = useState(true)
+  const [playingId, setPlayingId] = useState(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(false)
   const trackRef = useRef(null)
@@ -82,22 +84,13 @@ const YoutubeShortsSection = () => {
   const scrollByCards = (direction) => {
     const el = trackRef.current
     if (!el) return
-    // Scroll roughly one viewport of cards (5 on desktop)
     const step = Math.max(el.clientWidth * 0.95, 200)
     el.scrollBy({ left: direction * step, behavior: "smooth" })
   }
 
-  const openShort = (video) => {
-    const url =
-      video?.url ||
-      (video?.videoId
-        ? `https://www.youtube.com/shorts/${video.videoId}`
-        : "")
-    if (url) window.open(url, "_blank", "noopener,noreferrer")
-  }
-
   return (
     <CarouselContainer
+      id="shorts"
       ref={containerRef}
       role="region"
       aria-labelledby="youtube-shorts-heading"
@@ -154,32 +147,47 @@ const YoutubeShortsSection = () => {
             : videos.map((video) => {
                 const id = video.videoId || video.id
                 const title = video.title || "Short"
+                const isPlaying = playingId === id
                 return (
                   <VideoCard
                     key={id}
-                    as="button"
-                    type="button"
+                    as={isPlaying ? "div" : "button"}
+                    type={isPlaying ? undefined : "button"}
                     data-short-card
                     role="listitem"
-                    onClick={() => openShort(video)}
-                    aria-label={`Open short: ${title}`}
+                    onClick={isPlaying ? undefined : () => setPlayingId(id)}
+                    aria-label={
+                      isPlaying ? `Playing: ${title}` : `Play short: ${title}`
+                    }
                   >
                     <VideoThumbnail>
-                      <ShortsBadge>Shorts</ShortsBadge>
-                      <img
-                        src={
-                          video.thumbnail?.replace(
-                            /hqdefault\.jpg$/,
-                            "maxresdefault.jpg"
-                          ) ||
-                          `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
-                        }
-                        alt=""
-                        loading="lazy"
-                      />
-                      <VideoOverlay>
-                        <PlayButton aria-hidden="true" />
-                      </VideoOverlay>
+                      {isPlaying ? (
+                        <PlayerFrame
+                          src={`https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`}
+                          title={title}
+                          allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                          allowFullScreen
+                          referrerPolicy="strict-origin-when-cross-origin"
+                        />
+                      ) : (
+                        <>
+                          <ShortsBadge>Shorts</ShortsBadge>
+                          <img
+                            src={
+                              video.thumbnail?.replace(
+                                /hqdefault\.jpg$/,
+                                "maxresdefault.jpg"
+                              ) ||
+                              `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
+                            }
+                            alt=""
+                            loading="lazy"
+                          />
+                          <VideoOverlay>
+                            <PlayButton aria-hidden="true" />
+                          </VideoOverlay>
+                        </>
+                      )}
                     </VideoThumbnail>
                     <VideoInfo>
                       <VideoTitle>{title}</VideoTitle>
