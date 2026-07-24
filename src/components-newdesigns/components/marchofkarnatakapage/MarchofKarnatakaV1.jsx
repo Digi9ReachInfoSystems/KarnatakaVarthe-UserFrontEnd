@@ -2,10 +2,10 @@
 import { FlexContainer, PageLayout } from './MarchOfkarnatakV1.styles.js'
 import MarchOfKarnatakaHero from './modules/herosection/MarchOfKarnatakaHero'
 import StateNewsOfMarchOfKarnataka from './modules/stateNews/StateNews'
-import NewsGovermentWebsite from './modules/govWebsite/NewsGovermentWebsite'
 import ArticleNewsMarchOfKarnatala from './modules/article/ArticleNewsMarchOfKarnatala'
 import LongVideoMOK from '../varthaJanapada/modules/youtubeVideos/YoutubeVideosSection'
 import ShortsCarouselsMOK from '../varthaJanapada/modules/youtubeShorts/YoutubeShortsSection'
+import InstagramReelsSection from '../varthaJanapada/modules/instagramReels/InstagramReelsSection'
 import GalleryMOK from './modules/GalleryMOK/GalleryMOK'
 import { LanguageContext } from '../../../context/LanguageContext.jsx'
 import { useContext, useEffect } from 'react'
@@ -27,11 +27,11 @@ function MarchofKarnatakaV1() {
     <main aria-label="March of Karnataka main content">
       <PageLayout>
         <MarchOfKarnatakaHero/>
-        <ArticleNewsMarchOfKarnatala/>
         <FlexContainer>
-        <StateNewsOfMarchOfKarnataka/>
-        <NewsGovermentWebsite/>
+          <StateNewsOfMarchOfKarnataka />
+          <InstagramReelsSection />
         </FlexContainer>
+        <ArticleNewsMarchOfKarnatala/>
         <NewsMarchArticles/>
         <LongVideoMOK/>
         <ShortsCarouselsMOK/>

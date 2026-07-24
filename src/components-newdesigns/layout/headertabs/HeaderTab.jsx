@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { LanguageContext } from "../../../context/LanguageContext";
 import {
@@ -135,8 +135,7 @@ const HeaderTab = () => {
     },
     { 
       name: "Videos", 
-      path: "https://www.youtube.com/channel/UCED9mQG47OfrV8lFTkTgX9g/videos",
-      external: true,
+      path: "/#videos",
       translations: {
         English: "Videos",
         Kannada: "ವೀಡಿಯೋಗಳು",
@@ -145,8 +144,7 @@ const HeaderTab = () => {
     },
     { 
       name: "Shorts",
-      path: "https://www.youtube.com/channel/UCED9mQG47OfrV8lFTkTgX9g/shorts",
-      external: true,
+      path: "/#shorts",
       translations: {
         English: "Shorts",
         Kannada: "ಶಾರ್ಟ್ಸ್",
@@ -225,6 +223,10 @@ const HeaderTab = () => {
 
   // Check if tab should be active
   const isTabActive = (itemPath) => {
+    // Hash section links (Videos / Shorts) should never show active styling
+    if (typeof itemPath === "string" && itemPath.includes("#")) {
+      return false;
+    }
     if (itemPath === "/") {
       return location.pathname === "/" || location.pathname === "/magazinesvartha";
     }
@@ -410,6 +412,14 @@ const HeaderTab = () => {
                   >
                     {getTranslatedName(item)}
                   </NavLinkStyled>
+                ) : item.path.includes("#") ? (
+                  <NavLinkStyled
+                    as={Link}
+                    to={item.path}
+                    className={language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}
+                  >
+                    {getTranslatedName(item)}
+                  </NavLinkStyled>
                 ) : (
                   <NavLinkStyled
                     to={item.path}
@@ -486,6 +496,15 @@ const HeaderTab = () => {
                       href={item.path}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={closeMobileMenu}
+                      className={language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}
+                    >
+                      {getTranslatedName(item)}
+                    </MobileNavLink>
+                  ) : item.path.includes("#") ? (
+                    <MobileNavLink
+                      as={Link}
+                      to={item.path}
                       onClick={closeMobileMenu}
                       className={language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}
                     >
