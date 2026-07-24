@@ -78,48 +78,60 @@ export const GalleryContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: ${theme.spacing(2)};
+  gap: 10px;
   max-width: 100%;
   margin: 0 auto;
-  padding: ${theme.spacing(2.5)} ${theme.spacing(6)};
+  padding: ${theme.spacing(2.5)} ${theme.spacing(4)};
   background: ${theme.colors.background};
   flex-wrap: nowrap;
   overflow-x: hidden;
 
   @media (max-width: 1026px) {
     padding: ${theme.spacing(2)} ${theme.spacing(1)};
-    gap: ${theme.spacing(1)};
+    gap: 8px;
   }
 
   @media (max-width: ${theme.breakpoints.desktop}) {
-    gap: ${theme.spacing(1.5)};
+    gap: 8px;
     max-width: 95%;
-    padding: ${theme.spacing(2)} ${theme.spacing(3)};
+    padding: ${theme.spacing(2)} ${theme.spacing(2)};
   }
 
   @media (max-width: ${theme.breakpoints.tablet}) {
-    gap: ${theme.spacing(1.5)};
-    padding: ${theme.spacing(2)} ${theme.spacing(2)};
+    gap: 6px;
+    padding: ${theme.spacing(2)} ${theme.spacing(1.5)};
     max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   @media (max-width: 768px) {
-    padding: ${theme.spacing(1.5)} ${theme.spacing(1)};
+    padding: 12px 16px;
     gap: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    padding: 10px 12px;
   }
 `
 
 
 // Individual static images (dynamically change with carousel)
 export const StaticImage = styled.img`
-  width: 200px;
-  height: 220px;
-  object-fit: cover;
+  width: 230px;
+  height: 300px;
+  object-fit: contain;
+  object-position: center;
+  background: #000;
   border-radius: 0;
   box-shadow: 0 4px 12px rgba(${theme.colors.primaryRgb}, 0.15);
   transition: transform ${theme.transitions.fast}, 
               box-shadow ${theme.transitions.fast},
-              opacity 0.4s ease-in-out;
+              opacity 0.4s ease-in-out,
+              width 0.35s ease;
   cursor: pointer;
   flex-shrink: 0;
   opacity: 0.85;
@@ -150,8 +162,8 @@ export const StaticImage = styled.img`
   }
 
   @media (max-width: ${theme.breakpoints.desktop}) {
-    width: 160px;
-    height: 180px;
+    width: 190px;
+    height: 250px;
   }
 
   @media (max-width: ${theme.breakpoints.tablet}) {
@@ -160,89 +172,121 @@ export const StaticImage = styled.img`
     &:nth-child(4) {
       display: none;
     }
-    width: 140px;
+    width: 110px;
     height: 160px;
   }
 
   @media (max-width: 768px) {
     /* Hide all side images on mobile */
-    display: none;
+    display: none !important;
   }
 `
 
-// Central carousel container
+// Central carousel container — hug active slide (no extra side whitespace)
 export const CentralCarousel = styled.div`
-  flex: 1;
-  max-width: 600px;
-  min-width: 400px;
-  flex-shrink: 0;
-
-  @media (max-width: 1026px) {
-    max-width: 100%;
-    min-width: auto;
-    width: 100%;
-    flex: 1;
-  }
+  flex: 0 0 auto;
+  width: fit-content;
+  max-width: min(720px, 100%);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
 
   @media (max-width: ${theme.breakpoints.desktop}) {
-    max-width: 500px;
-    min-width: 350px;
+    max-width: min(600px, 100%);
   }
 
   @media (max-width: ${theme.breakpoints.tablet}) {
-    max-width: 100%;
-    min-width: auto;
-    width: 100%;
-    flex: 1;
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
+    max-width: calc(100% - 236px);
   }
 
   @media (max-width: 768px) {
-    max-width: 100%;
-    min-width: auto;
+    flex: 1 1 auto;
     width: 100%;
+    max-width: 100%;
   }
 `
 
-// Main preview card
+// Main preview card — shrink-wraps to image (no wide black side bars)
 export const MainCard = styled.div`
   position: relative;
-  background: ${theme.colors.white};
+  background: transparent;
   border-radius: 0;
   box-shadow: 0 8px 20px rgba(${theme.colors.primaryRgb}, 0.15);
   overflow: hidden;
-  height: 340px;
+  width: fit-content;
+  max-width: 100%;
+  height: auto;
+  padding: 0;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  @media (max-width: ${theme.breakpoints.desktop}) {
-    height: 320px;
-  }
+  margin: 0 auto;
+  transition: width 0.35s ease, height 0.35s ease;
 
   @media (max-width: ${theme.breakpoints.tablet}) {
-    height: 280px;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    box-shadow: 0 6px 16px rgba(${theme.colors.primaryRgb}, 0.12);
   }
 
   @media (max-width: 768px) {
-    height: 300px;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    background: transparent;
   }
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    height: 240px;
-  }
-
-  @media (max-width: 480px) {
-    height: 220px;
+    padding: 0;
   }
 `
 
 export const MainImage = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: min(72vh, 620px);
+  object-fit: contain;
+  object-position: center center;
+  display: block;
+  margin: 0 auto;
+  background: transparent;
   transform: ${(p) => (p.$zoomed ? "scale(1.6)" : "scale(1)")};
-  transition: transform ${theme.transitions.fast};
-  cursor: ${(p) => (p.$zoomed ? "zoom-out" : "zoom-in")};
+  transition: transform ${theme.transitions.fast}, opacity 0.35s ease, max-height 0.35s ease;
+  cursor: pointer;
+
+  @media (max-width: ${theme.breakpoints.desktop}) {
+    max-height: min(68vh, 560px);
+  }
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: min(58vh, 420px);
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: min(70vh, 560px);
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    max-height: min(68vh, 480px);
+  }
+
+  @media (max-width: 480px) {
+    max-height: min(65vh, 420px);
+  }
 
   &:focus-visible {
     outline: 2px solid ${theme.colors.primary};
@@ -291,7 +335,13 @@ export const NavButton = styled.button`
   @media (max-width: ${theme.breakpoints.tablet}) {
     width: 40px;
     height: 40px;
-    ${(p) => (p.$position === "left" ? "left: 12px;" : "right: 12px;")}
+    ${(p) => (p.$position === "left" ? "left: 8px;" : "right: 8px;")}
+  }
+
+  @media (max-width: 768px) {
+    width: 40px;
+    height: 40px;
+    ${(p) => (p.$position === "left" ? "left: 10px;" : "right: 10px;")}
   }
 
   @media (max-width: ${theme.breakpoints.mobile}) {
@@ -364,6 +414,11 @@ export const Caption = styled.p`
   line-height: 1.4;
   font-family: ${theme.fonts.body};
   border-top: 2px solid ${theme.colors.primary};
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
 
   @media (max-width: ${theme.breakpoints.tablet}) {
     font-size: ${theme.fontSizes.small};
@@ -392,8 +447,8 @@ const shimmer = `
 `
 
 export const SkeletonImage = styled.div`
-  width: 200px;
-  height: 220px;
+  width: 230px;
+  height: 300px;
   border-radius: 0;
   background: linear-gradient(
     90deg,
@@ -407,8 +462,8 @@ export const SkeletonImage = styled.div`
   ${shimmer}
 
   @media (max-width: ${theme.breakpoints.desktop}) {
-    width: 160px;
-    height: 180px;
+    width: 190px;
+    height: 250px;
   }
 
   @media (max-width: ${theme.breakpoints.tablet}) {
@@ -416,12 +471,12 @@ export const SkeletonImage = styled.div`
     &:nth-child(4) {
       display: none;
     }
-    width: 140px;
+    width: 110px;
     height: 160px;
   }
 
   @media (max-width: 768px) {
-    display: none;
+    display: none !important;
   }
 `
 
@@ -431,30 +486,38 @@ export const SkeletonMainCard = styled.div`
   border-radius: 0;
   box-shadow: 0 8px 20px rgba(${theme.colors.primaryRgb}, 0.15);
   overflow: hidden;
-  height: 340px;
+  width: fit-content;
+  max-width: 100%;
+  min-width: 280px;
+  height: min(72vh, 620px);
+  max-height: 620px;
+  padding: 6px;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0 auto;
   ${shimmer}
 
   @media (max-width: ${theme.breakpoints.desktop}) {
-    height: 320px;
+    height: min(68vh, 560px);
   }
 
   @media (max-width: ${theme.breakpoints.tablet}) {
-    height: 280px;
+    height: min(62vh, 480px);
   }
 
   @media (max-width: 768px) {
-    height: 300px;
+    width: 100%;
+    height: min(58vh, 440px);
   }
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    height: 240px;
+    height: min(52vh, 380px);
   }
 
   @media (max-width: 480px) {
-    height: 220px;
+    height: min(48vh, 320px);
   }
 `
 
