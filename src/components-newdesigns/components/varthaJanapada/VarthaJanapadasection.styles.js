@@ -35,7 +35,7 @@ export const FlexContainer = styled.div`
   gap: ${theme.spacing(5)};
   align-items: flex-start;
   width: 100%;
-  overflow-x: hidden;
+  overflow-x: visible;
   box-sizing: border-box;
 
   /* StateNews takes 70% */

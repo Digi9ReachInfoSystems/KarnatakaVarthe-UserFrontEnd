@@ -380,16 +380,16 @@ export const MobileCMPdfLink = styled.a`
 
 // CM Images with proper sizing and decorative treatment (WCAG 2.1 - 1.1.1, 1.4.10)
 export const CMImage = styled.img`
-  max-width: ${theme.spacing(35)};
-  height: 100px;
+  max-width: ${theme.spacing(38)};
+  height: 112px;
   object-fit: contain;
-  padding: ${theme.spacing(1.8)};
+  padding: ${theme.spacing(1.6)};
   flex-shrink: 0;
   display: block;
 
   @media (max-width: 1150px) {
-    max-width: ${theme.spacing(25)};
-    height: 75px;
+    max-width: ${theme.spacing(28)};
+    height: 84px;
     padding: ${theme.spacing(1)};
   }
 
@@ -397,23 +397,23 @@ export const CMImage = styled.img`
     flex: 1;
     width: calc(50% - 4px);
     max-width: calc(50% - 4px);
-    height: 82px;
+    height: 90px;
     padding: 0;
     object-fit: contain;
   }
 
   @media (max-width: 600px) {
-    height: 78px;
+    height: 84px;
   }
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     width: calc(50% - 3px);
     max-width: calc(50% - 3px);
-    height: 74px;
+    height: 80px;
     padding: 0;
   }
 
   @media (max-width: 400px) {
-    height: 68px;
+    height: 74px;
   }
 `;

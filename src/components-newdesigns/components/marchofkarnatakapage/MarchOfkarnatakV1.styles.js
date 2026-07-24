@@ -36,7 +36,7 @@ export const FlexContainer = styled.div`
   gap: ${theme.spacing(5)};
   align-items: flex-start;
   width: 100%;
-  overflow-x: hidden;
+  overflow-x: visible;
   box-sizing: border-box;
 
   /* StateNews takes 70% */
@@ -46,7 +46,7 @@ export const FlexContainer = styled.div`
     min-width: 0;
   }
 
-  /* StateGovernmentWebsites takes 30% */
+  /* Instagram Reels takes 30% */
   > :last-child {
     flex: 0 0 30%;
     max-width: 29%;
