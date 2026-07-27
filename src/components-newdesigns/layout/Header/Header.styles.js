@@ -417,3 +417,31 @@ export const CMImage = styled.img`
     height: 74px;
   }
 `;
+
+/* Slightly smaller than CM portrait */
+export const DCMImage = styled(CMImage)`
+  max-width: ${theme.spacing(34)};
+  height: 100px;
+  padding: ${theme.spacing(1.8)};
+
+  @media (max-width: 1150px) {
+    max-width: ${theme.spacing(24)};
+    height: 76px;
+  }
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    height: 82px;
+  }
+
+  @media (max-width: 600px) {
+    height: 76px;
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    height: 72px;
+  }
+
+  @media (max-width: 400px) {
+    height: 66px;
+  }
+`;
