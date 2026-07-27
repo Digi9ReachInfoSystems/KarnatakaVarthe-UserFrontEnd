@@ -11,6 +11,7 @@ import {
   CMSection,
   CMImagesWrapper,
   CMImage,
+  DCMImage,
   VisuallyHidden,
 } from './Header.styles';
 import { FontSizeContext } from '../../../context/FontSizeProvider';
@@ -53,7 +54,7 @@ const Header = () => {
             alt="Chief Minister D K Shivakumar portrait" 
             loading="eager"
           />
-          <CMImage 
+          <DCMImage 
             src="/header/newdcm.png" 
             alt="Deputy Chief Minister Dr. G Parameshwara portrait" 
             loading="eager"
