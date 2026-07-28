@@ -7,6 +7,7 @@ import {
   Container,
   SectionHeader,
   Title,
+  ShowMoreLink,
   CarouselWrapper,
   NavButton,
   ArticlesGrid,
@@ -52,12 +53,12 @@ export default function ArticlesNews() {
 
   const [itemsPerPage, setItemsPerPage] = useState(getItemsPerPage())
 
-  // Fetch latest 10 district news for homepage (magazine)
+  // Fetch latest district news for homepage (Vartha + March combined — no magazineType filter)
   useEffect(() => {
     const fetchDistrictNews = async () => {
       try {
         setLoading(true)
-        const response = await fetchHomepageDistrictNews("magazine")
+        const response = await fetchHomepageDistrictNews()
         setRawData(Array.isArray(response?.data) ? response.data : [])
       } catch (error) {
         console.error("Error fetching district news:", error)
@@ -165,11 +166,9 @@ export default function ArticlesNews() {
         {/* Section Header */}
         <SectionHeader>
           <Title id="articles-heading">{headerText[language] || "Articles"}</Title>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
-                        <a href="/district" style={{ textDecoration: 'none', color: '#007BFF', fontWeight: 'bold' }}>
-                          {buttonText[language] || "Show More"}
-                        </a>
-                      </div>
+          <ShowMoreLink href="/district">
+            {buttonText[language] || "Show More"}
+          </ShowMoreLink>
         </SectionHeader>
 
         {/* Articles Carousel */}

@@ -8,6 +8,7 @@ import {
   Section,
   SectionHeader,
   SectionTitle,
+  ShowMoreLink,
   GalleryContainer,
   StaticImage,
   CentralCarousel,
@@ -256,26 +257,13 @@ export default function GallerySection() {
     <Section aria-label={headerText[language] || "Photo Gallery"}>
       <SectionHeader>
         <SectionTitle>{headerText[language] || "Photo Gallery"}</SectionTitle>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginTop: "1rem",
-          }}
+        <ShowMoreLink
+          href={INSTAGRAM_PROFILE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
         >
-          <a
-            href={INSTAGRAM_PROFILE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              textDecoration: "none",
-              color: "#007BFF",
-              fontWeight: "bold",
-            }}
-          >
-            {buttonText[language] || "Show More"}
-          </a>
-        </div>
+          {buttonText[language] || "Show More"}
+        </ShowMoreLink>
       </SectionHeader>
       <GalleryContainer role="region" aria-label="Gallery single row layout">
         {total > 2 &&

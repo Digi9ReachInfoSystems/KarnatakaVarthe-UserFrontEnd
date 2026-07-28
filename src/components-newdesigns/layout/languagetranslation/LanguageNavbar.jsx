@@ -136,6 +136,7 @@ const LanguageNavbar = () => {
         )}
       </LanguageSelector>
 
+      {/* Search hidden for now
       <SearchContainer 
         aria-label="Search" 
         role="button" 
@@ -154,12 +155,13 @@ const LanguageNavbar = () => {
           {getSearchText()}
         </SearchText>
       </SearchContainer>
+      */}
 
       <TopBarAuth>
         <HeaderAuthMenu />
       </TopBarAuth>
 
-      <SearchModal isOpen={isSearchOpen} onClose={closeSearchModal} />
+      {/* <SearchModal isOpen={isSearchOpen} onClose={closeSearchModal} /> */}
     </LanguageNavContainer>
   );
 };

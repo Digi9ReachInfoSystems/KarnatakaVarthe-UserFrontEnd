@@ -1,98 +1,82 @@
-
-import { Link } from 'react-router-dom'
-import { useState, useContext } from 'react'
-import { LanguageContext } from '../../../../../context/LanguageContext.jsx'
-
+import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { LanguageContext } from "../../../../../context/LanguageContext.jsx";
+import { HeroLayout } from "./MarchOfKarnatakaHero.styles.js";
 import {
-    HeroLayout,
-    HeroRoot,
-    HeroBackground,
-    HeroContent,
-    HeroTitle,
+  MagazinePair,
+  MagazineCard,
+  MagazineCover,
+  MagazineFooter,
+  MagazineCta,
+} from "../../../varthaJanapada/modules/Varthahero.styles.js";
+import HeroShortVideos from "../../../varthaJanapada/modules/heroshorts/HeroShortVideos.jsx";
+import Services from "../../../varthaJanapada/modules/servicess/Services.jsx";
+import LiveTvPanel from "../../../varthaJanapada/modules/liveTv/LiveTvPanel.jsx";
+import { NewsColumnStack } from "../../../varthaJanapada/modules/liveTv/LiveTvPanel.styles.js";
 
-    HeroCta,
-
-} from "./MarchOfKarnatakaHero.styles.js"
-import HeroShortVideos from '../../../varthaJanapada/modules/heroshorts/HeroShortVideos.jsx'
-import Services from '../../../varthaJanapada/modules/servicess/Services.jsx'
-import LiveTvPanel from '../../../varthaJanapada/modules/liveTv/LiveTvPanel.jsx'
-import { NewsColumnStack } from '../../../varthaJanapada/modules/liveTv/LiveTvPanel.styles.js'
+const MAGAZINE_CARDS = [
+  {
+    id: "vartha",
+    image: "/new-magzinesimages/vartha-july.jpg",
+    link: "/magazinesvartha",
+    labels: {
+      English: "Vartha Janapada magazines",
+      Kannada: "ವಾರ್ತಾ ಜನಪದ ಮ್ಯಾಗಜೀನ್‌ಗಳು",
+      Hindi: "वार्ता जनपद पत्रिकाएँ",
+    },
+  },
+  {
+    id: "march",
+    image: "/new-magzinesimages/march-july.jpg",
+    link: "/marchofkarnatakmagzine",
+    labels: {
+      English: "March of Karnataka magazines",
+      Kannada: "ಮಾರ್ಚ್ ಆಫ್ ಕರ್ನಾಟಕ ಮ್ಯಾಗಜೀನ್‌ಗಳು",
+      Hindi: "मार्च ऑफ कर्नाटक पत्रिकाएँ",
+    },
+  },
+];
 
 function MarchOfKarnatakaHero() {
-    const { language } = useContext(LanguageContext);
-    const [touchStart, setTouchStart] = useState(null);
-  const [touchEnd, setTouchEnd] = useState(null);
-  const minSwipeDistance = 50;
-    const translations = {
-        magazine: {
-          Kannada: "ಮಾರ್ಚ್ ಆಫ್ ಕರ್ನಾಟಕ ಮ್ಯಾಗಜೀನ್ಗಳು",
-          English: "March of Karnataka Magazines",
-          Hindi: "मार्च ऑफ कर्नाटक पत्रिकाएं"
-        },
-
-        viewButton: {
-          Kannada: "ವೀಕ್ಷಿಸಿ",
-          English: "View",
-          Hindi: "देखें"
-        }
-    }
-
-    const getTranslatedTitle = (magazineType) => {
-        return translations[magazineType][language] || translations[magazineType].English;
-    };
-    const carouselData = [
-
-      {
-        image: "newupdate/marchofkarnatakjuly.jpg",
-        magazineType: "magazine2",
-        subtitle: "",
-        link: "/marchofkarnatakmagzine"
-      }
-    ];
- 
-
-  const onTouchStart = (e) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const onTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX);
-
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    const distance = touchStart - touchEnd;
-    const isSwipe = Math.abs(distance) > minSwipeDistance;
-    if (isSwipe) {
-      // Handle swipe if needed for future carousel implementation
-    }
-  };
+  const { language } = useContext(LanguageContext);
+  const textClass =
+    language === "Kannada" || language === "Hindi" ? "kannada-text" : "";
 
   return (
-   <HeroLayout aria-label="March of Karnataka Hero Section">
-          {/* Left: Live TV + Latest News */}
-    <NewsColumnStack>
-      <LiveTvPanel />
-      <Services magazineType="magazine2" />
-    </NewsColumnStack>
-    <HeroRoot aria-label="Featured magazines"
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}>
-        <HeroBackground src={`/${carouselData[0].image}`} />
+    <HeroLayout aria-label="March of Karnataka Hero Section">
+      <NewsColumnStack>
+        <LiveTvPanel />
+        <Services magazineType="magazine2" />
+      </NewsColumnStack>
 
-                        <HeroContent>
-                          <HeroTitle className="text-balance" $isKannada={language === "Kannada"}>
-                            {getTranslatedTitle("magazine")}
-                          </HeroTitle>
-                          <HeroCta as={Link} to="/marchofkarnatakmagzine" aria-label={`${translations.viewButton[language]} - ${getTranslatedTitle("magazine")}`}>
-                            {translations.viewButton[language]}
-                          </HeroCta>
-                        </HeroContent>
-    </HeroRoot>
-          {/* Right: Hero Shorts */}
-          <HeroShortVideos />
+      <MagazinePair aria-label="Featured magazines">
+        {MAGAZINE_CARDS.map((card) => {
+          const label = card.labels[language] || card.labels.English;
+          return (
+            <MagazineCard key={card.id}>
+              <MagazineCover
+                $src={card.image}
+                role="img"
+                aria-label={label}
+              />
+              <MagazineFooter>
+                <MagazineCta
+                  as={Link}
+                  to={card.link}
+                  className={textClass}
+                  aria-label={label}
+                >
+                  {label}
+                </MagazineCta>
+              </MagazineFooter>
+            </MagazineCard>
+          );
+        })}
+      </MagazinePair>
+
+      <HeroShortVideos />
     </HeroLayout>
-  )
+  );
 }
 
-export default MarchOfKarnatakaHero
+export default MarchOfKarnatakaHero;

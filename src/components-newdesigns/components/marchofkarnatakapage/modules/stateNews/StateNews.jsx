@@ -55,12 +55,12 @@ function StateNewsOfMarchOfKarnataka() {
         fetchCategories()
     }, [])
 
-    // Fetch latest 10 state news for homepage (magazine2)
+    // Fetch latest state news for homepage (Vartha + March combined — no magazineType filter)
     useEffect(() => {
         const fetchStateNews = async () => {
             try {
                 setLoading(true)
-                const response = await fetchHomepageStateNews("magazine2")
+                const response = await fetchHomepageStateNews()
                 setRawData(Array.isArray(response?.data) ? response.data : [])
             } catch (error) {
                 console.error("Error fetching state news:", error)
