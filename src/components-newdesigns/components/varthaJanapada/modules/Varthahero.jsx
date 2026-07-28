@@ -17,7 +17,7 @@ import { NewsColumnStack } from "./liveTv/LiveTvPanel.styles.js";
 const MAGAZINE_CARDS = [
   {
     id: "vartha",
-    image: "/new-magzinesimages/vartha-aug.jpeg",
+    image: "/new-magzinesimages/vartha-a.webp",
     link: "/magazinesvartha",
     labels: {
       English: "Vartha Janapada Magazines",
@@ -27,7 +27,7 @@ const MAGAZINE_CARDS = [
   },
   {
     id: "march",
-    image: "/new-magzinesimages/mok-aug.jpeg",
+    image: "/new-magzinesimages/mok-a.webp",
     link: "/marchofkarnatakmagzine",
     labels: {
       English: "March of Karnataka Magazines",
