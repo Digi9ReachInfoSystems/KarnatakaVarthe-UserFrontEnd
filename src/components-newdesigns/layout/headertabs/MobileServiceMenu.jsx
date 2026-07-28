@@ -59,7 +59,7 @@ const MobileServiceMenu = ({ isOpen, onServiceSelect }) => {
 
   return (
     <MobileDistrictSubmenu isOpen={isOpen}>
-      <MobileDistrictList style={{ listStyle: "none", padding: 0, margin: 0 }}>
+      <MobileDistrictList>
         {loading ? (
           <div style={{ padding: "20px", textAlign: "center", color: "#666" }}>
             Loading services...

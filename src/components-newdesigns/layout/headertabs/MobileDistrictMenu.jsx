@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { LanguageContext } from "../../../context/LanguageContext";
 import { fetchDistrictsList } from "../../../services/newapis/newapis-services";
 import {
@@ -10,8 +11,12 @@ import {
 
 const MobileDistrictMenu = ({ isOpen, onDistrictSelect }) => {
   const { language } = useContext(LanguageContext);
+  const location = useLocation();
+  const selectedDistrict = new URLSearchParams(location.search).get("district");
   const [districts, setDistricts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const textClass =
+    language === "Kannada" || language === "Hindi" ? "kannada-text" : "";
 
   // Fetch districts from API
   useEffect(() => {
@@ -57,8 +62,16 @@ const MobileDistrictMenu = ({ isOpen, onDistrictSelect }) => {
             <MobileDistrictItem key={district._id || district.name}>
               <MobileDistrictLink
                 to={`/district?district=${encodeURIComponent(district.name)}`}
+                end
                 onClick={onDistrictSelect}
-                className={language === "Kannada" || language === "Hindi" ? "kannada-text" : ""}
+                className={() =>
+                  [
+                    selectedDistrict === district.name ? "active" : "",
+                    textClass,
+                  ]
+                    .filter(Boolean)
+                    .join(" ")
+                }
               >
                 {getDistrictName(district)}
               </MobileDistrictLink>

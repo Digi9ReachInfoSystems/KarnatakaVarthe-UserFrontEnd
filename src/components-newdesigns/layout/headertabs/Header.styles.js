@@ -420,7 +420,7 @@ export const MobileNavItem = styled.div`
   position: relative;
 `;
 
-export const MobileNavLink = styled(NavLink)`
+const mobileNavItemBase = `
   display: flex;
   align-items: center;
   justify-content: center;
@@ -433,23 +433,17 @@ export const MobileNavLink = styled(NavLink)`
   transition: all ${theme.transitions.fast};
   border-radius: ${theme.borderRadius.small};
   margin: 0 ${theme.spacing(2)};
+  box-sizing: border-box;
+  width: auto;
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     padding: ${theme.spacing(1.5)} ${theme.spacing(2)};
     font-size: ${theme.fontSizes.small};
     margin: 0 ${theme.spacing(1)};
   }
+`;
 
-  &:hover {
-    background-color: ${theme.colors.gray[100]};
-    color: ${theme.colors.primary};
-  }
-
-  &:focus-visible {
-    outline: 2px solid ${theme.colors.primary};
-    outline-offset: 2px;
-  }
-
+const mobileNavItemActive = `
   &.active {
     background-color: ${theme.colors.primary};
     color: ${theme.colors.white};
@@ -475,12 +469,79 @@ export const MobileNavLink = styled(NavLink)`
     }
   }
 
+  &.active:active {
+    background-color: ${theme.colors.primary};
+  }
+
+  &.active.kannada-text {
+    font-weight: 700;
+  }
+`;
+
+export const MobileNavLink = styled(NavLink)`
+  ${mobileNavItemBase}
+
+  &:hover {
+    background-color: ${theme.colors.gray[100]};
+    color: ${theme.colors.primary};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${theme.colors.primary};
+    outline-offset: 2px;
+  }
+
+  ${mobileNavItemActive}
+
   &:active {
     background-color: ${theme.colors.gray[200]};
   }
 
-  &.active:active {
-    background-color: ${theme.colors.primary};
+  &.kannada-text {
+    font-weight: 700;
+    font-size: ${theme.fontSizes.medium};
+
+    @media (max-width: ${theme.breakpoints.mobile}) {
+      font-size: ${theme.fontSizes.small};
+    }
+  }
+`;
+
+/* Accordion triggers — never use page "active" styling; keep all the same */
+export const MobileNavTrigger = styled.button`
+  ${mobileNavItemBase}
+  width: calc(100% - ${theme.spacing(4)});
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: ${theme.spacing(5)};
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    width: calc(100% - ${theme.spacing(2)});
+    padding-right: ${theme.spacing(4)};
+  }
+
+  &:hover {
+    background-color: ${theme.colors.gray[100]};
+    color: ${theme.colors.primary};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${theme.colors.primary};
+    outline-offset: 2px;
+  }
+
+  &:active {
+    background-color: ${theme.colors.gray[200]};
+  }
+
+  /* Open accordion: same look as others — no blue active bar */
+  &[aria-expanded="true"] {
+    background-color: transparent;
+    color: ${theme.colors.text};
   }
 
   &.kannada-text {
@@ -492,8 +553,8 @@ export const MobileNavLink = styled(NavLink)`
     }
   }
 
-  &.active.kannada-text {
-    font-weight: 700;
+  svg {
+    color: ${theme.colors.text};
   }
 `;
 
@@ -818,71 +879,157 @@ export const UserEmail = styled.div`
   }
 `;
 
-// Mobile District Menu Styles
+// Mobile submenu styles (News / Magazines / Media / Districts) — broader & distinct
 export const MobileDistrictSubmenu = styled.div`
-  max-height: ${props => props.isOpen ? '400px' : '0'};
+  max-height: ${(props) => (props.isOpen ? "70vh" : "0")};
   overflow: hidden;
   transition: max-height 0.3s ease;
-  background-color: ${theme.colors.gray[50]};
-  margin: 0 ${theme.spacing(2)};
-  border-radius: ${theme.borderRadius.small};
+  background-color: #f4f7fb;
+  margin: ${theme.spacing(0.75)} ${theme.spacing(1.5)} ${theme.spacing(1)};
+  border-radius: 12px;
+  border: none;
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    margin: 0 ${theme.spacing(1)};
+    margin: ${theme.spacing(0.5)} ${theme.spacing(1)} ${theme.spacing(0.75)};
   }
 `;
 
 export const MobileDistrictList = styled.div`
   display: flex;
   flex-direction: column;
-  padding: ${theme.spacing(1)} 0;
-  max-height: 350px;
+  gap: 10px;
+  padding: 14px 12px;
+  max-height: 60vh;
+  overflow-x: hidden;
   overflow-y: auto;
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: ${theme.colors.primary} #e8eef5;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${theme.colors.primary};
+    border-radius: 999px;
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    gap: 8px;
+    padding: 12px 10px;
+  }
 `;
 
 export const MobileDistrictItem = styled.div`
   width: 100%;
-  border-bottom: 1px solid ${theme.colors.gray[200]};
-
-  &:last-child {
-    border-bottom: none;
-  }
+  border-bottom: none;
 `;
 
 export const MobileDistrictLink = styled(NavLink)`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: ${theme.spacing(1.5)} ${theme.spacing(3)};
-  font-size: ${theme.fontSizes.small};
+  position: relative;
+  min-height: 48px;
+  padding: 14px 18px;
+  font-size: 15px;
   font-weight: 500;
+  line-height: 1.4;
   color: ${theme.colors.text};
   text-decoration: none;
-  transition: all ${theme.transitions.fast};
   text-align: center;
   width: 100%;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: background-color 0.2s ease, color 0.2s ease;
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    padding: ${theme.spacing(1.25)} ${theme.spacing(2)};
-    font-size: ${theme.fontSizes.small};
+    min-height: 46px;
+    padding: 12px 16px;
+    font-size: 14px;
   }
 
   &:hover {
-    background-color: ${theme.colors.gray[100]};
+    background-color: #f5f8fc;
     color: ${theme.colors.primary};
   }
 
   &:active {
-    background-color: ${theme.colors.gray[200]};
+    background-color: #eef4fb;
   }
 
   &:focus-visible {
     outline: 2px solid ${theme.colors.primary};
-    outline-offset: -2px;
+    outline-offset: 2px;
+  }
+
+  /* Soft current-page hint — no blue bar / triangle like main menu */
+  &.active {
+    background-color: #f5f8fc;
+    color: ${theme.colors.primary};
+    font-weight: 600;
   }
 
   &.kannada-text {
     font-weight: 600;
+  }
+`;
+
+/* Submenu accordion row (e.g. District News expand) — not a NavLink */
+export const MobileSubmenuTrigger = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  min-height: 48px;
+  padding: 14px 40px 14px 18px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+  font-family: inherit;
+  color: ${theme.colors.text};
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    min-height: 46px;
+    padding: 12px 36px 12px 16px;
+    font-size: 14px;
+  }
+
+  &:hover {
+    background-color: #f5f8fc;
+    color: ${theme.colors.primary};
+  }
+
+  &:active {
+    background-color: #eef4fb;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${theme.colors.primary};
+    outline-offset: 2px;
+  }
+
+  &.kannada-text {
+    font-weight: 600;
+  }
+
+  svg {
+    color: ${theme.colors.text};
   }
 `;
 
