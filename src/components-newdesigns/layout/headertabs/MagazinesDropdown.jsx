@@ -30,8 +30,8 @@ export const MAGAZINES_ITEMS = [
     path: "/specialpublication",
     translations: {
       English: "Special Publication",
-      Kannada: "ಸ್ಪೆಷಲ್ ಪಬ್ಲಿಕೇಶನ್",
-      Hindi: "स्पेशल पब्लिकेशन",
+      Kannada: "ವಿಶೇಷ ಪ್ರಕಟಣೆ",
+      Hindi: "विशेष प्रकाशन",
     },
   },
 ];

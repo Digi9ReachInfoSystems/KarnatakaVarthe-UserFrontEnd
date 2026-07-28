@@ -27,7 +27,7 @@ export const MEDIA_ITEMS = [
   },
   {
     name: "Photos",
-    path: "/photos",
+    path: "/#photos",
     translations: {
       English: "Photos",
       Kannada: "ಫೋಟೋಗಳು",
