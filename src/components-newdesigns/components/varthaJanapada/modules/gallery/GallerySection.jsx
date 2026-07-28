@@ -189,7 +189,7 @@ export default function GallerySection() {
 
   if (loading) {
     return (
-      <Section aria-label={headerText[language] || "Photo Gallery"}>
+      <Section id="photos" aria-label={headerText[language] || "Photo Gallery"}>
         <SectionHeader>
           <SectionTitle>{headerText[language] || "Photo Gallery"}</SectionTitle>
         </SectionHeader>
@@ -200,7 +200,7 @@ export default function GallerySection() {
 
   if (error) {
     return (
-      <Section aria-label={headerText[language] || "Photo Gallery"}>
+      <Section id="photos" aria-label={headerText[language] || "Photo Gallery"}>
         <SectionHeader />
         <div style={{ textAlign: "center", padding: "2rem", color: "#f44336" }}>
           {language === "English"
@@ -217,7 +217,7 @@ export default function GallerySection() {
 
   if (photos.length === 0) {
     return (
-      <Section aria-label={headerText[language] || "Photo Gallery"}>
+      <Section id="photos" aria-label={headerText[language] || "Photo Gallery"}>
         <SectionHeader>
           <SectionTitle>{headerText[language] || "Photo Gallery"}</SectionTitle>
         </SectionHeader>
@@ -236,7 +236,7 @@ export default function GallerySection() {
 
   if (!active) {
     return (
-      <Section aria-label={headerText[language] || "Photo Gallery"}>
+      <Section id="photos" aria-label={headerText[language] || "Photo Gallery"}>
         <SectionHeader>
           <SectionTitle>{headerText[language] || "Photo Gallery"}</SectionTitle>
         </SectionHeader>
@@ -254,7 +254,7 @@ export default function GallerySection() {
   }
 
   return (
-    <Section aria-label={headerText[language] || "Photo Gallery"}>
+    <Section id="photos" aria-label={headerText[language] || "Photo Gallery"}>
       <SectionHeader>
         <SectionTitle>{headerText[language] || "Photo Gallery"}</SectionTitle>
         <ShowMoreLink

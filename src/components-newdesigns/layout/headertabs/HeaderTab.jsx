@@ -76,8 +76,8 @@ const HeaderTab = () => {
       path: "/specialnews",
       translations: {
         English: "CM Events",
-        Kannada: "ಸಿಎಂ ಇವೆಂಟ್ಸ್",
-        Hindi: "सीएम इवेंट्स"
+        Kannada: "ಸಿಎಂ ಕಾರ್ಯಕ್ರಮಗಳು",
+        Hindi: "सीएम कार्यक्रम"
       }
     },
     { 
@@ -115,8 +115,8 @@ const HeaderTab = () => {
       clickable: false,
       translations: {
         English: "Our Services",
-        Kannada: "ಅವರ್ ಸರ್ವಿಸಸ್",
-        Hindi: "आवर सर्विसेज़"
+        Kannada: "ನಮ್ಮ ಸೇವೆಗಳು",
+        Hindi: "हमारी सेवाएँ"
       }
     },
     {
@@ -251,9 +251,6 @@ const HeaderTab = () => {
     }
     if (itemPath === "/marchofkarnataka") {
       return location.pathname === "/marchofkarnataka";
-    }
-    if (itemPath === "/media") {
-      return location.pathname === "/photos";
     }
     return location.pathname === itemPath;
   };

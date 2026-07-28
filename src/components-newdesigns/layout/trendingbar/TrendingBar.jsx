@@ -97,14 +97,14 @@ const TrendingBar = () => {
     return article[field] || "No content available";
   };
 
-  // Get translated "Clarifications" label
+  // Get translated "Trending" label
   const getTrendingLabel = () => {
     const translations = {
-      English: "Clarifications",
-      Kannada: "ಕ್ಲಾರಿಫಿಕೇಶನ್ಸ್",
-      Hindi: "क्लैरिफिकेशन्स",
+      English: "Trending",
+      Kannada: "ಜನಪ್ರಿಯ",
+      Hindi: "प्रचलित",
     };
-    return translations[language] || "Clarifications";
+    return translations[language] || "Trending";
   };
 
   return (

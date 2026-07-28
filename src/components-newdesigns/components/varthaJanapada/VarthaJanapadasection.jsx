@@ -10,7 +10,7 @@ import ShortsCarousel from "./modules/youtubeShorts/YoutubeShortsSection";
 import InstagramReelsSection from "./modules/instagramReels/InstagramReelsSection";
 import NewsArticlesNews from "./modules/newsarticles/NewsArtilces";
 
-const HASH_SECTION_IDS = new Set(["videos", "shorts", "reels"]);
+const HASH_SECTION_IDS = new Set(["videos", "shorts", "reels", "photos"]);
 
 export default function VarthaJanapadasection() {
   const location = useLocation();
