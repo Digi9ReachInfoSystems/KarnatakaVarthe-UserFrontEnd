@@ -282,3 +282,114 @@ export const HeroCta = styled.a`
     padding: ${theme.spacing1(1.75)} ${theme.spacing1(2.5)};
   }
 `;
+
+/* Two magazine cards (Vartha + March) in the middle hero column */
+export const MagazinePair = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: ${theme.spacing1(3)};
+  height: 500px;
+  min-height: 0;
+  width: 100%;
+  box-sizing: border-box;
+
+  @media (max-width: ${theme.breakpoints.desktop}) {
+    height: 450px;
+  }
+
+  @media (min-width: 850px) and (max-width: 1026px) {
+    height: 500px;
+  }
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    height: 400px;
+  }
+
+  @media (max-width: 450px) {
+    grid-template-columns: 1fr;
+    height: auto;
+    gap: ${theme.spacing1(2.5)};
+  }
+`;
+
+export const MagazineCard = styled.article`
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  background: ${theme.colors.white};
+  border-radius: ${theme.borderRadius.medium};
+  border: 1px solid ${theme.colors.gray[200]};
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+
+  @media (max-width: 450px) {
+    height: 320px;
+  }
+`;
+
+export const MagazineCover = styled.div`
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  background-image: url(${(props) => props.$src});
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+`;
+
+export const MagazineFooter = styled.div`
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: ${theme.spacing1(3)} ${theme.spacing1(2.5)};
+  background: linear-gradient(90deg, #ffffff 0%, #f4f8fc 40%, #d9e8f8 100%);
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    padding: ${theme.spacing1(2.5)} ${theme.spacing1(2)};
+  }
+`;
+
+export const MagazineCta = styled.a`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  background: ${theme.colors.primary};
+  color: ${theme.colors.white};
+  border-radius: ${theme.borderRadius.small};
+  padding: ${theme.spacing1(2)} ${theme.spacing1(3)};
+  font-family: ${theme.fonts.heading};
+  font-weight: 600;
+  font-size: clamp(11px, 1.1vw, 13px);
+  line-height: 1.3;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: transform 0.14s ease, box-shadow 0.14s ease, background-color 0.14s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${theme.colors.primary};
+    outline-offset: 2px;
+  }
+
+  &.kannada-text {
+    font-weight: 600;
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    font-size: 12px;
+    padding: ${theme.spacing1(1.75)} ${theme.spacing1(2.5)};
+  }
+`;

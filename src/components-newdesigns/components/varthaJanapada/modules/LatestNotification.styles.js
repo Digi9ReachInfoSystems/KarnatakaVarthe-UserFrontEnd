@@ -36,13 +36,19 @@ export const NotificationPanel = styled.aside`
 export const PanelHeader = styled.div`
   text-align: center;
   font-family: ${theme.fonts.heading};
-  font-weight: 600;
+  font-weight: 700;
   font-size: 15px;
+  line-height: 1.2;
   padding: ${theme.spacing1(2)} ${theme.spacing1(3)};
   margin-bottom: 0;
-  background-color: ${theme.colors.white};
-  color: ${theme.colors.gray[800]};
-  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.06);
+  background: linear-gradient(
+    90deg,
+    #f8f8f8 0%,
+    #ececec 40%,
+    #d6d6d6 100%
+  );
+  color: #111111;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
   position: absolute;
   top: 0;
   left: 0;

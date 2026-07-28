@@ -63,23 +63,14 @@ const HeaderTab = () => {
   // Navigation items with translations
   const navItems = [
     { 
-      name: "Vartha Janapada", 
+      name: "Home", 
       path: "/",
       translations: {
-        English: "Vartha Janapada",
-        Kannada: "ವಾರ್ತಾ ಜನಪದ",
-        Hindi: "वार्ता जनपद"
+        English: "Home",
+        Kannada: "ಹೋಮ್",
+        Hindi: "होम"
       }
     },
-    { 
-      name: "March of karnataka", 
-      path: "/marchofkarnataka",
-      translations: {
-        English: "March of Karnataka",
-        Kannada: "March of Karnataka",
-        Hindi: "March of Karnataka"
-      }
-    },   
     { 
       name: "CM Events", 
       path: "/specialnews",

@@ -1,99 +1,80 @@
 import { Link } from "react-router-dom";
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { LanguageContext } from "../../../../context/LanguageContext";
 import {
   HeroLayout,
-  HeroRoot,
-  HeroBackground,
-  HeroOverlay,
-  HeroContent,
-  HeroTitle,
-  HeroCta,
+  MagazinePair,
+  MagazineCard,
+  MagazineCover,
+  MagazineFooter,
+  MagazineCta,
 } from "./Varthahero.styles.js";
 import HeroShortVideos from "./heroshorts/HeroShortVideos.jsx";
 import Services from "./servicess/Services.jsx";
 import LiveTvPanel from "./liveTv/LiveTvPanel.jsx";
 import { NewsColumnStack } from "./liveTv/LiveTvPanel.styles.js";
 
+const MAGAZINE_CARDS = [
+  {
+    id: "vartha",
+    image: "/new-magzinesimages/vartha-july.jpg",
+    link: "/magazinesvartha",
+    labels: {
+      English: "Vartha Janapada magazines",
+      Kannada: "ವಾರ್ತಾ ಜನಪದ ಮ್ಯಾಗಜೀನ್‌ಗಳು",
+      Hindi: "वार्ता जनपद पत्रिकाएँ",
+    },
+  },
+  {
+    id: "march",
+    image: "/new-magzinesimages/march-july.jpg",
+    link: "/marchofkarnatakmagzine",
+    labels: {
+      English: "March of Karnataka magazines",
+      Kannada: "ಮಾರ್ಚ್ ಆಫ್ ಕರ್ನಾಟಕ ಮ್ಯಾಗಜೀನ್‌ಗಳು",
+      Hindi: "मार्च ऑफ कर्नाटक पत्रिकाएँ",
+    },
+  },
+];
+
 export default function Varthahero() {
   const { language } = useContext(LanguageContext);
-
-  const translations = {
-    magazine: {
-      Kannada: "ಇತ್ತೀಚಿನ ವಾರ್ತಾ ಜನಪದ ಮ್ಯಾಗಜೀನ್ಗಳು",
-      English: "Latest Vartha Janapada Magazines",
-      Hindi: "नवीनतम वार्ता जनपद पत्रिकाएं",
-    },
-    viewButton: {
-      Kannada: "ವೀಕ್ಷಿಸಿ",
-      English: "View",
-      Hindi: "देखें",
-    },
-  };
-
-  const heroData = {
-    image: "/newupdate/varthajanapada.jpg",
-    magazineType: "magazine",
-    link: "/magazinesvartha",
-  };
-
-  const [touchStart, setTouchStart] = useState(null);
-  const [touchEnd, setTouchEnd] = useState(null);
-  const minSwipeDistance = 50;
-
-  const onTouchStart = (e) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const onTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX);
-
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    const distance = touchStart - touchEnd;
-    const isSwipe = Math.abs(distance) > minSwipeDistance;
-    if (isSwipe) {
-      // Handle swipe if needed for future carousel implementation
-    }
-  };
+  const textClass =
+    language === "Kannada" || language === "Hindi" ? "kannada-text" : "";
 
   return (
     <HeroLayout aria-label="Home hero">
-      {/* Left: Live TV + Latest News */}
       <NewsColumnStack>
         <LiveTvPanel />
         <Services magazineType="magazine" />
       </NewsColumnStack>
 
-      {/* Middle: Magazine hero */}
-      <HeroRoot
-        aria-label="Featured content"
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
-      >
-        <HeroBackground aria-hidden="true" src={heroData.image} />
-        <HeroOverlay aria-hidden="true" />
-        <HeroContent>
-          <HeroTitle className="text-balance" $isKannada={language === "Kannada"}>
-            {translations.magazine[language] || translations.magazine.English}
-          </HeroTitle>
-          <HeroCta
-            as={Link}
-            to={heroData.link}
-            aria-label={`${translations.viewButton[language]} - ${
-              translations.magazine[language] || translations.magazine.English
-            }`}
-          >
-            {translations.viewButton[language] ||
-              translations.viewButton.English}
-          </HeroCta>
-        </HeroContent>
-      </HeroRoot>
+      <MagazinePair aria-label="Featured magazines">
+        {MAGAZINE_CARDS.map((card) => {
+          const label = card.labels[language] || card.labels.English;
+          return (
+            <MagazineCard key={card.id}>
+              <MagazineCover
+                $src={card.image}
+                role="img"
+                aria-label={label}
+              />
+              <MagazineFooter>
+                <MagazineCta
+                  as={Link}
+                  to={card.link}
+                  className={textClass}
+                  aria-label={label}
+                >
+                  {label}
+                </MagazineCta>
+              </MagazineFooter>
+            </MagazineCard>
+          );
+        })}
+      </MagazinePair>
 
-      {/* Right: Hero Shorts */}
       <HeroShortVideos />
     </HeroLayout>
   );
 }
-
