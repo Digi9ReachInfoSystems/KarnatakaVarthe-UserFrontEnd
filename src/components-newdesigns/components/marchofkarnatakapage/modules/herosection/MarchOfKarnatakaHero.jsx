@@ -17,20 +17,20 @@ import { NewsColumnStack } from "../../../varthaJanapada/modules/liveTv/LiveTvPa
 const MAGAZINE_CARDS = [
   {
     id: "vartha",
-    image: "/new-magzinesimages/vartha-july.jpg",
+    image: "/new-magzinesimages/vartha-aug.jpeg",
     link: "/magazinesvartha",
     labels: {
-      English: "Vartha Janapada magazines",
+      English: "Vartha Janapada Magazines",
       Kannada: "ವಾರ್ತಾ ಜನಪದ ಮ್ಯಾಗಜೀನ್‌ಗಳು",
       Hindi: "वार्ता जनपद पत्रिकाएँ",
     },
   },
   {
     id: "march",
-    image: "/new-magzinesimages/march-july.jpg",
+    image: "/new-magzinesimages/mok-aug.jpeg",
     link: "/marchofkarnatakmagzine",
     labels: {
-      English: "March of Karnataka magazines",
+      English: "March of Karnataka Magazines",
       Kannada: "ಮಾರ್ಚ್ ಆಫ್ ಕರ್ನಾಟಕ ಮ್ಯಾಗಜೀನ್‌ಗಳು",
       Hindi: "मार्च ऑफ कर्नाटक पत्रिकाएँ",
     },
