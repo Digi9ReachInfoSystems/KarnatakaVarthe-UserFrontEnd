@@ -13,6 +13,10 @@ export const Section = styled.section`
 `
 
 export const SectionHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
   margin-bottom: ${theme.spacing(2)};
   padding-bottom: ${theme.spacing(1)};
   max-width: 100%;
@@ -35,6 +39,7 @@ export const SectionHeader = styled.div`
     margin-bottom: ${theme.spacing(1)};
     padding-left: ${theme.spacing(1)};
     padding-right: ${theme.spacing(1)};
+    gap: 8px;
   }
 `
 
@@ -45,6 +50,8 @@ export const SectionTitle = styled.h2`
   color: ${theme.colors.primary};
   margin: 0;
   position: relative;
+  flex: 1;
+  min-width: 0;
 
   &::after {
     content: "";
@@ -68,8 +75,26 @@ export const SectionTitle = styled.h2`
     font-size: clamp(16px, 2vw, 18px);
     
     &::after {
-      width: 150px;
+      width: min(150px, 55%);
     }
+  }
+`
+
+export const ShowMoreLink = styled.a`
+  flex-shrink: 0;
+  text-decoration: none;
+  color: ${theme.colors.primary};
+  font-family: ${theme.fonts.heading};
+  font-weight: 600;
+  font-size: 16px;
+  white-space: nowrap;
+
+  &:hover {
+    color: ${theme.colors.secondary};
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    font-size: 14px;
   }
 `
 

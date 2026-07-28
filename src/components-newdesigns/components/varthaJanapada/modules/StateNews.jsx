@@ -82,12 +82,12 @@ export default function StateNews({ onSeeMore }) {
     fetchCategories()
   }, [])
 
-  // Fetch latest 10 state news for homepage (magazine)
+  // Fetch latest state news for homepage (Vartha + March combined — no magazineType filter)
   useEffect(() => {
     const fetchStateNews = async () => {
       try {
         setLoading(true)
-        const response = await fetchHomepageStateNews("magazine")
+        const response = await fetchHomepageStateNews()
         setRawData(Array.isArray(response?.data) ? response.data : [])
       } catch (error) {
         console.error("Error fetching state news:", error)

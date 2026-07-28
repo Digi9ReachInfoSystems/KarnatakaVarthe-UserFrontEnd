@@ -172,12 +172,12 @@ export const ShortsPanel = styled.div`
   flex: 0 0 auto;
   padding: 0;
   box-sizing: border-box;
-  border-radius: 16px;
+  border-radius: 0;
   position: relative;
   box-shadow: 0 10px 28px rgba(15, 23, 42, 0.14);
 
   @media (max-width: ${MOBILE_BREAKPOINT}) {
-    border-radius: 14px;
+    border-radius: 0;
     box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
   }
 `
@@ -207,13 +207,13 @@ export const NavArrow = styled.button`
   position: relative;
   width: 36px;
   height: 36px;
-  border: 1.5px solid rgba(15, 23, 42, 0.12);
+  border: none;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: ${theme.colors.primary};
+  color: #000000;
   background: #fff;
   box-shadow: 0 4px 14px rgba(15, 23, 42, 0.12);
   transition: background 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
@@ -239,6 +239,8 @@ export const NavArrow = styled.button`
   svg {
     width: 22px;
     height: 22px;
+    color: #000000;
+    stroke: #000000;
   }
 
   @media (max-width: ${MOBILE_BREAKPOINT}) {
@@ -443,7 +445,7 @@ export const ShimmerScrollList = styled.div`
   height: 100%;
   width: 100%;
   display: flex;
-  background: #000;
+  background: #f0f0f0;
   border-radius: inherit;
 `
 
@@ -451,7 +453,7 @@ export const ShimmerCard = styled.div`
   width: 100%;
   height: 100%;
   flex-shrink: 0;
-  background: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%);
+  background: linear-gradient(90deg, #ececec 25%, #f7f7f7 50%, #ececec 75%);
   background-size: 200% 100%;
   animation: ${shimmer} 1.4s ease-in-out infinite;
 `

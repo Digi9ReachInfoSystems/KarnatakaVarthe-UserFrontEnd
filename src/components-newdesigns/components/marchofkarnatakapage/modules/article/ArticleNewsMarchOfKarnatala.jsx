@@ -57,12 +57,12 @@ export default function ArticleNewsMarchOfKarnatala() {
 
   const [itemsPerPage, setItemsPerPage] = useState(getItemsPerPage())
 
-  // Fetch latest 10 district news for homepage (magazine2)
+  // Fetch latest district news for homepage (Vartha + March combined — no magazineType filter)
   useEffect(() => {
     const fetchDistrictNews = async () => {
       try {
         setLoading(true)
-        const response = await fetchHomepageDistrictNews("magazine2")
+        const response = await fetchHomepageDistrictNews()
         setRawData(Array.isArray(response?.data) ? response.data : [])
       } catch (error) {
         console.error("Error fetching district news:", error)

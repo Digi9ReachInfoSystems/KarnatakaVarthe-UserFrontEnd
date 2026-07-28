@@ -305,10 +305,11 @@ export const MagazinePair = styled.div`
     height: 400px;
   }
 
+  /* Keep both magazine cards side-by-side on mobile */
   @media (max-width: 450px) {
-    grid-template-columns: 1fr;
-    height: auto;
-    gap: ${theme.spacing1(2.5)};
+    grid-template-columns: 1fr 1fr;
+    gap: ${theme.spacing1(1.5)};
+    height: 320px;
   }
 `;
 
@@ -316,6 +317,7 @@ export const MagazineCard = styled.article`
   display: flex;
   flex-direction: column;
   min-height: 0;
+  min-width: 0;
   height: 100%;
   background: ${theme.colors.white};
   border-radius: ${theme.borderRadius.medium};
@@ -324,7 +326,7 @@ export const MagazineCard = styled.article`
   overflow: hidden;
 
   @media (max-width: 450px) {
-    height: 320px;
+    height: 100%;
   }
 `;
 
@@ -348,6 +350,11 @@ export const MagazineFooter = styled.div`
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     padding: ${theme.spacing1(2.5)} ${theme.spacing1(2)};
+  }
+
+  /* Mobile-only tighter footer for side-by-side cards */
+  @media (max-width: 450px) {
+    padding: 8px 4px;
   }
 `;
 
@@ -391,5 +398,21 @@ export const MagazineCta = styled.a`
   @media (max-width: ${theme.breakpoints.mobile}) {
     font-size: 12px;
     padding: ${theme.spacing1(1.75)} ${theme.spacing1(2.5)};
+  }
+
+  /* Mobile-only: tighter English + spaced Kannada on 2-col cards */
+  @media (max-width: 450px) {
+    font-size: 9px;
+    padding: 6px 6px;
+    line-height: 1.25;
+    white-space: normal;
+
+    &.kannada-text {
+      font-size: 8px;
+      letter-spacing: 0.05em;
+      word-spacing: 0.1em;
+      line-height: 1.45;
+      padding: 7px 5px;
+    }
   }
 `;

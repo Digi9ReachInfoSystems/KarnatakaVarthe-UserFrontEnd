@@ -7,6 +7,7 @@ import {
   Container,
   SectionHeader,
   Title,
+  ShowMoreLink,
   CarouselWrapper,
   NavButton,
   ArticlesGrid,
@@ -160,11 +161,9 @@ export default function NewsArticlesNews() {
         {/* Section Header */}
         <SectionHeader>
           <Title id="articles-heading">{headerText[language] || "Articles"}</Title>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
-                        <a href="/articles" style={{ textDecoration: 'none', color: '#007BFF', fontWeight: 'bold' }}>
-                          {buttonText[language] || "Show More"}
-                        </a>
-                      </div>
+          <ShowMoreLink href="/articles">
+            {buttonText[language] || "Show More"}
+          </ShowMoreLink>
         </SectionHeader>
 
         {/* Articles Carousel */}
