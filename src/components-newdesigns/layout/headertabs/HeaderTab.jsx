@@ -229,7 +229,12 @@ const HeaderTab = () => {
       return false;
     }
     if (itemPath === "/news-menu") {
-      return location.pathname === "/state" || location.pathname.startsWith("/district");
+      return (
+        location.pathname === "/news" ||
+        location.pathname.startsWith("/newsdetails") ||
+        location.pathname === "/state" ||
+        location.pathname.startsWith("/district")
+      );
     }
     if (itemPath === "/magazines") {
       return (
@@ -347,6 +352,8 @@ const HeaderTab = () => {
   const handleNewsClick = () => {
     if (window.innerWidth < 1026) {
       setIsNewsDropdownOpen(!isNewsDropdownOpen);
+    } else {
+      setIsNewsDropdownOpen(false);
     }
   };
 
@@ -454,11 +461,11 @@ const HeaderTab = () => {
                     style={{ position: "relative", display: "inline-flex", justifyContent: "center" }}
                   >
                     <ServiceNavTrigger
-                      role="button"
-                      tabIndex={0}
+                      as={Link}
+                      to="/news"
                       onClick={handleNewsClick}
                       onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
+                        if (e.key === " ") {
                           e.preventDefault();
                           handleNewsClick();
                         }
