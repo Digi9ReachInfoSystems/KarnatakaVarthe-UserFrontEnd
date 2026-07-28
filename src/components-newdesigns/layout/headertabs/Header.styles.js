@@ -261,6 +261,8 @@ export const ServiceNavTrigger = styled(NavLabel)`
   align-items: center;
   justify-content: center;
   text-align: center;
+  text-decoration: none;
+  color: inherit;
 
   &:hover,
   &.open {

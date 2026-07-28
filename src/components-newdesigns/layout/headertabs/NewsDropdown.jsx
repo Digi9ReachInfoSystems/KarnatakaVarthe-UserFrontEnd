@@ -12,6 +12,15 @@ import {
 } from "./NewsDropdown.styles";
 
 export const NEWS_ITEMS = {
+  all: {
+    name: "All News",
+    path: "/news",
+    translations: {
+      English: "All News",
+      Kannada: "ಎಲ್ಲಾ ಸುದ್ದಿ",
+      Hindi: "सभी समाचार",
+    },
+  },
   state: {
     name: "State News",
     path: "/state",
