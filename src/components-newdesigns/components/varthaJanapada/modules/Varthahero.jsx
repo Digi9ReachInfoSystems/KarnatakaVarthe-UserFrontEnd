@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { LanguageContext } from "../../../../context/LanguageContext";
 import {
   HeroLayout,
@@ -13,11 +13,15 @@ import HeroShortVideos from "./heroshorts/HeroShortVideos.jsx";
 import Services from "./servicess/Services.jsx";
 import LiveTvPanel from "./liveTv/LiveTvPanel.jsx";
 import { NewsColumnStack } from "./liveTv/LiveTvPanel.styles.js";
+import {
+  getMagazines,
+  MarchMagazines,
+} from "../../../../services/magazineApi/magazineService.js";
+import { getLatestMagazineThumbnail } from "../../../../services/magazineApi/latestMagazineCover.js";
 
 const MAGAZINE_CARDS = [
   {
     id: "vartha",
-    image: "/new-magzinesimages/vartha-a.webp",
     link: "/magazinesvartha",
     labels: {
       English: "Vartha Janapada Magazines",
@@ -27,7 +31,6 @@ const MAGAZINE_CARDS = [
   },
   {
     id: "march",
-    image: "/new-magzinesimages/mok-a.webp",
     link: "/marchofkarnatakmagzine",
     labels: {
       English: "March of Karnataka Magazines",
@@ -41,6 +44,37 @@ export default function Varthahero() {
   const { language } = useContext(LanguageContext);
   const textClass =
     language === "Kannada" || language === "Hindi" ? "kannada-text" : "";
+  const [coverImages, setCoverImages] = useState({
+    vartha: "",
+    march: "",
+  });
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadCovers = async () => {
+      try {
+        const [varthaRes, marchRes] = await Promise.all([
+          getMagazines(),
+          MarchMagazines(),
+        ]);
+
+        if (cancelled) return;
+
+        setCoverImages({
+          vartha: getLatestMagazineThumbnail(varthaRes?.data) || "",
+          march: getLatestMagazineThumbnail(marchRes?.data) || "",
+        });
+      } catch (error) {
+        console.error("Error loading latest magazine covers:", error);
+      }
+    };
+
+    loadCovers();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <HeroLayout aria-label="Home hero">
@@ -55,7 +89,7 @@ export default function Varthahero() {
           return (
             <MagazineCard key={card.id}>
               <MagazineCover
-                $src={card.image}
+                $src={coverImages[card.id]}
                 role="img"
                 aria-label={label}
               />
