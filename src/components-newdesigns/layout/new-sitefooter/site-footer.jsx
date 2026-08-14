@@ -16,6 +16,10 @@ import {
   Divider,
   BottomBar,
   SrOnly,
+  AppDownloads,
+  StoreBadgeList,
+  StoreBadgeLink,
+  StoreBadge,
 } from "./sitefooter.styles"
 import { GetTotalVisitorApi, RegisterVisitorApi } from "../../../services/viewsapi/ViewsApi"
 import CopyrightPolicy from "../../../components/WebsitePolicies/CopyrightPolicy/CopyrightPolicy";
@@ -23,6 +27,10 @@ import HyperlinkingPolicy from "../../../components/WebsitePolicies/Hyperlinking
 import SecurityPolicy from "../../../components/WebsitePolicies/SecurityPolicy/SecurityPolicy";
 import TermsAndConditions from "../../../components/WebsitePolicies/TermsAndConditions/TermsAndConditions";
 import Help from "../../../components/WebsitePolicies/Help/Help";
+
+const APP_STORE_URL = "https://apps.apple.com/us/app/karnataka-varthe/id6741527549"
+const PLAY_STORE_URL =
+  "https://play.google.com/store/apps/details?id=com.mycompany.varthajanapatha&hl=en_IN"
 
 // Footer translations for different languages
 const footerTranslations = {
@@ -36,6 +44,9 @@ const footerTranslations = {
     footerInfo: "Footer information",
     copyright: "Designed, Developed and Hosted by: Digi9 - Web Portal, Government of Karnataka",
     allRightsReserved: "All Rights Reserved.",
+    downloadApp: "Download App",
+    appStoreLabel: "Download Karnataka Varthe on the App Store",
+    playStoreLabel: "Get Karnataka Varthe on Google Play",
     policies: [
       { id: "copyright", label: "Copyright Policy", href: "#" },
       { id: "hyperlinking", label: "Hyperlinking Policy", href: "#" },
@@ -55,6 +66,9 @@ const footerTranslations = {
     footerInfo: "ಅಡಿಟಿಪ್ಪಣಿ ಮಾಹಿತಿ",
     copyright: "ವಿನ್ಯಾಸ, ಅಭಿವೃದ್ಧಿ ಮತ್ತು ಹೋಸ್ಟ್ ಮಾಡಿದವರು: ಡಿಜಿ9 - ವೆಬ್ ಪೋರ್ಟಲ್, ಕರ್ನಾಟಕ ಸರ್ಕಾರ",
     allRightsReserved: "ಎಲ್ಲಾ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ.",
+    downloadApp: "ಆ್ಯಪ್ ಡೌನ್‌ಲೋಡ್",
+    appStoreLabel: "ಆಪ್ ಸ್ಟೋರ್‌ನಲ್ಲಿ ಕರ್ನಾಟಕ ವಾರ್ತೆ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ",
+    playStoreLabel: "ಗೂಗಲ್ ಪ್ಲೇನಲ್ಲಿ ಕರ್ನಾಟಕ ವಾರ್ತೆ ಪಡೆಯಿರಿ",
     policies: [
       { id: "copyright", label: "ಕಾಪಿರೈಟ್ ನೀತಿ", href: "#" },
       { id: "hyperlinking", label: "ಹೈಪರ್‌ಲಿಂಕಿಂಗ್ ನೀತಿ", href: "#" },
@@ -74,6 +88,9 @@ const footerTranslations = {
     footerInfo: "फुटर जानकारी",
     copyright: "डिजाइन, विकसित और होस्ट: डिजी9 - वेब पोर्टल, कर्नाटक सरकार",
     allRightsReserved: "सर्वाधिकार सुरक्षित।",
+    downloadApp: "ऐप डाउनलोड",
+    appStoreLabel: "ऐप स्टोर पर कर्नाटक वार्ते डाउनलोड करें",
+    playStoreLabel: "गूगल प्ले पर कर्नाटक वार्ते प्राप्त करें",
     policies: [
       { id: "copyright", label: "कॉपीराइट नीति", href: "#" },
       { id: "hyperlinking", label: "हाइपरलिंकिंग नीति", href: "#" },
@@ -197,6 +214,34 @@ export default function SiteFooter({
                 </div>
               </Meta>
             </div>
+
+            <AppDownloads>
+              <ColTitle>{translations.downloadApp}</ColTitle>
+              <StoreBadgeList>
+                <StoreBadgeLink
+                  href={APP_STORE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={translations.appStoreLabel}
+                >
+                  <StoreBadge
+                    src="/badges/app-store.svg"
+                    alt={translations.appStoreLabel}
+                  />
+                </StoreBadgeLink>
+                <StoreBadgeLink
+                  href={PLAY_STORE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={translations.playStoreLabel}
+                >
+                  <StoreBadge
+                    src="/badges/google-play.svg"
+                    alt={translations.playStoreLabel}
+                  />
+                </StoreBadgeLink>
+              </StoreBadgeList>
+            </AppDownloads>
           </RightColumn>
         </Grid>
 

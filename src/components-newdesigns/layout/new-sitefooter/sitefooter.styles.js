@@ -49,7 +49,7 @@ export const Grid = styled.div`
   }
   
   @media (min-width: ${theme.breakpoints.desktop}) { 
-    grid-template-columns: 1.2fr 1fr 1fr;
+    grid-template-columns: 1.2fr 1fr 1fr 0.9fr;
     gap: ${theme.spacing(4)};
     padding-left: ${theme.spacing(15)};
   }
@@ -272,4 +272,45 @@ export const SrOnly = styled.span`
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   border: 0;
+`
+
+export const AppDownloads = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  grid-column: 1 / -1;
+
+  @media (min-width: ${theme.breakpoints.tablet}) {
+    grid-column: auto;
+  }
+`
+
+export const StoreBadgeList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing(1)};
+  align-items: flex-start;
+`
+
+export const StoreBadgeLink = styled.a`
+  display: inline-flex;
+  line-height: 0;
+  border-radius: 6px;
+  transition: ${theme.transitions.fast};
+
+  &:hover {
+    opacity: 0.88;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${theme.colors.primary};
+    outline-offset: 3px;
+  }
+`
+
+export const StoreBadge = styled.img`
+  display: block;
+  width: 135px;
+  height: auto;
+  max-width: 100%;
 `
