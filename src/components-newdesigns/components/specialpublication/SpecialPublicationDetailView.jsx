@@ -16,12 +16,12 @@ import {
   RecommendedSection,
   RecommendedHeader,
   RecommendedTitle,
-  MagazineGrid,
   MagazineCard,
   MagazineImageWrapper,
   MagazineImage,
   DownloadButton,
 } from "../magzines-singleview/Modules/MagzineIdview.styles";
+import { MagazineGrid } from "../magazinesvarthapage/modules/MagazineGallery.styles";
 import theme from "../../../theme/Theme";
 import { FontSizeContext } from "../../../context/FontSizeProvider";
 import { LanguageContext } from "../../../context/LanguageContext";
@@ -172,16 +172,7 @@ export default function SpecialPublicationDetailView() {
           <RecommendedHeader style={{ justifyContent: "flex-start" }}>
             <RecommendedTitle>{t.publicationsTitle}</RecommendedTitle>
           </RecommendedHeader>
-          <MagazineGrid
-            role="list"
-            aria-label={t.publicationsTitle}
-            style={{
-              gridTemplateColumns: "repeat(2, 1fr)",
-              maxWidth: "640px",
-              margin: 0,
-              padding: 0,
-            }}
-          >
+          <MagazineGrid role="list" aria-label={t.publicationsTitle}>
             {otherPublications.map((item) => {
               const itemTitle = getPublicationTitle(item, language);
 
