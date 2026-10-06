@@ -7,12 +7,12 @@ import {
   SectionHeader,
   TitleWrapper,
   PageTitle,
-  MagazineGrid,
   MagazineCard,
   MagazineImageWrapper,
   MagazineImage,
   DownloadButton,
 } from "../magzines-singleview/Modules/MagzineIdview.styles";
+import { MagazineGrid } from "../magazinesvarthapage/modules/MagazineGallery.styles";
 import { FontSizeContext } from "../../../context/FontSizeProvider";
 import { LanguageContext } from "../../../context/LanguageContext";
 import { specialPublications } from "../../../config/specialPublicationData";
@@ -69,16 +69,7 @@ export default function SpecialPublicationView() {
         </TitleWrapper>
       </SectionHeader>
 
-      <MagazineGrid
-        role="list"
-        aria-label={t.title}
-        style={{
-          gridTemplateColumns: "repeat(2, 1fr)",
-          maxWidth: "640px",
-          margin: 0,
-          padding: 0,
-        }}
-      >
+      <MagazineGrid role="list" aria-label={t.title}>
         {specialPublications.map((publication) => {
           const publicationTitle = getPublicationTitle(publication, language);
 
